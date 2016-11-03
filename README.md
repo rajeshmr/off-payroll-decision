@@ -7,12 +7,8 @@
 
 ## Service Definitions
 
-All requests use the HTTP `POST` method
-
-### PDF Generator Service (external facing API - `/generate-pdf`)
 
 #### Functionality
-
 
 
 ## Request
@@ -21,8 +17,7 @@ All requests use the HTTP `POST` method
 ## Response
 
 
-## Run the application locally
-
+## Runing the application locally
 
 
 ## License
