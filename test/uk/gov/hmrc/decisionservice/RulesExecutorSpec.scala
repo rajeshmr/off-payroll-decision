@@ -3,8 +3,10 @@ package uk.gov.hmrc.decisionservice
 import org.junit.runner.RunWith
 import org.scalatest.{FunSuite, ShouldMatchers}
 import org.scalatest.junit.JUnitRunner
-import uk.gov.hmrc.decisionservice.model.{BusinessStructure, Substitution}
+import uk.gov.hmrc.decisionservice.model.{BusinessStructure, Decision, Substitution}
 import uk.gov.hmrc.decisionservice.service.RulesExecutor
+
+import collection.JavaConversions._
 
 @RunWith(classOf[JUnitRunner])
 class RulesExecutorSpec extends FunSuite with ShouldMatchers {
@@ -21,7 +23,10 @@ class RulesExecutorSpec extends FunSuite with ShouldMatchers {
 
   test("basic testcase") {
     val found = RulesExecutor.analyze(model1, "sheets/kb-rules-01.xls")
-    found should have size(2)
+    val decisions = found collect { case x:Decision => x}
+    found should have size(3)
+    decisions should have size(1)
+    decisions.foreach{println(_)}
   }
 
 
