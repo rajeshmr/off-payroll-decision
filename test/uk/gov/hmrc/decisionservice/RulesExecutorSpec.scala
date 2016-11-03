@@ -20,7 +20,7 @@ class RulesExecutorSpec extends FunSuite with ShouldMatchers {
   }
 
   test("basic testcase") {
-    val found = RulesExecutor.analyze(model1, "sheets/kb-questions-01.xls")
+    val found = RulesExecutor.analyze(model1, "sheets/kb-rules-01.xls")
     found should have size(2)
   }
 

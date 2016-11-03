@@ -8,7 +8,7 @@ import org.drools.io.ResourceFactory
 object SpreadsheetDrlConverter extends App {
 
   val compiler = new SpreadsheetCompiler
-  val drl = compiler.compile(ResourceFactory.newFileResource(new File("sheets/kb-questions-01.xls")), InputType.XLS)
+  val drl = compiler.compile(ResourceFactory.newFileResource(new File("sheets/kb-rules-01.xls")), InputType.XLS)
   println(drl)
-  
+
 }
