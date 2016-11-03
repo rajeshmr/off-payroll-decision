@@ -1,3 +1,4 @@
+import sbt.Keys._
 import sbt._
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
@@ -27,7 +28,15 @@ private object AppDependencies {
 
   private val playReactivemongoVersion = "4.8.0"
   private val catsVersion = "0.6.0"
+  private val droolsVersion = "6.4.0.Final"
 
+  val droolsDependencies = Seq(
+    "drools-compiler",
+    "drools-core",
+    "drools-jsr94",
+    "drools-decisiontables",
+    "knowledge-api"
+  ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
 
   val compile = Seq(
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
@@ -40,10 +49,9 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "io.github.cloudify" %% "spdf" % "1.3.1",
-    "org.apache.pdfbox" % "preflight" % "2.0.3",
-    "org.typelevel" %% "cats" % catsVersion
-  )
+    "org.typelevel" %% "cats" % catsVersion,
+    "org.codehaus.janino"      % "janino"            % "2.5.16"   // For drools
+  ) ++ droolsDependencies
 
   trait TestDependencies {
     lazy val scope: String = "test"
