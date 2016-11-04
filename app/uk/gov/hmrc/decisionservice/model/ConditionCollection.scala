@@ -4,7 +4,9 @@ abstract class ConditionCollection(conditions: Map[String,String]) {
   def is(condition:String):String = conditions.getOrElse(condition, "undefined")
 }
 
-trait CarryOver
+trait CarryOver {
+  val value:String
+}
 
 case class Substitution(conditions: Map[String,String]) extends ConditionCollection(conditions)
 case class SubstitutionCarryOver(value:String) extends CarryOver

@@ -1,14 +1,12 @@
 package uk.gov.hmrc.decisionservice.service
 
-import java.io.File
 import java.util
 
 import org.drools.builder.{KnowledgeBuilderFactory, ResourceType}
-import org.drools.impl.adapters.AgendaAdapter
 import org.drools.io.ResourceFactory
 import org.slf4j.LoggerFactory
 
-import collection.JavaConversions._
+import scala.collection.JavaConversions._
 
 object RulesExecutor {
   val logger = LoggerFactory.getLogger(RulesExecutor.getClass())
@@ -25,9 +23,7 @@ object RulesExecutor {
     config.setProperty("drools.dialect.mvel.strict", "false")
     val kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(config)
 
-//    val res = ResourceFactory.newClassPathResource(kb)
-    val res = ResourceFactory.newFileResource(new File(kb))
-//    kbuilder.add(res, ResourceType.DRL)
+    val res = ResourceFactory.newClassPathResource(kb)
     kbuilder.add(res, ResourceType.DTABLE)
 
     val errors = kbuilder.getErrors();
@@ -36,13 +32,11 @@ object RulesExecutor {
       throw new IllegalArgumentException("Problem with the Knowledge base");
     }
 
-
     val kbase = kbuilder.newKnowledgeBase()
 
     val results = using(kbase.newStatefulKnowledgeSession()) { session =>
       session.setGlobal("logger", LoggerFactory.getLogger(kb))
       model.foreach(session.insert(_))
-      val agenda = session.getAgenda.asInstanceOf[AgendaAdapter]
       session.fireAllRules()
       session.getObjects()
     }
