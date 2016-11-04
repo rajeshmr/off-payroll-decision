@@ -19,7 +19,7 @@ object RulesExecutor {
 
   def analyze(model: List[Any], kb: String):Xor[DecisionServiceError,List[AnyRef]] = {
 
-    val tryRes = Try {
+    val tryBuilder = Try {
       System.setProperty("drools.dialect.java.compiler", "JANINO")
       val config = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration()
       config.setProperty("drools.dialect.mvel.strict", "false")
@@ -28,15 +28,15 @@ object RulesExecutor {
       knowledgeBuilder.add(res, ResourceType.DTABLE)
       knowledgeBuilder
     }
-    tryRes match {
-      case Success(kbuilder) =>
-        val errors = kbuilder.getErrors()
+    tryBuilder match {
+      case Success(builder) =>
+        val errors = builder.getErrors()
         errors.size() match {
           case n if n > 0 =>
             for (error <- errors) logger.error(error.getMessage())
             Xor.left(KnowledgeBaseError(s"Problem(s) with knowledge base $errors"))
           case _ =>
-            val kbase = kbuilder.newKnowledgeBase()
+            val kbase = builder.newKnowledgeBase()
             val results = using(kbase.newStatefulKnowledgeSession()) { session =>
               session.setGlobal("logger", LoggerFactory.getLogger(kb))
               model.foreach(session.insert(_))
