@@ -2,6 +2,7 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
+import play.api.i18n.Messages
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.service.RulesExecutor
 import uk.gov.hmrc.play.test.UnitSpec
@@ -81,7 +82,8 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
       val result = RulesExecutor.analyze(List(), "rules-test-missing-import.xls")
       result.isLeft shouldBe true
       result.leftMap(e =>
-        e shouldBe a [KnowledgeBaseError]
+        (e shouldBe a [KnowledgeBaseError],
+         e.message should startWith(Messages("rules.executor.knowledge.base.error")))
       )
     }
   }
