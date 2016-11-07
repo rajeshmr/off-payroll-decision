@@ -76,4 +76,14 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
     }
   }
 
+  "processing spreadsheet with errors (missing import)" should {
+    "produce error" in {
+      val result = RulesExecutor.analyze(List(), "rules-test-missing-import.xls")
+      result.isLeft shouldBe true
+      result.leftMap(e =>
+        e shouldBe a [KnowledgeBaseError]
+      )
+    }
+  }
+
 }
