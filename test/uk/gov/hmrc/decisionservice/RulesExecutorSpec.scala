@@ -14,7 +14,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
         Substitution(Map("rightToSendSubstituteInContract" -> "yes", "obligationToSendSubstituteInContract" -> "yes")),
         BusinessStructure(Map("advertiseForWork" -> "yes", "expenseRunningBusinessPremises" -> "yes"))
       )
-      val result = RulesExecutor.analyze(model, "rules-test-basic.xls")
+      val result = await(RulesExecutor.analyze(model, "rules-test-basic.xls"))
       result.isRight shouldBe true
       result map
       { found =>
@@ -35,7 +35,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
       val model = List(
         BusinessStructure(Map("advertiseForWork" -> "no"))
       )
-      val result = RulesExecutor.analyze(model, "rules-test-emptyvalues-section.xls")
+      val result = await(RulesExecutor.analyze(model, "rules-test-emptyvalues-section.xls"))
       result.isRight shouldBe true
       result map { found =>
         val carryOvers = found collect { case x: CarryOver => x }
@@ -51,7 +51,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
         Substitution(Map("rightToSendSubstituteInContract" -> "yes", "obligationToSendSubstituteInContract" -> "yes")),
         BusinessStructure(Map("advertiseForWork" -> "yes", "expenseRunningBusinessPremises" -> "yes"))
       )
-      val result = RulesExecutor.analyze(model, "rules-test-emptyvalues-decision.xls")
+      val result = await(RulesExecutor.analyze(model, "rules-test-emptyvalues-decision.xls"))
       result.isRight shouldBe true
       result map { found =>
         val carryOvers = found collect { case x: CarryOver => x }
