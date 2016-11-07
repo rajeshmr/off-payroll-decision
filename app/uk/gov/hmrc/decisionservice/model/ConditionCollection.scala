@@ -4,7 +4,7 @@ abstract class ConditionCollection(conditions: Map[String,String]) {
   def is(condition:String):String = conditions.getOrElse(condition, "undefined")
 }
 
-trait CarryOver {
+sealed trait CarryOver {
   val value:String
 }
 
