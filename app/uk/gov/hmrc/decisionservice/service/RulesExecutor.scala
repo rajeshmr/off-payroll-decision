@@ -1,6 +1,7 @@
 package uk.gov.hmrc.decisionservice.service
 
 import cats.data.Xor
+import org.drools.KnowledgeBase
 import org.drools.builder.{KnowledgeBuilder, KnowledgeBuilderFactory, ResourceType}
 import org.drools.io.ResourceFactory
 import org.slf4j.LoggerFactory
@@ -24,31 +25,23 @@ object RulesExecutor {
   }
 
   def analyze(model: List[Any], kb: String):Future[Xor[DecisionServiceError,List[AnyRef]]] = {
-    val tryBuilder = createKnowledgeBuilder(kb)
-    tryBuilder.flatMap {
-      case Xor.Right(builder) =>
-        val errors = builder.getErrors()
-        errors.size() match {
-          case n if n > 0 =>
-            for (error <- errors) logger.error(error.getMessage())
-            Future.successful(Xor.left(KnowledgeBaseError(Messages("rules.executor.knowledge.base.error") + s" $errors")))
-          case _ =>
-            Future {
-              val kbase = builder.newKnowledgeBase()
-              val results = using(kbase.newStatefulKnowledgeSession()) { session =>
-                session.setGlobal(LoggerVariable, LoggerFactory.getLogger(kb))
-                model.foreach(session.insert(_))
-                session.fireAllRules()
-                session.getObjects()
-              }
-              Xor.right(results.toList)
-            }
+    val maybeKnowledgeBase = createKnowledgeBase(kb)
+    maybeKnowledgeBase.flatMap {
+      case Xor.Right(knowledgeBase) =>
+        Future {
+          val results = using(knowledgeBase.newStatefulKnowledgeSession()) { session =>
+            session.setGlobal(LoggerVariable, LoggerFactory.getLogger(kb))
+            model.foreach(session.insert(_))
+            session.fireAllRules()
+            session.getObjects()
+          }
+          Xor.right(results.toList)
         }
       case e@Xor.Left(ee) => Future.successful(e)
     }
   }
 
-  def createKnowledgeBuilder(kb: String): Future[Xor[DecisionServiceError,KnowledgeBuilder]] = {
+  def createKnowledgeBase(kb: String): Future[Xor[DecisionServiceError,KnowledgeBase]] = {
     Future {
       System.setProperty("drools.dialect.java.compiler", DroolsDialect)
       val config = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration()
@@ -56,7 +49,14 @@ object RulesExecutor {
       val res = ResourceFactory.newClassPathResource(kb)
       val knowledgeBuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(config)
       knowledgeBuilder.add(res, ResourceType.DTABLE)
-      Xor.right(knowledgeBuilder)
+      val errors = knowledgeBuilder.getErrors()
+      errors.size() match {
+        case n if n > 0 =>
+          for (error <- errors) logger.error(error.getMessage())
+          Xor.left(KnowledgeBaseError(Messages("rules.executor.knowledge.base.error") + s" $errors"))
+        case _ =>
+          Xor.right(knowledgeBuilder.newKnowledgeBase())
+      }
     }.recover {
       case e => Xor.left(RulesFileError(e.getMessage))
     }
