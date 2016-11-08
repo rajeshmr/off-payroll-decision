@@ -2,15 +2,13 @@ package uk.gov.hmrc.decisionservice.service
 
 import cats.data.Xor
 import org.drools.KnowledgeBase
-import org.drools.builder.{KnowledgeBuilder, KnowledgeBuilderFactory, ResourceType}
+import org.drools.builder.{KnowledgeBuilderFactory, ResourceType}
 import org.drools.io.ResourceFactory
 import org.slf4j.LoggerFactory
 import play.api.i18n.Messages
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, KnowledgeBaseError, RulesFileError}
 
 import scala.collection.JavaConversions._
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object RulesExecutor {
@@ -19,30 +17,31 @@ object RulesExecutor {
   val DroolsDialect: String = "JANINO"
   val DroolsDialectMvelStrict: String = "false"
 
-  def using[R, T <% { def dispose() }](getres: => T)(doit: T => R): R = {
+  def using[R, T <: { def dispose() }](getres: => T)(doit: T => R): R = {
     val res = getres
     try doit(res) finally res.dispose
   }
 
-  def analyze(model: List[Any], kb: String):Future[Xor[DecisionServiceError,List[AnyRef]]] = {
-    val maybeKnowledgeBase = createKnowledgeBase(kb)
-    maybeKnowledgeBase.flatMap {
+  def analyze(model: List[Any], kb: String):Xor[DecisionServiceError,List[AnyRef]] = {
+    analyze(model, kb, createKb(kb))
+  }
+
+  def analyze(model: List[Any], kb: String, maybeKnowledgeBase:Xor[DecisionServiceError,KnowledgeBase]):Xor[DecisionServiceError,List[AnyRef]] = {
+    maybeKnowledgeBase match {
       case Xor.Right(knowledgeBase) =>
-        Future {
-          val results = using(knowledgeBase.newStatefulKnowledgeSession()) { session =>
-            session.setGlobal(LoggerVariable, LoggerFactory.getLogger(kb))
-            model.foreach(session.insert(_))
-            session.fireAllRules()
-            session.getObjects()
-          }
-          Xor.right(results.toList)
+        val results = using(knowledgeBase.newStatefulKnowledgeSession()) { session =>
+          session.setGlobal(LoggerVariable, LoggerFactory.getLogger(kb))
+          model.foreach(session.insert(_))
+          session.fireAllRules()
+          session.getObjects()
         }
-      case e@Xor.Left(ee) => Future.successful(e)
+        Xor.right(results.toList)
+      case e@Xor.Left(ee) => e
     }
   }
 
-  def createKnowledgeBase(kb: String): Future[Xor[DecisionServiceError,KnowledgeBase]] = {
-    Future {
+  def createKb(kb: String): Xor[DecisionServiceError,KnowledgeBase] = {
+    try {
       System.setProperty("drools.dialect.java.compiler", DroolsDialect)
       val config = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration()
       config.setProperty("drools.dialect.mvel.strict", DroolsDialectMvelStrict)
@@ -57,8 +56,8 @@ object RulesExecutor {
         case _ =>
           Xor.right(knowledgeBuilder.newKnowledgeBase())
       }
-    }.recover {
-      case e => Xor.left(RulesFileError(e.getMessage))
+    } catch {
+      case e:Throwable => Xor.left(RulesFileError(e.getMessage))
     }
   }
 }
