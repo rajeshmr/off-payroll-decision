@@ -17,10 +17,7 @@ object RulesExecutor {
   val DroolsDialect: String = "JANINO"
   val DroolsDialectMvelStrict: String = "false"
 
-  def using[R, T <: { def dispose() }](getres: => T)(doit: T => R): R = {
-    val res = getres
-    try doit(res) finally res.dispose
-  }
+  def using[R <: { def dispose(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.dispose() }
 
   def analyze(model: List[Any], kb: String):Xor[DecisionServiceError,List[AnyRef]] = {
     analyze(model, kb, createKb(kb))

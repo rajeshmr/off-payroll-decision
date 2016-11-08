@@ -26,36 +26,39 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
   "processing rules in parallel" should {
     "return within a specified time limit" in {
       val start = nanoTime
-      val futures = (1 to 200) map { a =>
+      val Iterations = 200
+      val futures = (1 to Iterations) map { a =>
         Future { RulesExecutor.analyze(model, "rules-test-basic.xls") }
       }
       await(Future.sequence(futures))
       val duration = nanoTime - start
-      println("parallel execution completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("parallel execution of %d iterations completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
   }
 
   "processing rules in parallel with pre-initialized knowledge base" should {
     "return within a smaller time than when initializing knowledge base at each call" in {
       val start = nanoTime
+      val Iterations = 500
       val kb = RulesExecutor.createKb("rules-test-emptyvalues-section.xls")
-      val futures = (1 to 200) map { a =>
+      val futures = (1 to Iterations) map { a =>
         Future { RulesExecutor.analyze(model, "rules-test-emptyvalues-section.xls", kb) }
       }
       await(Future.sequence(futures))
       val duration = nanoTime - start
-      println("parallel execution with pre-initialized kb completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("parallel execution of %d iterations, with pre-initialized kb, completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
     "return within a small time for two different knowledge bases" in {
       val start = nanoTime
+      val Iterations = 500
       val kb1 = RulesExecutor.createKb("rules-test-basic.xls")
       val kb2 = RulesExecutor.createKb("rules-test-emptyvalues-section.xls")
-      val futures = (1 to 200) map { a =>
+      val futures = (1 to Iterations) map { a =>
         Future { RulesExecutor.analyze(model, "abc", if (a % 2 == 0) kb1 else kb2) }
       }
       await(Future.sequence(futures))
       val duration = nanoTime - start
-      println("parallel execution with two pre-initialized knowledge bases completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("parallel execution of %d iterations, with two pre-initialized kb, completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
 
   }
@@ -63,42 +66,46 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
   "processing rules sequentially" should {
     "return within a specified time limit" in {
       val start = nanoTime
-      (1 to 200) map { a =>
+      val Iterations = 200
+      (1 to Iterations) map { a =>
         RulesExecutor.analyze(model, "rules-test-basic.xls")
       }
       val duration = nanoTime - start
-      println("sequential execution completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("sequential execution of %d iterations, completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
   }
 
   "processing rules sequentially with pre-initialized knowledge base" should {
     "return within a smaller time than when initializing knowledge base at each call" in {
       val start = nanoTime
+      val Iterations = 200
       val kb = RulesExecutor.createKb("rules-test-basic.xls")
-      (1 to 200) map { a =>
+      (1 to Iterations) map { a =>
         RulesExecutor.analyze(model, "rules-test-basic.xls", kb)
       }
       val duration = nanoTime - start
-      println("sequential execution with pre-initialized kb completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("sequential execution of %d iterations, with pre-initialized kb, completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
     "return within a small time for a large number of iterations" in {
       val start = nanoTime
+      val Iterations = 10000
       val kb = RulesExecutor.createKb("rules-test-basic.xls")
-      (1 to 10000) map { a =>
+      (1 to Iterations) map { a =>
         RulesExecutor.analyze(model, "rules-test-basic.xls", kb)
       }
       val duration = nanoTime - start
-      println("sequential execution with pre-initialized kb completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("sequential execution of %d iterations, with pre-initialized kb, completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
     "return within a small time for two different knowledge bases" in {
       val start = nanoTime
+      val Iterations = 10000
       val kb1 = RulesExecutor.createKb("rules-test-basic.xls")
       val kb2 = RulesExecutor.createKb("rules-test-emptyvalues-section.xls")
-      (1 to 10000) map { a =>
+      (1 to Iterations) map { a =>
         RulesExecutor.analyze(model, "abc", if (a % 2 == 0) kb1 else kb2)
       }
       val duration = nanoTime - start
-      println("sequential execution with two pre-initialized knowledge bases completed in %,d ms.".format(NANOSECONDS.toMillis(duration)))
+      println("sequential execution of %d iterations, with two pre-initialized kb, completed in %,d ms.".format(Iterations, NANOSECONDS.toMillis(duration)))
     }
   }
 
