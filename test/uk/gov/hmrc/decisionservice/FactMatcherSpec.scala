@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import cats.data.Xor
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, Fact, Rule, SectionResult}
+import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.ruleengine.FactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -11,15 +11,25 @@ class FactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
 
   "fact matcher" should {
     "produce correct result for a sample fact" in {
-
-      val fact = Fact(List(("question1", "yes")), "BusinessStructure")
-
-      val rule = Rule(List((List("yes"), SectionResult("high", true))))
+      val fact = Fact(List(
+        FactRow("question1", "yes"),
+        FactRow("question2", "no"),
+        FactRow("question3", "yes")), "BusinessStructure")
+      val rule = Rule(List(
+        RuleRow(List("yes","yes","yes"), SectionResult("high"  , true)),
+        RuleRow(List("yes","no" ,"no" ), SectionResult("medium", true)),
+        RuleRow(List("yes","no" ,"yes"), SectionResult("low"   , true)),
+        RuleRow(List("no" ,""   ,"yes"), SectionResult("low"   , false))
+      ))
 
       val response = FactMatcher.matchSectionFact(fact:Fact, rule:Rule)
 
       response shouldBe a [Xor[DecisionServiceError,SectionResult]]
-
+      response.isRight shouldBe true
+      response.map { sectionResult =>
+        sectionResult.value should equal("low")
+        sectionResult.exit should equal(true)
+      }
     }
   }
 
