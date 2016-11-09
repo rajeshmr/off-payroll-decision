@@ -28,7 +28,7 @@ private object AppDependencies {
 
   private val playReactivemongoVersion = "4.8.0"
   private val catsVersion = "0.6.0"
-  private val droolsVersion = "6.4.0.Final"
+  private val droolsVersion = "6.5.0.Final"
 
   val droolsDependencies = Seq(
     "drools-compiler",
