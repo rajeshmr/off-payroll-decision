@@ -31,6 +31,25 @@ class FactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
         sectionResult.exit should equal(true)
       }
     }
+    "produce error for incorrect (too short) fact" in {
+      val fact = Fact(List(
+        FactRow("question1", "yes"),
+        FactRow("question3", "yes")), "BusinessStructure")
+      val rule = Rule(List(
+        RuleRow(List("yes","yes","yes"), SectionResult("high"  , true)),
+        RuleRow(List("yes","no" ,"no" ), SectionResult("medium", true)),
+        RuleRow(List("yes","no" ,"yes"), SectionResult("low"   , true)),
+        RuleRow(List("no" ,""   ,"yes"), SectionResult("low"   , false))
+      ))
+
+      val response = FactMatcher.matchSectionFact(fact:Fact, rule:Rule)
+
+      response shouldBe a [Xor[DecisionServiceError,SectionResult]]
+      response.isLeft shouldBe true
+      response.leftMap { error =>
+        error shouldBe a [FactError]
+      }
+    }
   }
 
 }
