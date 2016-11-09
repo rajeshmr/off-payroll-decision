@@ -1,8 +1,12 @@
 package uk.gov.hmrc.decisionservice.model
 
-case class Fact(interviewSection:List[(String,String)], sectionName:String) // question -> answer
+case class FactRow(question:String, answer:String)
 
-case class Rule(answers:List[(List[String],SectionResult)]) // permutations of answers
+case class Fact(interviewSection:List[FactRow], sectionName:String)
+
+case class RuleRow(answers:List[String], result:SectionResult)
+
+case class Rule(rows:List[RuleRow])
 
 case class SectionResult(value:String, exit:Boolean)
 
