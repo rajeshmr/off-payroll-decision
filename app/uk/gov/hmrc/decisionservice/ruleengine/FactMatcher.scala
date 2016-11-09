@@ -12,12 +12,15 @@ object FactMatcher {
   {
     @tailrec
     def go(factAnswers:List[String], ruleRows:List[RuleRow]):Xor[DecisionServiceError,SectionResult] = ruleRows match {
-      case _ if factAnswers.isEmpty => Xor.left(FactError("incorrect fact"))
       case Nil => Xor.left(RulesFileError("no match found"))
       case x :: xs =>
-        factMatches(factAnswers, x) match {
-          case Some(result) => Xor.right(result)
-          case None => go(factAnswers, xs)
+        if (factAnswers.size != x.answers.size)
+          Xor.left(FactError("incorrect fact"))
+        else {
+          factMatches(factAnswers, x) match {
+            case Some(result) => Xor.right(result)
+            case None => go(factAnswers, xs)
+          }
         }
     }
 
