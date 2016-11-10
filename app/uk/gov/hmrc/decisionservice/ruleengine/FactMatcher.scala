@@ -10,8 +10,8 @@ import scala.annotation.tailrec
 
 sealed trait FactMatcher {
   type ValueType
-  type Facts <: { def values:List[ValueType]}
-  type Rule  <: { def values:List[ValueType]; def result:RuleResult}
+  type Facts <: { def values:List[ValueType] }
+  type Rule  <: { def values:List[ValueType]; def result:RuleResult }
   type RuleResult
 
   def matchFacts(facts: Facts, rules: List[Rule]): Xor[DecisionServiceError,RuleResult] =

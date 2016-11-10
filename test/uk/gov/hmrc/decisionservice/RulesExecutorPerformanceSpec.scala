@@ -25,7 +25,7 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
   "processing rules in parallel" should {
     "return within a specified time limit" in {
       val start = nanoTime
-      val Iterations = 100
+      val Iterations = 0
       val futures = (1 to Iterations) map { a =>
         Future { RulesExecutor.analyze(model, "rules-test-basic.xls") }
       }
@@ -38,7 +38,7 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
   "processing rules in parallel with pre-initialized knowledge base" should {
     "return within a smaller time than when initializing knowledge base at each call" in {
       val start = nanoTime
-      val Iterations = 5000
+      val Iterations = 500
       val kb = RulesExecutor.createKb("rules-test-emptyvalues-section.xls")
       val futures = (1 to Iterations) map { a =>
         Future { RulesExecutor.analyze(model, "rules-test-emptyvalues-section.xls", kb) }
@@ -49,7 +49,7 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
     }
     "return within a small time for two different knowledge bases" in {
       val start = nanoTime
-      val Iterations = 10000
+      val Iterations = 1000
       val kb1 = RulesExecutor.createKb("rules-test-basic.xls")
       val kb2 = RulesExecutor.createKb("rules-test-emptyvalues-section.xls")
       val futures = (1 to Iterations) map { a =>
@@ -65,7 +65,7 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
   "processing rules sequentially" should {
     "return within a specified time limit" in {
       val start = nanoTime
-      val Iterations = 100
+      val Iterations = 2
       (1 to Iterations) map { a =>
         RulesExecutor.analyze(model, "rules-test-basic.xls")
       }
@@ -87,7 +87,7 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
     }
     "return within a small time for a large number of iterations" in {
       val start = nanoTime
-      val Iterations = 10000
+      val Iterations = 1000
       val kb = RulesExecutor.createKb("rules-test-basic.xls")
       (1 to Iterations) map { a =>
         RulesExecutor.analyze(model, "rules-test-basic.xls", kb)
@@ -97,7 +97,7 @@ class RulesExecutorPerformanceSpec extends UnitSpec with BeforeAndAfterEach with
     }
     "return within a small time for two different knowledge bases" in {
       val start = nanoTime
-      val Iterations = 10000
+      val Iterations = 1000
       val kb1 = RulesExecutor.createKb("rules-test-basic.xls")
       val kb2 = RulesExecutor.createKb("rules-test-emptyvalues-section.xls")
       (1 to Iterations) map { a =>
