@@ -65,6 +65,6 @@ object MatrixFactMatcher extends FactMatcher {
   type RuleResult = MatrixDecision
 
   def equivalent(p:(SectionCarryOver,SectionCarryOver)):Boolean = p match {
-    case (a,b) => a == b || a.value.isEmpty || b.value.isEmpty
+    case (a,b) => a.value == b.value || a.value.isEmpty || b.value.isEmpty
   }
 }
