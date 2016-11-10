@@ -42,4 +42,18 @@ object FactMatcher {
 
   }
 
+
+  /**
+    * matrix
+    */
+
+
+
+
+
+  def matchMatrixFacts(matrixFacts:MatrixFacts, matrixRules:List[MatrixRule]): Xor[DecisionServiceError,MatrixDecision] = {
+    Xor.right(MatrixDecision("out of IR35"))
+  }
+
+
 }

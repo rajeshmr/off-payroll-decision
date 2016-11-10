@@ -7,10 +7,10 @@ import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.ruleengine.FactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
-class FactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
+class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
 
-  "fact matcher" should {
-    "produce correct result for a sample fact" in {
+  "section fact matcher" should {
+    "produce correct result for sample facts" in {
       val fact = SectionFacts(List(
         SectionFact("question1", "yes"),
         SectionFact("question2", "no"),
@@ -24,7 +24,6 @@ class FactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
 
       val response = FactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
 
-      response shouldBe a [Xor[DecisionServiceError,SectionCarryOver]]
       response.isRight shouldBe true
       response.map { sectionResult =>
         sectionResult.value should equal("low")
@@ -44,7 +43,6 @@ class FactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
 
       val response = FactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
 
-      response shouldBe a [Xor[DecisionServiceError,SectionCarryOver]]
       response.isLeft shouldBe true
       response.leftMap { error =>
         error shouldBe a [FactError]
@@ -63,7 +61,6 @@ class FactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
 
       val response = FactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
 
-      response shouldBe a [Xor[DecisionServiceError,SectionCarryOver]]
       response.isLeft shouldBe true
       response.leftMap { error =>
         error shouldBe a [RulesFileError]

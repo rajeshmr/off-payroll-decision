@@ -11,4 +11,11 @@ case class SectionRules(rows:List[SectionRule])
 case class SectionCarryOver(value:String, exit:Boolean)
 
 
-case class MatrixFact(section:String, carryOver:SectionCarryOver)
+case class MatrixDecision(value:String)
+
+case class MatrixFact(sectionName:String, carryOver:SectionCarryOver)
+
+case class MatrixFacts(facts:List[MatrixFact])
+
+case class MatrixRule(carryOvers:List[SectionCarryOver], decision:MatrixDecision)
+
