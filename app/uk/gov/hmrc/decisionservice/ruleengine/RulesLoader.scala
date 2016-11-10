@@ -11,8 +11,7 @@ case class RulesFileMetaData(values:List[String], results:List[String], path:Str
 
 trait RulesLoader {
   type ValueType
-  type Rule  <: { def values:List[ValueType]; def result:RuleResult }
-  type RuleResult
+  type Rule  <: { def values:List[ValueType] }
 
   val Separator = ','
 
@@ -45,7 +44,6 @@ trait RulesLoader {
 object SectionRulesLoader extends RulesLoader {
   type ValueType = String
   type Rule = SectionRule
-  type RuleResult = SectionCarryOver
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
     val result = SectionCarryOver(tokens.drop(rulesFileMetaData.values.size).head, tokens.last.toBoolean)
@@ -58,7 +56,6 @@ object SectionRulesLoader extends RulesLoader {
 object MatrixRulesLoader extends RulesLoader {
   type ValueType = SectionCarryOver
   type Rule = MatrixRule
-  type RuleResult = MatrixDecision
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):MatrixRule = {
     val result = MatrixDecision(tokens.last)
