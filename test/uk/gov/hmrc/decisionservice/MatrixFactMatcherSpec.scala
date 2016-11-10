@@ -19,7 +19,7 @@ class MatrixFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true )), MatrixDecision("in IR35"))
       )
 
-      val response = MatrixFactMatcher.matchMatrixFacts(matrixFacts, matrixRules)
+      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRules)
 
       response.isRight shouldBe true
       response.map { decision =>
@@ -38,7 +38,7 @@ class MatrixFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true ),SectionCarryOver("low" , true )), MatrixDecision("out of IR35"))
       )
 
-      val response = MatrixFactMatcher.matchMatrixFacts(matrixFacts, matrixRules)
+      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRules)
 
       response.isRight shouldBe true
       response.map { decision =>

@@ -8,12 +8,16 @@ import scala.annotation.tailrec
 
 
 
-object SectionFactMatcher {
+trait FactMatcher {
+  type ValueType
+  type Facts <: { def values:List[ValueType]}
+  type Rule  <: { def values:List[ValueType]; def result:RuleResult}
+  type RuleResult
 
-  def matchSectionFacts(facts: SectionFacts, rules: SectionRules): Xor[DecisionServiceError,SectionCarryOver] =
+  def matchFacts(facts: Facts, rules: List[Rule]): Xor[DecisionServiceError,RuleResult] =
   {
     @tailrec
-    def go(facts: SectionFacts, rules:List[SectionRule]):Xor[DecisionServiceError,SectionCarryOver] = rules match {
+    def go(facts: Facts, rules:List[Rule]):Xor[DecisionServiceError,RuleResult] = rules match {
       case Nil => Xor.left(RulesFileError("no match found"))
       case rule :: xs =>
         if (!validateFacts(facts, rule))
@@ -26,22 +30,41 @@ object SectionFactMatcher {
         }
     }
 
-    def validateFacts(facts: SectionFacts, rule:SectionRule):Boolean = facts.interview.size == rule.answers.size
+    def validateFacts(facts: Facts, rule:Rule):Boolean = facts.values.size == rule.values.size
 
-    def factMatches(facts: SectionFacts, rule:SectionRule):Option[SectionCarryOver] = {
-      val factAnswers = facts.interview.map(_.answer)
-      factAnswers.zip(rule.answers).filterNot(equivalent(_)) match {
+    def factMatches(facts: Facts, rule:Rule):Option[RuleResult] = {
+      facts.values.zip(rule.values).filterNot(equivalent(_)) match {
         case Nil => Some(rule.result)
         case _ => None
       }
     }
 
-    def equivalent(p:(String,String)):Boolean = p match {
-      case (a,b) => a.toLowerCase == b.toLowerCase || a.isEmpty || b.isEmpty
-    }
-
-    go(facts, rules.rows)
-
+    go(facts, rules)
   }
 
+  def equivalent(p:(ValueType,ValueType)):Boolean
+}
+
+
+object SectionFactMatcher extends FactMatcher {
+  type ValueType = String
+  type Facts = SectionFacts
+  type Rule = SectionRule
+  type RuleResult = SectionCarryOver
+
+  def equivalent(p:(String,String)):Boolean = p match {
+    case (a,b) => a.toLowerCase == b.toLowerCase || a.isEmpty || b.isEmpty
+  }
+}
+
+
+object MatrixFactMatcher extends FactMatcher {
+  type ValueType = SectionCarryOver
+  type Facts = MatrixFacts
+  type Rule = MatrixRule
+  type RuleResult = MatrixDecision
+
+  def equivalent(p:(SectionCarryOver,SectionCarryOver)):Boolean = p match {
+    case (a,b) => a == b || a.value.isEmpty || b.value.isEmpty
+  }
 }
