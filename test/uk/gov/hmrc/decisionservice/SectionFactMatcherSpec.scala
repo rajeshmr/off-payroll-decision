@@ -1,6 +1,5 @@
 package uk.gov.hmrc.decisionservice
 
-import cats.data.Xor
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
@@ -14,15 +13,15 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       val fact = SectionFacts(List(
         SectionFact("question1", "yes"),
         SectionFact("question2", "no"),
-        SectionFact("question3", "yes")), "BusinessStructure")
-      val rule = SectionRules(List(
+        SectionFact("question3", "yes")),"BusinessStructure")
+      val rules = List(
         SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
         SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
         SectionRule(List("yes","no" ,"yes"), SectionCarryOver("low"   , true)),
         SectionRule(List("no" ,""   ,"yes"), SectionCarryOver("low"   , false))
-      ))
+      )
 
-      val response = SectionFactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
+      val response = SectionFactMatcher.matchFacts(fact, rules)
 
       response.isRight shouldBe true
       response.map { sectionResult =>
@@ -34,14 +33,14 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       val fact = SectionFacts(List(
         SectionFact("question1", "yes"),
         SectionFact("question3", "yes")), "BusinessStructure")
-      val rule = SectionRules(List(
+      val rules = List(
         SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
         SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
         SectionRule(List("yes","no" ,"yes"), SectionCarryOver("low"   , true)),
         SectionRule(List("no" ,""   ,"yes"), SectionCarryOver("low"   , false))
-      ))
+      )
 
-      val response = SectionFactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
+      val response = SectionFactMatcher.matchFacts(fact, rules)
 
       response.isLeft shouldBe true
       response.leftMap { error =>
@@ -53,13 +52,13 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionFact("question1", "yes"),
         SectionFact("question2", "no"),
         SectionFact("question3", "yes")), "BusinessStructure")
-      val rule = SectionRules(List(
+      val rules = List(
         SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
         SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
         SectionRule(List("no" ,""   ,"yes"), SectionCarryOver("low"   , false))
-      ))
+      )
 
-      val response = SectionFactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
+      val response = SectionFactMatcher.matchFacts(fact:SectionFacts, rules)
 
       response.isLeft shouldBe true
       response.leftMap { error =>
