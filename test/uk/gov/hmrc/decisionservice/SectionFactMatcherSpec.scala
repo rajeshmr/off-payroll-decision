@@ -4,7 +4,7 @@ import cats.data.Xor
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.ruleengine.FactMatcher
+import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
@@ -22,7 +22,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("no" ,""   ,"yes"), SectionCarryOver("low"   , false))
       ))
 
-      val response = FactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
+      val response = SectionFactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
 
       response.isRight shouldBe true
       response.map { sectionResult =>
@@ -41,7 +41,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("no" ,""   ,"yes"), SectionCarryOver("low"   , false))
       ))
 
-      val response = FactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
+      val response = SectionFactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
 
       response.isLeft shouldBe true
       response.leftMap { error =>
@@ -59,7 +59,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("no" ,""   ,"yes"), SectionCarryOver("low"   , false))
       ))
 
-      val response = FactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
+      val response = SectionFactMatcher.matchSectionFacts(fact:SectionFacts, rule:SectionRules)
 
       response.isLeft shouldBe true
       response.leftMap { error =>

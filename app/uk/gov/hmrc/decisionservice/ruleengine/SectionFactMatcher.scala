@@ -6,7 +6,9 @@ import uk.gov.hmrc.decisionservice.model._
 
 import scala.annotation.tailrec
 
-object FactMatcher {
+
+
+object SectionFactMatcher {
 
   def matchSectionFacts(facts: SectionFacts, rules: SectionRules): Xor[DecisionServiceError,SectionCarryOver] =
   {
@@ -41,19 +43,5 @@ object FactMatcher {
     go(facts, rules.rows)
 
   }
-
-
-  /**
-    * matrix
-    */
-
-
-
-
-
-  def matchMatrixFacts(matrixFacts:MatrixFacts, matrixRules:List[MatrixRule]): Xor[DecisionServiceError,MatrixDecision] = {
-    Xor.right(MatrixDecision("out of IR35"))
-  }
-
 
 }
