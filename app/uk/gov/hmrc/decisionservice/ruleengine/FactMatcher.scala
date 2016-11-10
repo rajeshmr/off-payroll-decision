@@ -8,25 +8,28 @@ import scala.annotation.tailrec
 
 object FactMatcher {
 
-  def matchSectionFact(fact: Fact, rule: Rule): Xor[DecisionServiceError,SectionResult] =
+  def matchSectionFacts(facts: SectionFacts, rules: SectionRules): Xor[DecisionServiceError,SectionCarryOver] =
   {
     @tailrec
-    def go(factAnswers:List[String], ruleRows:List[RuleRow]):Xor[DecisionServiceError,SectionResult] = ruleRows match {
+    def go(facts: SectionFacts, rules:List[SectionRule]):Xor[DecisionServiceError,SectionCarryOver] = rules match {
       case Nil => Xor.left(RulesFileError("no match found"))
-      case x :: xs =>
-        if (factAnswers.size != x.answers.size)
+      case rule :: xs =>
+        if (!validateFacts(facts, rule))
           Xor.left(FactError("incorrect fact"))
         else {
-          factMatches(factAnswers, x) match {
+          factMatches(facts, rule) match {
             case Some(result) => Xor.right(result)
-            case None => go(factAnswers, xs)
+            case None => go(facts, xs)
           }
         }
     }
 
-    def factMatches(factAnswers:List[String], ruleRow:RuleRow):Option[SectionResult] = {
-      factAnswers.zip(ruleRow.answers).filterNot(equivalent(_)) match {
-        case Nil => Some(ruleRow.result)
+    def validateFacts(facts: SectionFacts, rule:SectionRule):Boolean = facts.interview.size == rule.answers.size
+
+    def factMatches(facts: SectionFacts, rule:SectionRule):Option[SectionCarryOver] = {
+      val factAnswers = facts.interview.map(_.answer)
+      factAnswers.zip(rule.answers).filterNot(equivalent(_)) match {
+        case Nil => Some(rule.result)
         case _ => None
       }
     }
@@ -35,7 +38,7 @@ object FactMatcher {
       case (a,b) => a.toLowerCase == b.toLowerCase || a.isEmpty || b.isEmpty
     }
 
-    go(fact.interviewSection.map(_.answer), rule.rows)
+    go(facts, rules.rows)
 
   }
 
