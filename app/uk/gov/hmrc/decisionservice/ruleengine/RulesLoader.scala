@@ -1,9 +1,7 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import java.io.{File, FileInputStream, InputStream}
-
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.model.{RulesFileLoadError, SectionCarryOver, SectionRule}
+import uk.gov.hmrc.decisionservice.model.{MatrixDecision, _}
 
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
@@ -50,7 +48,21 @@ object SectionRulesLoader extends RulesLoader {
   type RuleResult = SectionCarryOver
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
-    SectionRule(tokens.take(rulesFileMetaData.values.size),
-      SectionCarryOver(tokens.drop(rulesFileMetaData.values.size).head, tokens.last.toBoolean))
+    val result = SectionCarryOver(tokens.drop(rulesFileMetaData.values.size).head, tokens.last.toBoolean)
+    val values = tokens.take(rulesFileMetaData.values.size)
+    SectionRule(values, result)
+  }
+}
+
+
+object MatrixRulesLoader extends RulesLoader {
+  type ValueType = SectionCarryOver
+  type Rule = MatrixRule
+  type RuleResult = MatrixDecision
+
+  def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):MatrixRule = {
+    val result = MatrixDecision(tokens.last)
+    val values = tokens.take(tokens.size-1).map(SectionCarryOver(_,false))
+    MatrixRule(values, result)
   }
 }

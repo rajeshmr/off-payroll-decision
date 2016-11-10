@@ -9,10 +9,13 @@ import uk.gov.hmrc.play.test.UnitSpec
 class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
 
   val csvFilePath = "/business_structure.csv"
+  val csvFilePathError = "/business_structure_error.csv"
+  val csvMetadata = RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath)
+  val csvMetadataError = RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePathError)
 
   "section rules loader" should {
-    "load rules from a csv file" in {
-      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath))
+    "load section rules from a csv file" in {
+      val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { rules =>
         rules should have size (4)
@@ -25,12 +28,19 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
         error shouldBe a [RulesFileLoadError]
       }
     }
+    "return error if file contains invalid data" in {
+      val maybeRules = SectionRulesLoader.load(csvMetadataError)
+      maybeRules.isLeft shouldBe true
+      maybeRules.leftMap { error =>
+        error shouldBe a [RulesFileLoadError]
+      }
+    }
     "provide valid input for an inference against fact" in {
       val fact = SectionFacts(List(
         SectionFact("question1", "yes"),
         SectionFact("question2", "no"),
         SectionFact("question3", "yes")),"BusinessStructure")
-      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath))
+      val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { rules =>
         rules should have size (4)

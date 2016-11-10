@@ -11,11 +11,11 @@ class MatrixFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
   "matrix fact matcher" should {
     "produce correct result for a sample matrix fact" in {
       val matrixFacts = MatrixFacts(List(
-        MatrixFact("BusinessStructure", SectionCarryOver("high", true)), MatrixFact("Substitute", SectionCarryOver("low" , false))
+        MatrixFact("BusinessStructure", SectionCarryOver("high", true)), MatrixFact("Substitute", SectionCarryOver("high" , false))
       ))
       val matrixRules = List(
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false)), MatrixDecision("out of IR35")),
+        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high", false)), MatrixDecision("out of IR35")),
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true )), MatrixDecision("in IR35"))
       )
 
@@ -33,8 +33,8 @@ class MatrixFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
         MatrixFact("FinancialRisk", SectionCarryOver("" , false))
       ))
       val matrixRules = List(
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , true ),SectionCarryOver("low" , true )), MatrixDecision("self employed")),
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("" , true )), MatrixDecision("in IR35")),
+        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high" , true ),SectionCarryOver("" , true )), MatrixDecision("self employed")),
+        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true ),SectionCarryOver("low" , true )), MatrixDecision("out of IR35"))
       )
 
