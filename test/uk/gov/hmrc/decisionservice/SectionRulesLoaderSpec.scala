@@ -17,8 +17,8 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
     "load section rules from a csv file" in {
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
-      maybeRules.map { rules =>
-        rules should have size (4)
+      maybeRules.map { ruleset =>
+        ruleset.rules should have size (4)
       }
     }
     "return error if file is not found" in {
@@ -42,9 +42,9 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionFact("question3", "yes")),"BusinessStructure")
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
-      maybeRules.map { rules =>
-        rules should have size (4)
-        val response = SectionFactMatcher.matchFacts(fact, rules)
+      maybeRules.map { ruleset =>
+        ruleset.rules should have size (4)
+        val response = SectionFactMatcher.matchFacts(fact, ruleset.rules)
         response.isRight shouldBe true
         response.map { sectionResult =>
           sectionResult.value should equal("low")
