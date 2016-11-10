@@ -8,7 +8,7 @@ import scala.annotation.tailrec
 
 
 
-trait FactMatcher {
+sealed trait FactMatcher {
   type ValueType
   type Facts <: { def values:List[ValueType]}
   type Rule  <: { def values:List[ValueType]; def result:RuleResult}
