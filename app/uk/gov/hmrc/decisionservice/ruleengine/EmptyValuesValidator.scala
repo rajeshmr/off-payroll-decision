@@ -19,7 +19,7 @@ trait EmptyValuesValidator {
   def rulesMaxEmptySet(rules: List[Rule]):Set[Int] = {
     def ruleEmptySet(rules: Rule):Set[Int] = rules.values.zipWithIndex.collect { case (a,i) if(valueEmpty(a)) => i }.toSet
     val sets = for { r <- rules } yield { ruleEmptySet(r) }
-    sets.foldLeft(Set[Int]())((a:Set[Int],b) => a ++ b)
+    sets.foldLeft(Set[Int]())((a,b) => a ++ b)
   }
 
   def valueEmpty(v:ValueType):Boolean
