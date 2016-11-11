@@ -53,8 +53,10 @@ object SectionFactMatcher extends FactMatcher {
   type RuleResult = SectionCarryOver
 
   def equivalent(p:(String,String)):Boolean = p match {
-    case (a,b) => a.toLowerCase == b.toLowerCase || a.isEmpty || b.isEmpty
+    case (a,b) => a.toLowerCase == b.toLowerCase || valueEmpty(b)
   }
+
+  def valueEmpty(s:String) = s.isEmpty
 }
 
 
@@ -65,6 +67,8 @@ object MatrixFactMatcher extends FactMatcher {
   type RuleResult = MatrixDecision
 
   def equivalent(p:(SectionCarryOver,SectionCarryOver)):Boolean = p match {
-    case (a,b) => a.value == b.value || a.value.isEmpty || b.value.isEmpty
+    case (a,b) => a.value == b.value || valueEmpty(b)
   }
+
+  def valueEmpty(v:SectionCarryOver) = v.value.isEmpty
 }

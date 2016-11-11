@@ -13,7 +13,7 @@ case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String){
 
 trait RulesLoader {
   type ValueType
-  type Rule  <: { def values:List[ValueType] }
+  type Rule
   type RuleSet
 
   val Separator = ','
@@ -33,8 +33,7 @@ trait RulesLoader {
           })
           createRuleSet(rules, headings)
         }
-      }
-      match {
+      } match {
         case Success(content) => Xor.right(content)
         case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
       }
