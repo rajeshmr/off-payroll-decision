@@ -10,8 +10,8 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
 
   val csvFilePath = "/business_structure.csv"
   val csvFilePathError = "/business_structure_error.csv"
-  val csvMetadata = RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath)
-  val csvMetadataError = RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePathError)
+  val csvMetadata = RulesFileMetaData(3, 2, csvFilePath)
+  val csvMetadataError = RulesFileMetaData(3, 2, csvFilePathError)
 
   "section rules loader" should {
     "load section rules from a csv file" in {
@@ -22,7 +22,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       }
     }
     "return error if file is not found" in {
-      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath + "xx"))
+      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(3, 2, csvFilePath + "xx"))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]

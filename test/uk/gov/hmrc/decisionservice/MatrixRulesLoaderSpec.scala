@@ -10,19 +10,20 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
 
   val csvFilePath = "/matrix.csv"
   val csvFilePathError = "/matrix_error.csv"
-  val csvMetadata = RulesFileMetaData(List("Section1", "Section2"), List("Decision"), csvFilePath)
-  val csvMetadataError = RulesFileMetaData(List("Section1", "Section2"), List("Decision"), csvFilePathError)
+  val csvMetadata = RulesFileMetaData(2, 1, csvFilePath)
+  val csvMetadataError = RulesFileMetaData(2, 1, csvFilePathError)
 
   "matrix rules loader" should {
     "load matrix rules from a csv file" in {
       val maybeRules = MatrixRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
-        ruleset.rules should have size (3)
+        ruleset.rules should have size 3
+        ruleset.headings should have size 3
       }
     }
     "return error if file is not found" in {
-      val maybeRules = MatrixRulesLoader.load(RulesFileMetaData(List("Section1","Section2"), List("Decision"), csvFilePath + "xx"))
+      val maybeRules = MatrixRulesLoader.load(RulesFileMetaData(2, 1, csvFilePath + "xx"))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
@@ -42,7 +43,8 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
       val maybeRules = MatrixRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
-        ruleset.rules should have size (3)
+        ruleset.rules should have size 3
+        ruleset.headings should have size 3
         val response = MatrixFactMatcher.matchFacts(matrixFacts, ruleset.rules)
         response.isRight shouldBe true
         response.map { decision =>
