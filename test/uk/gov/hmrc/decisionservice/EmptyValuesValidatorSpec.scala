@@ -2,14 +2,23 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
+import uk.gov.hmrc.decisionservice.model.{SectionCarryOver, _}
+import uk.gov.hmrc.decisionservice.ruleengine.{EmptyValuesValidator, MatrixFactMatcher, SectionFactMatcher}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
+class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
 
-  "section fact with empty values matcher" should {
-    "produce fact error when fact is missing answers for which there is no match and corresponding rule values are not all empty in any of the rules" in {
+  object SectionEmptyValuesValidator extends EmptyValuesValidator {
+    type ValueType = String
+    type Facts = SectionFacts
+    type Rule = SectionRule
+    type RuleResult = SectionCarryOver
+
+    def valueEmpty(s: String) = s.isEmpty
+  }
+
+  "empty values validator" should {
+    "produce fact error if FactsEmptySet is a subset of MaximumRulesEmptySet" in {
       val fact = SectionFacts(List(
         SectionFact("question1", "yes"),
         SectionFact("question2", ""),
@@ -20,13 +29,10 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         SectionRule(List("no" ,"yes",""   ), SectionCarryOver("low"   , false))
       )
 
-      val response = SectionFactMatcher.matchFacts(fact:SectionFacts, rules)
-      response.isLeft shouldBe true
-      response.leftMap { error =>
-        error shouldBe a [FactError]
-      }
+      val error = SectionEmptyValuesValidator.noMatchError(fact,rules)
+      error shouldBe a [FactError]
     }
-    "produce rules error when fact is missing answers for which there is no match but corresponding rule values are empty in at least one rule" in {
+    "produce rules error if FactsEmptySet is a superset of MaximumRulesEmptySet" in {
       val fact = SectionFacts(List(
         SectionFact("question1", "yes"),
         SectionFact("question2", ""),
@@ -37,11 +43,8 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         SectionRule(List("no" ,""   ,""   ), SectionCarryOver("low"   , false))
       )
 
-      val response = SectionFactMatcher.matchFacts(fact:SectionFacts, rules)
-      response.isLeft shouldBe true
-      response.leftMap { error =>
-        error shouldBe a [RulesFileError]
-      }
+      val error = SectionEmptyValuesValidator.noMatchError(fact,rules)
+      error shouldBe a [RulesFileError]
     }
   }
 
