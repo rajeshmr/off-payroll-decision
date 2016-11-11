@@ -74,7 +74,7 @@ Requests use the HTTP `POST` method
 | Attribute        | Required           | Description                                                          |
 | :---------------- |:------------------:| :--------------------------------------------------------------------|
 | version          | true               | The version of the QuestionSet being used and therefore the endpoint |
-| sections         | true               | An array of completed questions. _Note:_ does not need to contain all the questions. Once all the questions are present in this array then a Decision response will be present. Though depending on the QuestionSet a Decision can be arrived at before all questions are present, this is know as a 'hard-exit' |
+| sections         | true               | An array of completed questions. _Note:_ does not need to contain all the questions. Once all the questions are present in this array then a Decision response will be present. Though depending on the QuestionSet a Decision can be arrived at before all questions are present, this is known as a 'hard-exit' |
 
 
 ## Response
