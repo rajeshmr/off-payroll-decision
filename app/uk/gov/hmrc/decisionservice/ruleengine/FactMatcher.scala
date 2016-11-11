@@ -9,16 +9,17 @@ import scala.annotation.tailrec
 
 
 sealed trait FactMatcher {
+  self:EmptyValuesValidator =>
   type ValueType
   type Facts <: { def values:List[ValueType] }
   type Rule  <: { def values:List[ValueType]; def result:RuleResult }
   type RuleResult
 
-  def matchFacts(facts: Facts, rules: List[Rule]): Xor[DecisionServiceError,RuleResult] =
+  def matchFacts(facts: Facts, inputRules: List[Rule]): Xor[DecisionServiceError,RuleResult] =
   {
     @tailrec
     def go(facts: Facts, rules:List[Rule]):Xor[DecisionServiceError,RuleResult] = rules match {
-      case Nil => Xor.left(RulesFileError("no match found"))
+      case Nil => Xor.left(noMatchError(facts, inputRules))
       case rule :: xs =>
         if (!validateFacts(facts, rule))
           Xor.left(FactError("incorrect fact"))
@@ -39,14 +40,14 @@ sealed trait FactMatcher {
       }
     }
 
-    go(facts, rules)
+    go(facts, inputRules)
   }
 
   def equivalent(p:(ValueType,ValueType)):Boolean
 }
 
 
-object SectionFactMatcher extends FactMatcher {
+object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
   type ValueType = String
   type Facts = SectionFacts
   type Rule = SectionRule
@@ -60,7 +61,7 @@ object SectionFactMatcher extends FactMatcher {
 }
 
 
-object MatrixFactMatcher extends FactMatcher {
+object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
   type ValueType = SectionCarryOver
   type Facts = MatrixFacts
   type Rule = MatrixRule
