@@ -23,17 +23,16 @@ trait RulesLoader {
   def load(rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
       Try {
         val is = getClass.getResourceAsStream(rulesFileMetaData.path)
-        val ruleSet = using(Source.fromInputStream(is)) { res =>
-          val (h::t) = res.getLines.toList
-          val headings = h.split(Separator).map(_.trim).toList
-          val rules = (for (line <- t) yield {
-            line.split(Separator).map(_.trim).toList match {
-              case tokens if isValidRule(tokens, rulesFileMetaData) => createRule(tokens, rulesFileMetaData)
+        using(Source.fromInputStream(is)) { res =>
+          val tokens = res.getLines.map(_.split(Separator).map(_.trim).toList).toList
+          val (headings::rest) = tokens
+          val rules = (for (lineTokens <- rest) yield {
+            lineTokens match {
+              case t if isValidRule(t, rulesFileMetaData) => createRule(t, rulesFileMetaData)
             }
           })
           createRuleSet(rules, headings)
         }
-        ruleSet
       }
       match {
         case Success(content) => Xor.right(content)
