@@ -1,0 +1,5 @@
+Q1 , Q2  , Q3  , CarryOver , Exit
+yes, yes , yes , high      ,
+yes, no  , no  , medium    , false
+yes, no  , yes ,           , true
+no ,     , yes , low       , false
