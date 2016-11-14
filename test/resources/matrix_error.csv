@@ -1,4 +1,4 @@
-BusinessStructure, Substitute , Decision
+BusinessStructure, Substitute
 high             , low        , in IR35
 high             , low        , out of IR35, extra column
 medium           , high       , in IR35

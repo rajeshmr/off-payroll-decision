@@ -10,16 +10,17 @@ class MatrixFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
 
   "matrix fact matcher" should {
     "produce correct result for a sample matrix fact" in {
-      val matrixFacts = MatrixFacts(List(
-        MatrixFact("BusinessStructure", SectionCarryOver("high", true)), MatrixFact("Substitute", SectionCarryOver("high" , false))
-      ))
+      val matrixFacts = Map(
+        ("BusinessStructure" -> SectionCarryOver("high", true)), ("Substitute" -> SectionCarryOver("high" , false))
+      )
       val matrixRules = List(
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high", false)), MatrixDecision("out of IR35")),
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true )), MatrixDecision("in IR35"))
       )
+      val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute"), matrixRules)
 
-      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRules)
+      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRuleSet)
 
       response.isRight shouldBe true
       response.map { decision =>
@@ -27,18 +28,19 @@ class MatrixFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
       }
     }
     "produce correct result for a partial fact" in {
-      val matrixFacts = MatrixFacts(List(
-        MatrixFact("BusinessStructure", SectionCarryOver("high", true)),
-        MatrixFact("Substitute", SectionCarryOver("low" , false)),
-        MatrixFact("FinancialRisk", SectionCarryOver("" , false))
-      ))
+      val matrixFacts = Map(
+        ("BusinessStructure" -> SectionCarryOver("high", true)),
+        ("Substitute" -> SectionCarryOver("low" , false)),
+        ("FinancialRisk" -> SectionCarryOver("" , false))
+      )
       val matrixRules = List(
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high" , true ),SectionCarryOver("" , true )), MatrixDecision("self employed")),
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("" , true )), MatrixDecision("in IR35")),
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true ),SectionCarryOver("low" , true )), MatrixDecision("out of IR35"))
       )
+      val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 
-      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRules)
+      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRuleSet)
 
       response.isRight shouldBe true
       response.map { decision =>
