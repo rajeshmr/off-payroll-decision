@@ -10,20 +10,19 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
 
   val csvFilePath = "/business_structure.csv"
   val csvFilePathError = "/business_structure_error.csv"
-  val csvMetadata = RulesFileMetaData(3, 2, csvFilePath)
-  val csvMetadataError = RulesFileMetaData(3, 2, csvFilePathError)
+  val csvMetadata = RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath, 4, 2)
+  val csvMetadataError = RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePathError, 4, 2)
 
   "section rules loader" should {
     "load section rules from a csv file" in {
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
-        ruleset.rules should have size 4
-        ruleset.headings should have size 5
+        ruleset.rules should have size (4)
       }
     }
     "return error if file is not found" in {
-      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(3, 2, csvFilePath + "xx"))
+      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(List("Q1","Q2","Q3"), List("CO1","CO2"), csvFilePath + "xx", 4, 2))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
@@ -44,8 +43,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
-        ruleset.rules should have size 4
-        ruleset.headings should have size 5
+        ruleset.rules should have size (4)
         val response = SectionFactMatcher.matchFacts(fact, ruleset.rules)
         response.isRight shouldBe true
         response.map { sectionResult =>
