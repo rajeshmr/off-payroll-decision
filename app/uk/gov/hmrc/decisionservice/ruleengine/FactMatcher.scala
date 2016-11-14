@@ -11,36 +11,37 @@ import scala.annotation.tailrec
 sealed trait FactMatcher {
   self:EmptyValuesValidator =>
   type ValueType
-  type Facts <: { def values:List[ValueType] }
   type Rule  <: { def values:List[ValueType]; def result:RuleResult }
   type RuleResult
+  type RuleSet <: { def headings:List[String]; def rules:List[Rule] }
 
-  def matchFacts(facts: Facts, inputRules: List[Rule]): Xor[DecisionServiceError,RuleResult] =
+  def matchFacts(facts: Facts, ruleSet: RuleSet): Xor[DecisionServiceError,RuleResult] =
   {
     @tailrec
-    def go(facts: Facts, rules:List[Rule]):Xor[DecisionServiceError,RuleResult] = rules match {
-      case Nil => Xor.left(noMatchError(facts, inputRules))
+    def go(factValues: List[ValueType], rules:List[Rule]):Xor[DecisionServiceError,RuleResult] = rules match {
+      case Nil => Xor.left(noMatchError(facts, ruleSet.rules))
       case rule :: xs =>
-        if (!validateFacts(facts, rule))
+        if (!validateFacts(factValues, rule))
           Xor.left(FactError("incorrect fact"))
         else {
-          factMatches(facts, rule) match {
+          factMatches(factValues, rule) match {
             case Some(result) => Xor.right(result)
-            case None => go(facts, xs)
+            case None => go(factValues, xs)
           }
         }
     }
 
-    def validateFacts(facts: Facts, rule:Rule):Boolean = facts.values.size == rule.values.size
+    def validateFacts(factValues: List[ValueType], rule:Rule):Boolean = factValues.size == rule.values.size
 
-    def factMatches(facts: Facts, rule:Rule):Option[RuleResult] = {
-      facts.values.zip(rule.values).filterNot(equivalent(_)) match {
+    def factMatches(factValues: List[ValueType], rule:Rule):Option[RuleResult] = {
+      factValues.zip(rule.values).filterNot(equivalent(_)) match {
         case Nil => Some(rule.result)
         case _ => None
       }
     }
 
-    go(facts, inputRules)
+    val factValues = ruleSet.headings.flatMap(a => facts.get(a))
+    go(factValues, ruleSet.rules)
   }
 
   def equivalent(p:(ValueType,ValueType)):Boolean
@@ -49,9 +50,9 @@ sealed trait FactMatcher {
 
 object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
   type ValueType = String
-  type Facts = SectionFacts
   type Rule = SectionRule
   type RuleResult = SectionCarryOver
+  type RuleSet = SectionRuleSet
 
   def equivalent(p:(String,String)):Boolean = p match {
     case (a,b) => a.toLowerCase == b.toLowerCase || valueEmpty(b)
@@ -63,9 +64,9 @@ object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
 
 object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
   type ValueType = SectionCarryOver
-  type Facts = MatrixFacts
   type Rule = MatrixRule
   type RuleResult = MatrixDecision
+  type RuleSet = MatrixRuleSet
 
   def equivalent(p:(SectionCarryOver,SectionCarryOver)):Boolean = p match {
     case (a,b) => a.value == b.value || valueEmpty(b)
