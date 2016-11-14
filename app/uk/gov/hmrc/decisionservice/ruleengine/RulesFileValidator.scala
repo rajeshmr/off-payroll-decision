@@ -5,6 +5,10 @@ import uk.gov.hmrc.decisionservice.model.RulesFileError
 
 /**
   * Created by habeeb on 11/11/2016.
+  *
+  * FIXME: this class is to be refactored!!
+  *
+  *
   */
 sealed trait RulesFileValidator {
 
@@ -13,29 +17,32 @@ sealed trait RulesFileValidator {
   var possibleDecisionValues = List("in ir35", "outside ir35", "employed", "self-employed", "unknown")
 
 
-  def validateRuleRow(rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit]
+  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit]
 
   def isValidSize(row: List[String], headerSize: Int): Boolean = {
     return row.size == headerSize
   }
 
-  def isValidAnswer(answer: String, possibleValues:List[String]): Boolean = {
-    return possibleValues.contains(answer.toLowerCase) || answer.equals("")
+  def validateAnswer(answer: String, possibleValues:List[String], errorMessage:String): Xor[RulesFileError, Unit] = {
+
+    if(possibleValues.contains(answer.toLowerCase) || answer.equals("")) {
+      return Xor.right(Unit)
+    }
+    else
+      return Xor.left(RulesFileError(errorMessage))
   }
 
-  def validateResultColumnPair(resultColumnPair: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = {
+  def validateResultColumnPair(resultColumnPair: List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
 
-    //FIXME refactor
     val carryOverValue: String = resultColumnPair.head.trim
     val exit: String = resultColumnPair.last.trim
 
     if (exit.isEmpty || exit.equals("false")) {
       if (possibleCarryOverValues.contains(carryOverValue.toLowerCase) || carryOverValue.isEmpty) {
-        //FIXME refactor
         return Xor.right(Unit)
       }
       else {
-        return Xor.left(RulesFileError("Invalid CarryOver value for row x")) //FIXME what line has the problem???
+        return Xor.left(RulesFileError("Invalid CarryOver value for row "+rowNumber))
       }
     }
     else if (exit.equals("true")) {
@@ -43,40 +50,50 @@ sealed trait RulesFileValidator {
         return  Xor.right(Unit)
       }
       else {
-        return  Xor.left(RulesFileError("Invalid CarryOver value for row x")) //FIXME what line has the problem???
+        return  Xor.left(RulesFileError("Invalid CarryOver value for row "+rowNumber))
       }
     }
     else
-      return Xor.left(RulesFileError("Invalid Exit value for row x")) //FIXME what line has the problem???
+      return Xor.left(RulesFileError("Invalid Exit value for row "+rowNumber))
   }
 
-  def validateColumnHeaders(rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = {
-    val row: List[String] = rulesFileMetaData.values ::: rulesFileMetaData.results
-
-    if (!isValidSize(row, rulesFileMetaData.numOfAnswers + rulesFileMetaData.numOfResultColumns)) {
+  def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = {
+    if (!isValidSize(row, rulesFileMetaData.numCols)) {
       return Xor.left(RulesFileError("Column header size does not match metadata"))
     }
 
     return Xor.right(Unit)
   }
 
+  def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileError, Unit] = {
+    if (!isValidSize(row, rulesFileMetaData.numCols)) {
+      return Xor.left(RulesFileError("Row size does not match metadata on row "+ rowNumber))
+    }
+    else
+      {
+        return Xor.right(Unit)
+      }
+  }
+
 }
 
 object SectionRuleValidator extends RulesFileValidator {
 
-  def validateRuleRow(rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = {
-    val row: List[String] = rulesFileMetaData.values ::: rulesFileMetaData.results
-    if (!isValidSize(row, rulesFileMetaData.numOfAnswers + rulesFileMetaData.numOfResultColumns)) {
-      return Xor.left(RulesFileError("Column header size does not match metadata"))
+  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
+    val result: Xor[RulesFileError, Unit] = validateRowSize(row, rulesFileMetaData, rowNumber)
+    if(result.isLeft){
+      return result
     }
 
-    for (answer <- rulesFileMetaData.values ) {
-      if (!isValidAnswer(answer.trim, possibleAnswers)) {
-        return Xor.left(RulesFileError("Invalid answer"))
-      }
+    val tuple: (List[String], List[String]) = row.splitAt(rulesFileMetaData.valueCols)
+
+    val errorMessage: String = "Invalid answer value on row " + rowNumber
+    for (answer <- tuple._1) {
+      val xor: Xor[RulesFileError, Unit] = validateAnswer(answer.trim, possibleAnswers, errorMessage)
+      if(xor.isLeft) return xor
     }
 
-    return validateResultColumnPair(rulesFileMetaData.results, rulesFileMetaData)
+    return validateResultColumnPair(tuple._2, rulesFileMetaData, rowNumber)
 
   }
 
@@ -84,25 +101,24 @@ object SectionRuleValidator extends RulesFileValidator {
 
 object MatrixRuleValidator extends RulesFileValidator {
 
-  def validateRuleRow(rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = {
-    val row: List[String] = rulesFileMetaData.values ::: rulesFileMetaData.results
-    if (!isValidSize(row, rulesFileMetaData.numOfAnswers + rulesFileMetaData.numOfResultColumns)) {
-      return Xor.left(RulesFileError("Column header size does not match metadata"))
+  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
+    val result: Xor[RulesFileError, Unit] = validateRowSize(row, rulesFileMetaData, rowNumber)
+    if(result.isLeft){
+      return result
     }
 
-    for (answer <- rulesFileMetaData.values ) {
-      if (!isValidAnswer(answer.trim, possibleCarryOverValues)) {
-        return Xor.left(RulesFileError("Invalid answer"))
-      }
+    val tuple: (List[String], List[String]) = row.splitAt(rulesFileMetaData.valueCols)
+
+    val errorMessage: String = "Invalid CarryOver value on row " + rowNumber
+    for (answer <- tuple._1) {
+      val xor: Xor[RulesFileError, Unit] = validateAnswer(answer.trim, possibleCarryOverValues, errorMessage)
+      if(xor.isLeft) return xor
     }
 
-    val decision: String = rulesFileMetaData.results.head
-    if (!isValidAnswer(decision, possibleDecisionValues)) {
-      return Xor.left(RulesFileError("Invalid Decision value on row x"))
-    }
-    else{
-      return Xor.right(Unit)
-    }
+    val decision: String = tuple._2.head
+    val message: String = "Invalid Decision value on row " + rowNumber
+
+    return validateAnswer(decision, possibleDecisionValues, message)
 
   }
 
