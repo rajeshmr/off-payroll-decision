@@ -10,18 +10,19 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
 
   "matrix fact with empty values matcher" should {
     "produce fact error when fact is missing answers for which rule values are not empty" in {
-      val matrixFacts = MatrixFacts(List(
-        MatrixFact("BusinessStructure", SectionCarryOver("high", true)),
-        MatrixFact("Substitute", SectionCarryOver("" , false)),
-        MatrixFact("FinancialRisk", SectionCarryOver("" , false))
-      ))
+      val matrixFacts = Map(
+        ("BusinessStructure" -> SectionCarryOver("high", true)),
+        ("Substitute" -> SectionCarryOver("" , false)),
+        ("FinancialRisk" -> SectionCarryOver("" , false))
+      )
       val matrixRules = List(
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high" , true ),SectionCarryOver("low" , true )), MatrixDecision("self employed")),
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true ),SectionCarryOver("low" , true )), MatrixDecision("out of IR35"))
       )
+      val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 
-      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRules)
+      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRuleSet)
       println(response)
       response.isLeft shouldBe true
       response.leftMap { error =>
@@ -29,18 +30,19 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
       }
     }
     "produce rules error when fact is missing answers for which there is no match but corresponding rule values are empty in at least one rule" in {
-      val matrixFacts = MatrixFacts(List(
-        MatrixFact("BusinessStructure", SectionCarryOver("high", true)),
-        MatrixFact("Substitute", SectionCarryOver("" , false)),
-        MatrixFact("FinancialRisk", SectionCarryOver("" , false))
-      ))
+      val matrixFacts = Map(
+        ("BusinessStructure" -> SectionCarryOver("high", true)),
+        ("Substitute" -> SectionCarryOver("" , false)),
+        ("FinancialRisk" -> SectionCarryOver("" , false))
+      )
       val matrixRules = List(
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high" , true ),SectionCarryOver("low" , true )), MatrixDecision("self employed")),
         MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
         MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("", true ),SectionCarryOver("" , true )), MatrixDecision("out of IR35"))
       )
+      val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 
-      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRules)
+      val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRuleSet)
       println(response)
       response.isLeft shouldBe true
       response.leftMap { error =>

@@ -4,7 +4,7 @@ import uk.gov.hmrc.decisionservice.model._
 
 trait EmptyValuesValidator {
   type ValueType
-  type Facts <: { def values:List[ValueType] }
+  type Facts = Map[String,ValueType]
   type Rule  <: { def values:List[ValueType]; def result:RuleResult }
   type RuleResult
 

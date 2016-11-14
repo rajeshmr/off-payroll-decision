@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.{MatrixFact, MatrixFacts, RulesFileLoadError, SectionCarryOver}
+import uk.gov.hmrc.decisionservice.model.{RulesFileLoadError, SectionCarryOver}
 import uk.gov.hmrc.decisionservice.ruleengine.{MatrixFactMatcher, MatrixRulesLoader, RulesFileMetaData}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -37,15 +37,15 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
       }
     }
     "provide valid input for an inference against fact" in {
-      val matrixFacts = MatrixFacts(List(
-        MatrixFact("BusinessStructure", SectionCarryOver("high", true)), MatrixFact("Substitute", SectionCarryOver("high" , false))
-      ))
+      val matrixFacts = Map(
+        ("BusinessStructure" -> SectionCarryOver("high", true)), ("Substitute" -> SectionCarryOver("high" , false))
+      )
       val maybeRules = MatrixRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
         ruleset.rules should have size 3
         ruleset.headings should have size 3
-        val response = MatrixFactMatcher.matchFacts(matrixFacts, ruleset.rules)
+        val response = MatrixFactMatcher.matchFacts(matrixFacts, ruleset)
         response.isRight shouldBe true
         response.map { decision =>
           decision.value should equal("out of IR35")

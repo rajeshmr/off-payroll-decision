@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.{RulesFileLoadError, SectionFact, SectionFacts}
+import uk.gov.hmrc.decisionservice.model.RulesFileLoadError
 import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, SectionFactMatcher, SectionRulesLoader}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -37,16 +37,16 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       }
     }
     "provide valid input for an inference against fact" in {
-      val fact = SectionFacts(List(
-        SectionFact("question1", "yes"),
-        SectionFact("question2", "no"),
-        SectionFact("question3", "yes")),"BusinessStructure")
+      val fact = Map(
+        ("Q1" -> "yes"),
+        ("Q2" -> "no"),
+        ("Q3" -> "yes"))
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
         ruleset.rules should have size 4
         ruleset.headings should have size 5
-        val response = SectionFactMatcher.matchFacts(fact, ruleset.rules)
+        val response = SectionFactMatcher.matchFacts(fact, ruleset)
         response.isRight shouldBe true
         response.map { sectionResult =>
           sectionResult.value should equal("low")
