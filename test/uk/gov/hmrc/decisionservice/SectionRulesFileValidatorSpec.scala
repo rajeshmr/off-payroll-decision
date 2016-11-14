@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.{SectionCarryOver, _}
+import uk.gov.hmrc.decisionservice.model.RulesFileError
 import uk.gov.hmrc.decisionservice.ruleengine._
 import uk.gov.hmrc.play.test.UnitSpec
 
