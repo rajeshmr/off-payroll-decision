@@ -19,7 +19,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
         ruleset.rules should have size 4
-        ruleset.headings should have size 5
+        ruleset.headings should have size 3
       }
     }
     "return error if file is not found" in {
@@ -45,7 +45,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
         ruleset.rules should have size 4
-        ruleset.headings should have size 5
+        ruleset.headings should have size 3
         val response = SectionFactMatcher.matchFacts(fact, ruleset)
         response.isRight shouldBe true
         response.map { sectionResult =>

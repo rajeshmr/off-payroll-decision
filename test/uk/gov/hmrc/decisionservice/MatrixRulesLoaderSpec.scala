@@ -19,7 +19,7 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
         ruleset.rules should have size 3
-        ruleset.headings should have size 3
+        ruleset.headings should have size 2
       }
     }
     "return error if file is not found" in {
@@ -44,7 +44,7 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
         ruleset.rules should have size 3
-        ruleset.headings should have size 3
+        ruleset.headings should have size 2
         val response = MatrixFactMatcher.matchFacts(matrixFacts, ruleset)
         response.isRight shouldBe true
         response.map { decision =>
