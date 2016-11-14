@@ -3,6 +3,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model._
+import uk.gov.hmrc.decisionservice.model.rules._
 
 import scala.annotation.tailrec
 

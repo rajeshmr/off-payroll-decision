@@ -1,7 +1,8 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.model.{MatrixDecision, _}
+import uk.gov.hmrc.decisionservice.model.rules._
+import uk.gov.hmrc.decisionservice.model.{_}
 
 import scala.io.Source
 import scala.util.{Failure, Success, Try}

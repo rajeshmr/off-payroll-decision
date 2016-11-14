@@ -2,7 +2,8 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.{SectionCarryOver, _}
+import uk.gov.hmrc.decisionservice.model._
+import uk.gov.hmrc.decisionservice.model.rules.{MatrixDecision, MatrixRule, MatrixRuleSet, SectionCarryOver}
 import uk.gov.hmrc.decisionservice.ruleengine.MatrixFactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
