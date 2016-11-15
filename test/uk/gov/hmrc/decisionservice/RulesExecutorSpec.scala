@@ -19,7 +19,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
       result.isRight shouldBe true
       result map
       { found =>
-        val carryOvers = found collect { case x: CarryOver => x }
+        val carryOvers = found collect { case x: DCarryOver => x }
         val decisions = found collect { case x: Decision => x }
         found should have size (5)
         carryOvers should have size (2)
@@ -39,7 +39,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
       val result = RulesExecutor.analyze(model, "rules-test-emptyvalues-section.xls")
       result.isRight shouldBe true
       result map { found =>
-        val carryOvers = found collect { case x: CarryOver => x }
+        val carryOvers = found collect { case x: DCarryOver => x }
         found should have size (2)
         carryOvers should have size (1)
         (carryOvers map {
@@ -55,7 +55,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
       val result = RulesExecutor.analyze(model, "rules-test-emptyvalues-decision.xls")
       result.isRight shouldBe true
       result map { found =>
-        val carryOvers = found collect { case x: CarryOver => x }
+        val carryOvers = found collect { case x: DCarryOver => x }
         val decisions = found collect { case x: Decision => x }
         found should have size (5)
         carryOvers should have size (2)

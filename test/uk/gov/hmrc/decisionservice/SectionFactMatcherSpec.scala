@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.model.rules.{SectionCarryOver, SectionRule, SectionRuleSet}
+import uk.gov.hmrc.decisionservice.model.rules.{SectionCarryOver, SectionNotValidUseCase, SectionRule, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -12,9 +12,9 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
   "section fact matcher" should {
     "produce correct result for sample facts" in {
       val fact = Map(
-        ("question1" -> "yes"),
-        ("question2" -> "no"),
-        ("question3" -> "yes"))
+        "question1" -> "yes",
+        "question2" -> "no",
+        "question3" -> "yes")
       val rules = List(
         SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
         SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
@@ -33,8 +33,8 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
     }
     "produce error for incorrect (too short) fact" in {
       val fact = Map(
-        ("question1" -> "yes"),
-        ("question3" -> "yes"))
+        "question1" -> "yes",
+        "question3" -> "yes")
       val rules = List(
         SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
         SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
@@ -50,11 +50,11 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         error shouldBe a [FactError]
       }
     }
-    "produce error when match not found" in {
+    "produce 'section not valid use case' result when match not found" in {
       val fact = Map(
-        ("question1" -> "yes"),
-        ("question2" -> "no"),
-        ("question3" -> "yes"))
+        "question1" -> "yes",
+        "question2" -> "no",
+        "question3" -> "yes")
       val rules = List(
         SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
         SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
@@ -64,9 +64,9 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
 
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
 
-      response.isLeft shouldBe true
-      response.leftMap { error =>
-        error shouldBe a [RulesFileError]
+      response.isRight shouldBe true
+      response.map { r =>
+        r shouldBe SectionNotValidUseCase
       }
     }
   }

@@ -68,7 +68,7 @@ object SectionRulesLoader extends RulesLoader {
 
 
 object MatrixRulesLoader extends RulesLoader {
-  type ValueType = SectionCarryOver
+  type ValueType = CarryOver
   type Rule = MatrixRule
   type RuleSet = MatrixRuleSet
 
