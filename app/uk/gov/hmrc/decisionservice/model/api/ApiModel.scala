@@ -8,9 +8,9 @@ case class Section(name:String, facts:Map[String,Boolean])
 case class QuestionSet(version:String, sections:List[Section])
 
 object Section {
-  implicit val factSectionFormat: Format[Section] = Json.format[Section]
+  implicit val sectionFormat: Format[Section] = Json.format[Section]
 }
 
 object QuestionSet {
-  implicit val decisionRequestFormat: Format[QuestionSet] = Json.format[QuestionSet]
+  implicit val questionSetFormat: Format[QuestionSet] = Json.format[QuestionSet]
 }
