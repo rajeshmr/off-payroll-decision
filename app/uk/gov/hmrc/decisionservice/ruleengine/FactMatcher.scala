@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.model.rules._
+import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, _}
 
 import scala.annotation.tailrec
 
@@ -20,7 +20,7 @@ sealed trait FactMatcher {
   {
     @tailrec
     def go(factValues: List[ValueType], rules:List[Rule]):Xor[DecisionServiceError,RuleResult] = rules match {
-      case Nil => Xor.left(noMatchError(facts, ruleSet.rules))
+      case Nil => noMatchResult(facts, ruleSet.rules)
       case rule :: xs =>
         if (!validateFacts(factValues, rule))
           Xor.left(FactError("incorrect fact"))
@@ -52,7 +52,7 @@ sealed trait FactMatcher {
 object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
   type ValueType = String
   type Rule = SectionRule
-  type RuleResult = SectionCarryOver
+  type RuleResult = CarryOver
   type RuleSet = SectionRuleSet
 
   def equivalent(p:(String,String)):Boolean = p match {
@@ -60,18 +60,24 @@ object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
   }
 
   def valueEmpty(s:String) = s.isEmpty
+
+  def notValidUseCase: CarryOver = SectionNotValidUseCase
+
 }
 
 
 object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
-  type ValueType = SectionCarryOver
+  type ValueType = CarryOver
   type Rule = MatrixRule
   type RuleResult = MatrixDecision
   type RuleSet = MatrixRuleSet
 
-  def equivalent(p:(SectionCarryOver,SectionCarryOver)):Boolean = p match {
+  def equivalent(p:(CarryOver,CarryOver)):Boolean = p match {
     case (a,b) => a.value == b.value || valueEmpty(b)
   }
 
-  def valueEmpty(v:SectionCarryOver) = v.value.isEmpty
+  def valueEmpty(v:CarryOver) = v.value.isEmpty
+
+  def notValidUseCase: MatrixDecision = MatrixDecision("NotValidUseCase")
+
 }

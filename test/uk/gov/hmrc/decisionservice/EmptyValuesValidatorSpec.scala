@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.rules.{SectionCarryOver, SectionRule}
+import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.ruleengine.EmptyValuesValidator
 import uk.gov.hmrc.play.test.UnitSpec
@@ -12,9 +12,10 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
   object SectionEmptyValuesValidator extends EmptyValuesValidator {
     type ValueType = String
     type Rule = SectionRule
-    type RuleResult = SectionCarryOver
+    type RuleResult = CarryOver
 
     def valueEmpty(s: String) = s.isEmpty
+    def notValidUseCase: CarryOver = SectionNotValidUseCase
   }
 
   "empty values validator" should {
@@ -29,10 +30,13 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
         SectionRule(List("no" ,"yes",""   ), SectionCarryOver("low"   , false))
       )
 
-      val error = SectionEmptyValuesValidator.noMatchError(fact,rules)
-      error shouldBe a [FactError]
+      val error = SectionEmptyValuesValidator.noMatchResult(fact,rules)
+      error.isLeft should be (true)
+      error.leftMap { e =>
+        e shouldBe a [FactError]
+      }
     }
-    "produce rules error if FactsEmptySet is a superset of MaximumRulesEmptySet" in {
+    "produce 'not valid use case' result if FactsEmptySet is a superset of MaximumRulesEmptySet" in {
       val fact = Map(
         ("question1" -> "yes"),
         ("question2" -> ""),
@@ -43,8 +47,11 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
         SectionRule(List("no" ,""   ,""   ), SectionCarryOver("low"   , false))
       )
 
-      val error = SectionEmptyValuesValidator.noMatchError(fact,rules)
-      error shouldBe a [RulesFileError]
+      val result = SectionEmptyValuesValidator.noMatchResult(fact,rules)
+      result.isRight should be (true)
+      result.map { r =>
+        r shouldBe SectionNotValidUseCase
+      }
     }
   }
 

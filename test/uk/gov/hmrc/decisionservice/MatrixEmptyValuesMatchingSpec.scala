@@ -30,7 +30,7 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
         error shouldBe a [FactError]
       }
     }
-    "produce rules error when fact is missing answers for which there is no match but corresponding rule values are empty in at least one rule" in {
+    "produce 'not valid use case' result when fact is missing answers for which there is no match but corresponding rule values are empty in at least one rule" in {
       val matrixFacts = Map(
         ("BusinessStructure" -> SectionCarryOver("high", true)),
         ("Substitute" -> SectionCarryOver("" , false)),
@@ -45,9 +45,10 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
 
       val response = MatrixFactMatcher.matchFacts(matrixFacts, matrixRuleSet)
       println(response)
-      response.isLeft shouldBe true
-      response.leftMap { error =>
-        error shouldBe a [RulesFileError]
+      response.isRight shouldBe true
+      response.map { r =>
+        r shouldBe a [MatrixDecision]
+        r.value shouldBe "NotValidUseCase"
       }
     }
   }

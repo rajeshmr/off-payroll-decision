@@ -13,6 +13,8 @@ object BusinessStructureCheck extends Properties("business structure check") wit
     print(s.mkString(" "))
   }
 
+//  def expectedResult(m:Map[String,String]):String = if (m.getOrElse("8d","No") == "Yes") "High" else "Low"
+
   val gen = for {
     y <- Gen.listOfN(7, Gen.oneOf[String]("Yes", "No"))
   } yield {
@@ -29,7 +31,8 @@ object BusinessStructureCheck extends Properties("business structure check") wit
         val response = SectionFactMatcher.matchFacts(m, ruleSet)
         response match {
           case Xor.Right(sectionResult) =>
-            sectionResult.exit should equal(true)
+//            sectionResult.value should equal(expectedResult(m))
+            sectionResult.exit should equal(false)
             print(s"    ${sectionResult.value}")
           case Xor.Left(e) =>
             print(s"    $e")

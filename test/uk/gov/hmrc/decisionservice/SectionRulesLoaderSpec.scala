@@ -38,9 +38,9 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
     }
     "provide valid input for an inference against fact" in {
       val fact = Map(
-        ("Q1" -> "yes"),
-        ("Q2" -> "no"),
-        ("Q3" -> "yes"))
+        "Q1" -> "yes",
+        "Q2" -> "no",
+        "Q3" -> "yes")
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleset =>
