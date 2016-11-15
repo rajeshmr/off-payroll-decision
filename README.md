@@ -1,17 +1,5 @@
 
-<<<<<<< HEAD
 # off-payroll-decision-service
-
-[![Build Status](https://travis-ci.org/hmrc/off-payroll-decision-service.svg?branch=master)](https://travis-ci.org/hmrc/off-payroll-decision-service) [ ![Download](https://api.bintray.com/packages/hmrc/releases/off-payroll-decision-service/images/download.svg) ](https://bintray.com/hmrc/releases/off-payroll-decision-service/_latestVersion)
-
-This is a placeholder README.md for a new repository
-
-### License
-
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
-    
-=======
-# offpayroll-decision-service
 
 
 ## Endpoint URLs
@@ -34,59 +22,66 @@ Requests use the HTTP `POST` method
 * Body contains QuestionSet JSON
 
 ```json
-	{
-		"version": 1.0, 
-		"sections": [
-						{"name": "personal-service",
-							"questions": [
-											{"id": 1, "answer": true},
-											{"id": 2, "answer": false},
-											{"id": 3, "answer": null}
-								]},
-						{"name": "helper",
-							"questions": [
-											{"id": 1, "answer": false},
-											{"id": 2, "answer": false},
-											{"id": 3, "answer": false}
-								]},
-						{"name": "control",
-							"questions": [
-											{"id": 1, "answer": true},
-											{"id": 2, "answer": true},
-											{"id": 3, "answer": true}
-								]},
-						{"name": "financial-risk",
-							"questions": [
-											{"id": 1, "answer": false},
-											{"id": 2, "answer": true},
-											{"id": 3, "answer": false}
-								]},
-						{"name": "business-structure",
-							"questions": [
-											{"id": 1, "answer": false},
-											{"id": 2, "answer": false},
-											{"id": 3, "answer": true}
-								]},
-						{"name": "part-of-organisation",
-							"questions": [
-											{"id": 1, "answer": true},
-											{"id": 2, "answer": true},
-											{"id": 3, "answer": true},
-											{"id": 4, "answer": true}
-								]},
-						{"name": "miscalaneous",
-							"questions": [
-											{"id": 1, "answer": false},
-											{"id": 2, "answer": false}
-								]}
-
-		]	
-	}
+{
+  "version": 1,
+  "sections": [
+    {
+      "name": "personal-service",
+      "facts": {
+        "personal-service.short-name-tba-1": true,
+        "personal-service.short-name-tba-2": true
+      }
+    },
+    {
+      "name": "helper",
+      "facts": {
+        "helper.short-name-tba-1": true,
+        "helper.short-name-tba-2": false
+      }
+    },
+    {
+      "name": "control",
+      "facts": {
+        "control.short-name-tba-1": true,
+        "control.short-name-tba-2": true
+      }
+    },
+    {
+      "name": "financial-risk",
+      "facts": {
+        "financial-risk.short-name-tba-1": true,
+        "financial-risk.short-name-tba-2": true
+      }
+    },
+    {
+      "name": "business-structure",
+      "facts": {
+        "business-structure.short-name-tba-1": true,
+        "business-structure.short-name-tba-2": true
+      }
+    },
+    {
+      "name": "part-of-organisation",
+      "facts": {
+        "part-of-organisation.short-name-tba-1": true,
+        "part-of-organisation.short-name-tba-2": true,
+        "part-of-organisation.short-name-tba-3": true
+      }
+    },
+    {
+      "name": "miscalaneous",
+      "facts": {
+        "miscalaneous.short-name-tba-1": true,
+        "miscalaneous.short-name-tba-2": true
+      }
+    }
+  ]
+}
 ```
 | Attribute        | Required           | Description                                                          |
 | :---------------- |:------------------:| :--------------------------------------------------------------------|
 | version          | true               | The version of the QuestionSet being used and therefore the endpoint |
-| sections         | true               | An array of completed questions. _Note:_ does not need to contain all the questions. Once all the questions are present in this array then a Decision response will be present. Though depending on the QuestionSet a Decision can be arrived at before all questions are present, this is known as a 'hard-exit' |
+| sections         | true               | An array of completed QuestionSet Sections. _Note:_ does not need to contain all the sections. Once all the sections are present in this array then a Decision response will be present. Though depending on the QuestionSet a Decision can be arrived at before all sections are present, this is known as a 'hard-exit' |
 
 
 ## Response
@@ -96,10 +91,10 @@ Requests use the HTTP `POST` method
 ```json
 	{
 		"version": 1.0,
-		"result": "Ouside IR35",
+		"result": "Outside IR35",
 		"continue": false,
 		"score": [{"personal-service": "HIGH"}, {"helper": "LOW"}, {"control": "LOW"}, {"financial-risk": "HIGH"}, {"business-structure": "LOW"}, {"part-of-organisation": "HIGH"}, {"miscalaneous": "HIGH"}],
-		"question-set": {"version":1.0,"sections":[{"name":"personal-service","questions":[{"id":1,"answer":true},{"id":2,"answer":false},{"id":3,"answer":null}]},{"name":"helper","questions":[{"id":1,"answer":false},{"id":2,"answer":false},{"id":3,"answer":false}]},{"name":"control","questions":[{"id":1,"answer":true},{"id":2,"answer":true},{"id":3,"answer":true}]},{"name":"financial-risk","questions":[{"id":1,"answer":false},{"id":2,"answer":true},{"id":3,"answer":false}]},{"name":"business-structure","questions":[{"id":1,"answer":false},{"id":2,"answer":false},{"id":3,"answer":true}]},{"name":"part-of-organisation","questions":[{"id":1,"answer":true},{"id":2,"answer":true},{"id":3,"answer":true},{"id":4,"answer":true}]},{"name":"miscalaneous","questions":[{"id":1,"answer":false},{"id":2,"answer":false}]}]}
+		"question-set": {"version":1,"sections":[{"name":"personal-service","facts":{"personal-service.short-name-tba-1":true,"personal-service.short-name-tba-2":true}},{"name":"helper","facts":{"short-name-tba-1":true,"short-name-tba-2":false}},{"name":"control","facts":{"helper.short-name-tba-1":true,"helper.short-name-tba-2":true}},{"name":"financial-risk","facts":{"financial-risk.short-name-tba-1":true,"financial-risk.short-name-tba-2":true}},{"name":"business-structure","facts":{"business-structure.short-name-tba-1":true,"business-structure.short-name-tba-2":true}},{"name":"part-of-organisation","facts":{"part-of-organisation.short-name-tba-1":true,"part-of-organisation.short-name-tba-2":true,"part-of-organisation.short-name-tba-3":true}},{"name":"miscalaneous","facts":{"miscalaneous.short-name-tba-1":true,"miscalaneous.short-name-tba-2":true}}]}
 	}
 
 ```
@@ -137,4 +132,3 @@ sbt ~run 9000 -Drule_sheets.location=[Path to Excel File]” (e.g. /Users/milosz
 ## License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
->>>>>>> origin/decision-service-mm-sprint-3
