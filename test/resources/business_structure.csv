@@ -1,5 +1,15 @@
-Q1 , Q2  , Q3
-yes, yes , yes , high   , true
-yes, no  , no  , medium , true
-yes, no  , yes , low    , true
-no ,     , yes , low    , false
+8a,8b,8c,8d,8e,8f,8g
+Yes ,Yes,Yes,Yes,Yes,Yes,Yes,   High   ,true
+Yes ,Yes,Yes,Yes,Yes,Yes,No ,   High   ,true
+Yes ,Yes,Yes,Yes,Yes,No ,No ,   High   ,true
+Yes ,Yes,Yes,Yes,No ,No ,No ,   High   ,true
+Yes ,Yes,Yes,No ,No ,No ,No ,   Low    ,true
+Yes ,Yes,No ,No ,No ,No ,No ,   Low    ,true
+Yes ,No ,No ,No ,No ,No ,No ,   Low    ,true
+No  ,No ,No ,No ,No ,No ,No ,   Low    ,true
+No  ,No ,No ,No ,No ,No ,Yes,   Low    ,true
+No  ,No ,No ,No ,No ,Yes,Yes,   Low    ,true
+No  ,No ,No ,No ,Yes,Yes,Yes,   Low    ,true
+No  ,No ,No ,Yes,Yes,Yes,Yes,   High   ,true
+No  ,No ,Yes,Yes,Yes,Yes,Yes,   High   ,true
+No  ,Yes,Yes,Yes,Yes,Yes,Yes,   High   ,true

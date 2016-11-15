@@ -8,8 +8,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
 
-  val csvFilePath = "/business_structure.csv"
-  val csvFilePathError = "/business_structure_error.csv"
+  val csvFilePath = "/section_rules_sample.csv"
+  val csvFilePathError = "/section_rules_sample_error.csv"
   val csvMetadata = RulesFileMetaData(3, 2, csvFilePath)
   val csvMetadataError = RulesFileMetaData(3, 2, csvFilePathError)
 
