@@ -27,11 +27,11 @@ trait RulesLoader {
         using(Source.fromInputStream(is)) { res =>
           val tokens = res.getLines.map(_.split(Separator).map(_.trim).toList).toList
           val (headings::rest) = tokens
-          val rules = (for (lineTokens <- rest) yield {
+          val rules = for (lineTokens <- rest) yield {
             lineTokens match {
               case t if isValidRule(t, rulesFileMetaData) => createRule(t, rulesFileMetaData)
             }
-          })
+          }
           createRuleSet(rules, headings)
         }
       } match {

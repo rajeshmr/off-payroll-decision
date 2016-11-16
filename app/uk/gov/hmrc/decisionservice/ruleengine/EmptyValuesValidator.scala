@@ -1,6 +1,7 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
+import play.api.i18n.Messages
 import uk.gov.hmrc.decisionservice.model._
 
 trait EmptyValuesValidator {
@@ -12,13 +13,15 @@ trait EmptyValuesValidator {
   def noMatchResult(facts: Facts, rules: List[Rule]): Xor[DecisionServiceError,RuleResult] = {
     val factSet = factsEmptySet(facts)
     val rulesSet = rulesMaxEmptySet(rules)
-    if (factSet.subsetOf(rulesSet)) Xor.Right(notValidUseCase) else Xor.Left(FactError("facts have too many empty values"))
+    if (factSet.subsetOf(rulesSet)) Xor.Right(notValidUseCase) else Xor.Left(FactError(Messages("facts.empty.values.error")))
   }
 
-  def factsEmptySet(facts:Facts):Set[Int] = facts.values.zipWithIndex.collect { case (a,i) if(valueEmpty(a)) => i }.toSet
+  def emptyPositions(values: Iterable[ValueType]):Set[Int] = values.zipWithIndex.collect { case (a,i) if(valueEmpty(a)) => i }.toSet
+
+  def factsEmptySet(facts:Facts):Set[Int] = emptyPositions(facts.values)
 
   def rulesMaxEmptySet(rules: List[Rule]):Set[Int] = {
-    def ruleEmptySet(rules: Rule):Set[Int] = rules.values.zipWithIndex.collect { case (a,i) if(valueEmpty(a)) => i }.toSet
+    def ruleEmptySet(rules: Rule):Set[Int] = emptyPositions(rules.values)
     val sets = for { r <- rules } yield { ruleEmptySet(r) }
     sets.foldLeft(Set[Int]())((a,b) => a ++ b)
   }
