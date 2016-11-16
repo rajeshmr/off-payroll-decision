@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.model.rules.{SectionCarryOver, SectionNotValidUseCase, SectionRule, SectionRuleSet}
+import uk.gov.hmrc.decisionservice.model.rules.{CarryOverImpl, SectionNotValidUseCase, SectionRule, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -16,9 +16,9 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         "question2" -> "",
         "question3" -> "")
       val rules = List(
-        SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
-        SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
-        SectionRule(List("no" ,"yes",""   ), SectionCarryOver("low"   , false))
+        SectionRule(List("yes","yes","yes"), CarryOverImpl("high"  , true)),
+        SectionRule(List("yes","no" ,"no" ), CarryOverImpl("medium", true)),
+        SectionRule(List("no" ,"yes",""   ), CarryOverImpl("low"   , false))
       )
       val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
 
@@ -34,9 +34,9 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         "question2" -> "",
         "question3" -> "")
       val rules = List(
-        SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
-        SectionRule(List("yes","no" ,""   ), SectionCarryOver("medium", true)),
-        SectionRule(List("no" ,""   ,""   ), SectionCarryOver("low"   , false))
+        SectionRule(List("yes","yes","yes"), CarryOverImpl("high"  , true)),
+        SectionRule(List("yes","no" ,""   ), CarryOverImpl("medium", true)),
+        SectionRule(List("no" ,""   ,""   ), CarryOverImpl("low"   , false))
       )
       val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
 

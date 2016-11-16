@@ -78,6 +78,5 @@ object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
 
   def valueEmpty(v:CarryOver) = v.value.isEmpty
 
-  def notValidUseCase: MatrixDecision = MatrixDecision("NotValidUseCase")
-
+  def notValidUseCase: MatrixDecision = DecisionNotValidUseCase
 }

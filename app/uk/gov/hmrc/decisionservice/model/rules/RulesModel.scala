@@ -1,6 +1,6 @@
 package uk.gov.hmrc.decisionservice.model.rules
 
-case class SectionRule(values:List[String], result:SectionCarryOver)
+case class SectionRule(values:List[String], result:CarryOverImpl)
 
 case class SectionRuleSet(headings:List[String],rules:List[SectionRule])
 
@@ -14,11 +14,27 @@ object SectionNotValidUseCase extends CarryOver {
   override def exit = false
 }
 
-case class SectionCarryOver(value:String, exit:Boolean) extends CarryOver
+case class CarryOverImpl(value:String, exit:Boolean) extends CarryOver
 
 
-case class MatrixRule(values:List[SectionCarryOver], result:MatrixDecision)
+case class MatrixRule(values:List[CarryOver], result:MatrixDecision)
 
 case class MatrixRuleSet(headings:List[String],rules:List[MatrixRule])
 
-case class MatrixDecision(value:String)
+sealed trait MatrixDecision {
+  def value:String
+}
+
+object DecisionOutOfIR35 extends MatrixDecision {
+  override def value = "OutOfIR35"
+}
+
+object DecisionInIR35 extends MatrixDecision {
+  override def value = "InIR35"
+}
+
+object DecisionNotValidUseCase extends MatrixDecision {
+  override def value = "NotValidUseCase"
+}
+
+case class MatrixDecisionImpl(value:String) extends MatrixDecision

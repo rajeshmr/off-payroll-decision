@@ -25,9 +25,9 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
         ("question2" -> ""),
         ("question3" -> ""))
       val rules = List(
-        SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
-        SectionRule(List("yes","no" ,"no" ), SectionCarryOver("medium", true)),
-        SectionRule(List("no" ,"yes",""   ), SectionCarryOver("low"   , false))
+        SectionRule(List("yes","yes","yes"), CarryOverImpl("high"  , true)),
+        SectionRule(List("yes","no" ,"no" ), CarryOverImpl("medium", true)),
+        SectionRule(List("no" ,"yes",""   ), CarryOverImpl("low"   , false))
       )
 
       val error = SectionEmptyValuesValidator.noMatchResult(fact,rules)
@@ -42,9 +42,9 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
         ("question2" -> ""),
         ("question3" -> ""))
       val rules = List(
-        SectionRule(List("yes","yes","yes"), SectionCarryOver("high"  , true)),
-        SectionRule(List("yes","no" ,""   ), SectionCarryOver("medium", true)),
-        SectionRule(List("no" ,""   ,""   ), SectionCarryOver("low"   , false))
+        SectionRule(List("yes","yes","yes"), CarryOverImpl("high"  , true)),
+        SectionRule(List("yes","no" ,""   ), CarryOverImpl("medium", true)),
+        SectionRule(List("no" ,""   ,""   ), CarryOverImpl("low"   , false))
       )
 
       val result = SectionEmptyValuesValidator.noMatchResult(fact,rules)
