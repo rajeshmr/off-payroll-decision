@@ -1,50 +1,43 @@
 package uk.gov.hmrc.decisionservice
 
-import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
-import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
+import uk.gov.hmrc.decisionservice.ruleengine.MatrixRuleValidator._
 import uk.gov.hmrc.decisionservice.ruleengine._
 import uk.gov.hmrc.play.test.UnitSpec
 
-class MatrixRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
+class MatrixRulesFileValidatorSpec extends UnitSpec {
 
-  var headers = List("Section1", "Section2", "Section3", "Section4")
-  var result = List("Decision")
+  object RowFixture {
+    private val headers = List("Section1", "Section2", "Section3", "Section4")
+    private val result = List("Decision")
+    private val validAnswers = List("Low", "Medium", "", "High")
+    private val validAnswers_result = List("In IR35")
+    private val invalidAnswers = List("medium", "Bob", "low", "")
+    private val invalidAnswers_decision = List("whatever")
+    val validHeaderRow = headers ::: result
+    val validRuleRow = validAnswers ::: validAnswers_result
+    val ruleRowWithInvalidRuleText = invalidAnswers ::: validAnswers_result
+    val ruleRowWithInvalidDecision = validAnswers ::: invalidAnswers_decision
+  }
 
-  var validHeaderRow = headers ::: result
-  var validHeaderMetaData: RulesFileMetaData = RulesFileMetaData(4, 1, "")
-
-  var metaData_HeaderSizeMismatch: RulesFileMetaData = RulesFileMetaData(9, 1, "")
-
-  var validAnswers = List("Low", "Medium", "", "High")
-  var validAnswers_result = List("In IR35")
-
-  var validRuleRow = validAnswers ::: validAnswers_result
-  var validAnswerMetaData: RulesFileMetaData = RulesFileMetaData(4, 1, "")
-
-  var answerMetaDataSizeMismatch: RulesFileMetaData = RulesFileMetaData(41, 1, "")
-
-  var invalidAnswers = List("medium", "Bob", "low", "")
-
-  var ruleRowWithInvalidRuleText = invalidAnswers ::: validAnswers_result
-  var metaData_withInvalidAnswer: RulesFileMetaData = RulesFileMetaData(4, 1, "")
-
-
-  var invalidAnswers_decision = List("whatever")
-
-  var ruleRowWithInvalidDecision = validAnswers ::: invalidAnswers_decision
-  var metaData_withInvalidCarryOver: RulesFileMetaData = RulesFileMetaData(4, 1, "")
-
+  object MetadataFixture {
+    val valid = RulesFileMetaData(4, 1, "")
+    val headerSizeMismatch = RulesFileMetaData(9, 1, "")
+    val validAnswer = RulesFileMetaData(4, 1, "")
+    val answerSizeMismatch = RulesFileMetaData(41, 1, "")
+    val invalidAnswer = RulesFileMetaData(4, 1, "")
+    val invalidCarryOver = RulesFileMetaData(4, 1, "")
+  }
 
   "section rules file validator" should {
 
     "validate correct column header size" in {
-      val mayBeValid = MatrixRuleValidator.validateColumnHeaders(validHeaderRow, validHeaderMetaData)
+      val mayBeValid = validateColumnHeaders(RowFixture.validHeaderRow, MetadataFixture.valid)
       mayBeValid.isRight shouldBe true
     }
 
     "return error for invalid column header size" in {
-      val mayBeValid = MatrixRuleValidator.validateColumnHeaders(validHeaderRow, metaData_HeaderSizeMismatch)
+      val mayBeValid = validateColumnHeaders(RowFixture.validHeaderRow, MetadataFixture.headerSizeMismatch)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
         error shouldBe a[RulesFileError]
@@ -53,13 +46,13 @@ class MatrixRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach with
     }
 
     "correctly validate valid rule row" in {
-      val mayBeValid = MatrixRuleValidator.validateRuleRow(validRuleRow, validAnswerMetaData, 3)
+      val mayBeValid = validateRuleRow(RowFixture.validRuleRow, MetadataFixture.validAnswer, 3)
       mayBeValid.isRight shouldBe true
 
     }
 
     "return error for rule row size mismatch" in {
-      val mayBeValid = MatrixRuleValidator.validateRuleRow(validRuleRow, answerMetaDataSizeMismatch, 3)
+      val mayBeValid = validateRuleRow(RowFixture.validRuleRow, MetadataFixture.answerSizeMismatch, 3)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
         error shouldBe a[RulesFileError]
@@ -68,7 +61,7 @@ class MatrixRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach with
     }
 
     "return error for invalid rule text" in {
-      val mayBeValid = MatrixRuleValidator.validateRuleRow(ruleRowWithInvalidRuleText, metaData_withInvalidAnswer, 3)
+      val mayBeValid = validateRuleRow(RowFixture.ruleRowWithInvalidRuleText, MetadataFixture.invalidAnswer, 3)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
         error shouldBe a[RulesFileError]
@@ -77,14 +70,13 @@ class MatrixRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach with
     }
 
     "return error for invalid decision text" in {
-      val mayBeValid = MatrixRuleValidator.validateRuleRow(ruleRowWithInvalidDecision, metaData_withInvalidCarryOver, 2)
+      val mayBeValid = validateRuleRow(RowFixture.ruleRowWithInvalidDecision, MetadataFixture.invalidCarryOver, 2)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
         error shouldBe a[RulesFileError]
         error.message shouldBe "Invalid Decision value on row 2"
       }
     }
-
   }
 
 }
