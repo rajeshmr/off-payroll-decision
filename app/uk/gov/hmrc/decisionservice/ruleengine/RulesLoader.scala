@@ -56,7 +56,7 @@ object SectionRulesLoader extends RulesLoader {
   type RuleSet = SectionRuleSet
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
-    val result = SectionCarryOver(tokens.drop(rulesFileMetaData.valueCols).head, tokens.last.toBoolean)
+    val result = CarryOverImpl(tokens.drop(rulesFileMetaData.valueCols).head, tokens.last.toBoolean)
     val values = tokens.take(rulesFileMetaData.valueCols)
     SectionRule(values, result)
   }
@@ -73,8 +73,8 @@ object MatrixRulesLoader extends RulesLoader {
   type RuleSet = MatrixRuleSet
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):MatrixRule = {
-    val result = MatrixDecision(tokens.last)
-    val values = tokens.take(tokens.size-1).map(SectionCarryOver(_,false))
+    val result = MatrixDecisionImpl(tokens.last)
+    val values = tokens.take(tokens.size-1).map(CarryOverImpl(_,false))
     MatrixRule(values, result)
   }
 

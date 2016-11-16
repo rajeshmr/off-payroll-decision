@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.model.rules.{MatrixDecision, MatrixRule, MatrixRuleSet, SectionCarryOver}
+import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.ruleengine.MatrixFactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -12,14 +12,14 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
   "matrix fact with empty values matcher" should {
     "produce fact error when fact is missing answers for which rule values are not empty" in {
       val matrixFacts = Map(
-        ("BusinessStructure" -> SectionCarryOver("high", true)),
-        ("Substitute" -> SectionCarryOver("" , false)),
-        ("FinancialRisk" -> SectionCarryOver("" , false))
+        ("BusinessStructure" -> CarryOverImpl("high", true)),
+        ("Substitute" -> CarryOverImpl("" , false)),
+        ("FinancialRisk" -> CarryOverImpl("" , false))
       )
       val matrixRules = List(
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high" , true ),SectionCarryOver("low" , true )), MatrixDecision("self employed")),
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
-        MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("high", true ),SectionCarryOver("low" , true )), MatrixDecision("out of IR35"))
+        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("high" , true ),CarryOverImpl("low" , true )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("low" , false),CarryOverImpl("low" , true )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("medium", true ),CarryOverImpl("high", true ),CarryOverImpl("low" , true )), DecisionOutOfIR35)
       )
       val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 
@@ -32,14 +32,14 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
     }
     "produce 'not valid use case' result when fact is missing answers for which there is no match but corresponding rule values are empty in at least one rule" in {
       val matrixFacts = Map(
-        ("BusinessStructure" -> SectionCarryOver("high", true)),
-        ("Substitute" -> SectionCarryOver("" , false)),
-        ("FinancialRisk" -> SectionCarryOver("" , false))
+        ("BusinessStructure" -> CarryOverImpl("high", true)),
+        ("Substitute" -> CarryOverImpl("" , false)),
+        ("FinancialRisk" -> CarryOverImpl("" , false))
       )
       val matrixRules = List(
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("high" , true ),SectionCarryOver("low" , true )), MatrixDecision("self employed")),
-        MatrixRule(List(SectionCarryOver("high"  , true ),SectionCarryOver("low" , false),SectionCarryOver("low" , true )), MatrixDecision("in IR35")),
-        MatrixRule(List(SectionCarryOver("medium", true ),SectionCarryOver("", true ),SectionCarryOver("" , true )), MatrixDecision("out of IR35"))
+        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("high" , true ),CarryOverImpl("low" , true )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("low" , false),CarryOverImpl("low" , true )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("medium", true ),CarryOverImpl("", true ),CarryOverImpl("" , true )), DecisionOutOfIR35)
       )
       val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 

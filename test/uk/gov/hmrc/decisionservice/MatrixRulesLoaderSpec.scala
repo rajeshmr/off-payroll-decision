@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model.RulesFileLoadError
-import uk.gov.hmrc.decisionservice.model.rules.SectionCarryOver
+import uk.gov.hmrc.decisionservice.model.rules.CarryOverImpl
 import uk.gov.hmrc.decisionservice.ruleengine.{MatrixFactMatcher, MatrixRulesLoader, RulesFileMetaData}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -39,7 +39,7 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
     }
     "provide valid input for an inference against fact" in {
       val matrixFacts = Map(
-        ("BusinessStructure" -> SectionCarryOver("high", true)), ("Substitute" -> SectionCarryOver("high" , false))
+        ("BusinessStructure" -> CarryOverImpl("high", true)), ("Substitute" -> CarryOverImpl("high" , false))
       )
       val maybeRules = MatrixRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
