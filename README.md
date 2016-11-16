@@ -3,7 +3,7 @@
 
 
 ## Endpoint URLs
-POST /decide/v1/
+POST /decide/
 
 ## Service Definitions
 
@@ -22,66 +22,38 @@ Requests use the HTTP `POST` method
 * Body contains QuestionSet JSON
 
 ```json
-{
-  "version": 1,
-  "sections": [
-    {
-      "name": "personal-service",
-      "facts": {
-        "personal-service.short-name-tba-1": true,
-        "personal-service.short-name-tba-2": true
-      }
-    },
-    {
-      "name": "helper",
-      "facts": {
-        "helper.short-name-tba-1": true,
-        "helper.short-name-tba-2": false
-      }
-    },
-    {
-      "name": "control",
-      "facts": {
-        "control.short-name-tba-1": true,
-        "control.short-name-tba-2": true
-      }
-    },
-    {
-      "name": "financial-risk",
-      "facts": {
-        "financial-risk.short-name-tba-1": true,
-        "financial-risk.short-name-tba-2": true
-      }
-    },
-    {
-      "name": "business-structure",
-      "facts": {
-        "business-structure.short-name-tba-1": true,
-        "business-structure.short-name-tba-2": true
-      }
-    },
-    {
-      "name": "part-of-organisation",
-      "facts": {
-        "part-of-organisation.short-name-tba-1": true,
-        "part-of-organisation.short-name-tba-2": true,
-        "part-of-organisation.short-name-tba-3": true
-      }
-    },
-    {
-      "name": "miscalaneous",
-      "facts": {
-        "miscalaneous.short-name-tba-1": true,
-        "miscalaneous.short-name-tba-2": true
-      }
-    }
-  ]
-}
+	{
+	  "version": "1.0",
+	  "correlation-id": "48fd5b38-9047-4d9b-983e-27fb2c5360dd",
+	    "personal-service":{
+	        "contractrual-right-for-substitute": true,
+	        "contractrual-obligation-for-substitute": false
+	      
+	    },
+	    "control":{
+	        "can-work-be-instructed": true,
+	        "can-worker-be-moved": true
+	      
+	    },
+	    "financial-risk": {
+	      "motor-vehical-in-order-to-work": false,
+	      "engager-contribution-to-cost": false
+	    }
+	  
+	}
 ```
 | Attribute        | Required           | Description                                                          |
 | :---------------- |:------------------:| :--------------------------------------------------------------------|
 | version          | true               | The version of the QuestionSet being used and therefore the endpoint |
-| sections         | true               | An array of completed QuestionSet Sections. _Note:_ does not need to contain all the sections. Once all the sections are present in this array then a Decision response will be present. Though depending on the QuestionSet a Decision can be arrived at before all sections are present, this is known as a 'hard-exit' |
+| correlation-id   | true               | Unique number to identify this QuestionSet and correlate it to its  decision |
+| personal-service | false              | Part of the Question Set  ...|
+| cotrol           | false              | Part of the Question Set  ...|
+| financial-risk   | false              | Part of the Question Set  ...|
+| busines-structure| false              | Part of the Question Set  ...|
+| part-of-organisation| false              | Part of the Question Set  ...|
+| miscellaneous| false              | Part of the Question Set  ...|
+
+ _Note:_ does not need to contain all the sections. Once all the sections are present in this array then a Decision response will be present. Though depending on the QuestionSet a Decision can be arrived at before all sections are present, this is known as a 'hard-exit'
 
 
 ## Response
@@ -90,22 +62,22 @@ Requests use the HTTP `POST` method
 
 ```json
 	{
-		"version": 1.0,
-		"result": "Outside IR35",
-		"continue": false,
-		"score": [{"personal-service": "HIGH"}, {"helper": "LOW"}, {"control": "LOW"}, {"financial-risk": "HIGH"}, {"business-structure": "LOW"}, {"part-of-organisation": "HIGH"}, {"miscalaneous": "HIGH"}],
-		"question-set": {"version":1,"sections":[{"name":"personal-service","facts":{"personal-service.short-name-tba-1":true,"personal-service.short-name-tba-2":true}},{"name":"helper","facts":{"short-name-tba-1":true,"short-name-tba-2":false}},{"name":"control","facts":{"helper.short-name-tba-1":true,"helper.short-name-tba-2":true}},{"name":"financial-risk","facts":{"financial-risk.short-name-tba-1":true,"financial-risk.short-name-tba-2":true}},{"name":"business-structure","facts":{"business-structure.short-name-tba-1":true,"business-structure.short-name-tba-2":true}},{"name":"part-of-organisation","facts":{"part-of-organisation.short-name-tba-1":true,"part-of-organisation.short-name-tba-2":true,"part-of-organisation.short-name-tba-3":true}},{"name":"miscalaneous","facts":{"miscalaneous.short-name-tba-1":true,"miscalaneous.short-name-tba-2":true}}]}
+		"version": "1.0",
+		"correlation-id": "48fd5b38-9047-4d9b-983e-27fb2c5360dd",
+		"result": "Unknown",
+		"carry-on-with-questions": true,
+		"score": [{"personal-service": "HIGH"}, {"control": "LOW"}, {"financial-risk": "HIGH"}]
 	}
-
 ```
 
 | Attribute        | Required           | Description                                                                                                    |
 | :---------------- |:------------------:| :--------------------------------------------------------------------------------------------------------------|
 | version          | true               | The version of the QuestionSet sent in the request and therefore applied to this Response                      |
+| correlation-id   | true               | Unique number to identify this QuestionSet and correlate it to its  decision |
 | result           | true               | An enumeration of "Outside IR35" &#124; "Inside IR35" &#124; "Unknown"|
-| continue         | true               | true if the input QuestionSet that created this Decision is incomplete or false if a QuestionSet has been completed and the Decision is therefore final|
-| score            | optionaly empty    | An optional array of scores populated only when attribute "contine" is false and therefore a Decision is final |
-| question-set     | false              | Present if the Decision is final                                                                               |
+| carry-on-with-questions         | true               | true if the input QuestionSet that created this Decision is incomplete <br /> or false if a QuestionSet has been completed and the Decision is therefore final|
+| score            | optionaly empty    | An optional array of scores populated only when attribute "carry-on-with-questions" is false and therefore a Decision is final |
+
 
 * HTTP 400 Bad Request for invalid/error scenarios
 
