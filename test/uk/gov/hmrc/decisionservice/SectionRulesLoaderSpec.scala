@@ -49,8 +49,8 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
         val response = SectionFactMatcher.matchFacts(fact, ruleSet)
         response.isRight shouldBe true
         response.map { sectionResult =>
-          sectionResult.value should equal("low")
-          sectionResult.exit should equal(true)
+          sectionResult.value shouldBe "low"
+          sectionResult.exit shouldBe true
         }
       }
     }
