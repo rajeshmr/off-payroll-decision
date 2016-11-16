@@ -49,7 +49,7 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
         val response = MatrixFactMatcher.matchFacts(matrixFacts, ruleset)
         response.isRight shouldBe true
         response.map { decision =>
-          decision.value should equal("out of IR35")
+          decision.value shouldBe "out of IR35"
         }
       }
     }

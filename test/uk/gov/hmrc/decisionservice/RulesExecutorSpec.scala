@@ -29,7 +29,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
         }) should contain theSameElementsAs List("high", "out")
         (decisions map {
           _.text
-        }).head should equal("out of IR35")
+        }).head shouldBe "out of IR35"
       }
     }
     "treat section empty inputs as always matching" in {
@@ -44,7 +44,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
         carryOvers should have size (1)
         (carryOvers map {
           _.value
-        }).head should equal("low")
+        }).head shouldBe "low"
       }
     }
     "treat decision empty inputs as always matching" in {
@@ -62,7 +62,7 @@ class RulesExecutorSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutur
         decisions should have size (1)
         (decisions map {
           _.text
-        }).head should equal("out")
+        }).head shouldBe "out"
       }
     }
   }
