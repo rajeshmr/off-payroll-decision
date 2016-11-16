@@ -22,16 +22,14 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("no" ,""   ,"yes"), CarryOverImpl("low"   , false))
       )
       val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
-
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
-
       response.isRight shouldBe true
       response.map { sectionResult =>
         sectionResult.value should equal("low")
         sectionResult.exit should equal(true)
       }
     }
-    "produce error for incorrect (too short) fact" in {
+    "produce error for a fact with missing obligatory answers" in {
       val fact = Map(
         "question1" -> "yes",
         "question3" -> "yes")
@@ -42,15 +40,13 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("no" ,""   ,"yes"), CarryOverImpl("low"   , false))
       )
       val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
-
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
-
       response.isLeft shouldBe true
       response.leftMap { error =>
         error shouldBe a [FactError]
       }
     }
-    "produce 'section not valid use case' result when match not found" in {
+    "produce 'section not valid use case' result when match is not found" in {
       val fact = Map(
         "question1" -> "yes",
         "question2" -> "no",
@@ -61,9 +57,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("no" ,""   ,"yes"), CarryOverImpl("low"   , false))
       )
       val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
-
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
-
       response.isRight shouldBe true
       response.map { r =>
         r shouldBe SectionNotValidUseCase

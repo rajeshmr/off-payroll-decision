@@ -17,36 +17,36 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
     "load section rules from a csv file" in {
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
-      maybeRules.map { ruleset =>
-        ruleset.rules should have size 4
-        ruleset.headings should have size 3
+      maybeRules.map { ruleSet =>
+        ruleSet.rules should have size 4
+        ruleSet.headings should have size 3
       }
     }
-    "return error if file is not found" in {
+    "return error if a csv file is not found" in {
       val maybeRules = SectionRulesLoader.load(RulesFileMetaData(3, 2, csvFilePath + "xx"))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
       }
     }
-    "return error if file contains invalid data" in {
+    "return error if a csv file contains invalid data" in {
       val maybeRules = SectionRulesLoader.load(csvMetadataError)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
       }
     }
-    "provide valid input for an inference against fact" in {
+    "provide valid input rules for a matcher against a given fact" in {
       val fact = Map(
         "Q1" -> "yes",
         "Q2" -> "no",
         "Q3" -> "yes")
       val maybeRules = SectionRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
-      maybeRules.map { ruleset =>
-        ruleset.rules should have size 4
-        ruleset.headings should have size 3
-        val response = SectionFactMatcher.matchFacts(fact, ruleset)
+      maybeRules.map { ruleSet =>
+        ruleSet.rules should have size 4
+        ruleSet.headings should have size 3
+        val response = SectionFactMatcher.matchFacts(fact, ruleSet)
         response.isRight shouldBe true
         response.map { sectionResult =>
           sectionResult.value should equal("low")
