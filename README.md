@@ -45,7 +45,7 @@ Requests use the HTTP `POST` method
 | Attribute        | Required           | Description                                                          |
 | :---------------- |:------------------:| :--------------------------------------------------------------------|
 | version          | true               | The version of the QuestionSet being used and therefore the endpoint |
-| correlation-id   | true               | Unique number to identify this QuestionSet and correlate it to its  decision |
+| correlation-id   | true               | A value unique to the consumer, to identify this QuestionSet and correlate it to its decision, we have used a UUID however any String of length min 1 max 36 is acceptable |
 | personal-service | false              | Part of the Question Set  ...|
 | cotrol           | false              | Part of the Question Set  ...|
 | financial-risk   | false              | Part of the Question Set  ...|
