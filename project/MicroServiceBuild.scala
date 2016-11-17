@@ -28,15 +28,6 @@ private object AppDependencies {
 
   private val playReactivemongoVersion = "4.8.0"
   private val catsVersion = "0.6.0"
-  private val droolsVersion = "6.5.0.Final"
-
-  val droolsDependencies = Seq(
-    "drools-compiler",
-    "drools-core",
-    "drools-jsr94",
-    "drools-decisiontables",
-    "knowledge-api"
-  ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
 
   val compile = Seq(
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
@@ -49,9 +40,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "org.typelevel" %% "cats" % catsVersion,
-    "org.codehaus.janino"      % "janino"            % "2.5.16"   // For drools
-  ) ++ droolsDependencies
+    "org.typelevel" %% "cats" % catsVersion
+  )
 
   trait TestDependencies {
     lazy val scope: String = "test"
