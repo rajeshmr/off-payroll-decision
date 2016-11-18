@@ -73,7 +73,7 @@ object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
   type RuleSet = MatrixRuleSet
 
   def equivalent(p:(CarryOver,CarryOver)):Boolean = p match {
-    case (a,b) => a.value == b.value || valueEmpty(b)
+    case (a,b) => a.value.toLowerCase == b.value.toLowerCase || valueEmpty(b)
   }
 
   def valueEmpty(v:CarryOver) = v.value.isEmpty

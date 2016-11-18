@@ -8,7 +8,7 @@ import uk.gov.hmrc.decisionservice.ruleengine._
 
 
 trait DecisionService {
-  def evaluate(questionSet:QuestionSet, matrixRuleSet:MatrixRuleSet):Xor[DecisionServiceError,MatrixDecision]
+  def evaluate(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision]
 }
 
 
@@ -17,7 +17,7 @@ object DecisionServiceInstance extends DecisionService {
     (7, 2, "/business_structure.csv", "BusinessStructure"),
     (9, 2, "/personal_service.csv", "PersonalService")
   ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
-  val csvMatrixMetadata = RulesFileMetaData(2, 2, "matrix.csv", "matrix")
+  val csvMatrixMetadata = RulesFileMetaData(2, 1, "/matrix.csv", "matrix")
 
   def loadSectionRules():Xor[DecisionServiceError,List[SectionRuleSet]] = {
     val maybeRules = csvSectionMetadata.map(SectionRulesLoader.load(_))
@@ -31,7 +31,7 @@ object DecisionServiceInstance extends DecisionService {
     maybeRules
   }
 
-  def evaluate(questionSet:QuestionSet, matrixRuleSet:MatrixRuleSet):Xor[DecisionServiceError,MatrixDecision] = {
+  def evaluate(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision] = {
     val maybeDecision = for {
       sectionRules <- loadSectionRules()
       matrixRules <- loadMatrixRules()
