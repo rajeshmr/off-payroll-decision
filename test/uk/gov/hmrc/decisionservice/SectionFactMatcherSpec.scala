@@ -21,7 +21,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("yes","no" ,"yes"), CarryOverImpl("low"   , true)),
         SectionRule(List("no" ,""   ,"yes"), CarryOverImpl("low"   , false))
       )
-      val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
+      val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
       response.isRight shouldBe true
       response.map { sectionResult =>
@@ -39,7 +39,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("yes","no" ,"yes"), CarryOverImpl("low"   , true)),
         SectionRule(List("no" ,""   ,"yes"), CarryOverImpl("low"   , false))
       )
-      val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
+      val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
       response.isLeft shouldBe true
       response.leftMap { error =>
@@ -56,7 +56,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List("yes","no" ,"no" ), CarryOverImpl("medium", true)),
         SectionRule(List("no" ,""   ,"yes"), CarryOverImpl("low"   , false))
       )
-      val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
+      val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
       response.isRight shouldBe true
       response.map { r =>

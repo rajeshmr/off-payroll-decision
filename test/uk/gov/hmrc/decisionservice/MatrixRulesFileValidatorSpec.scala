@@ -21,12 +21,12 @@ class MatrixRulesFileValidatorSpec extends UnitSpec {
   }
 
   object MetadataFixture {
-    val valid = RulesFileMetaData(4, 1, "")
-    val headerSizeMismatch = RulesFileMetaData(9, 1, "")
-    val validAnswer = RulesFileMetaData(4, 1, "")
-    val answerSizeMismatch = RulesFileMetaData(41, 1, "")
-    val invalidAnswer = RulesFileMetaData(4, 1, "")
-    val invalidCarryOver = RulesFileMetaData(4, 1, "")
+    val valid = RulesFileMetaData(4, 1, "", "")
+    val headerSizeMismatch = RulesFileMetaData(9, 1, "", "")
+    val validAnswer = RulesFileMetaData(4, 1, "", "")
+    val answerSizeMismatch = RulesFileMetaData(41, 1, "", "")
+    val invalidAnswer = RulesFileMetaData(4, 1, "", "")
+    val invalidCarryOver = RulesFileMetaData(4, 1, "", "")
   }
 
   "section rules file validator" should {

@@ -18,7 +18,7 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         SectionRule(List("yes","no" ,"no" ), CarryOverImpl("medium", true)),
         SectionRule(List("no" ,"yes",""   ), CarryOverImpl("low"   , false))
       )
-      val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
+      val ruleSet = SectionRuleSet("sectionName",List("question1", "question2", "question3"), rules)
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
       response.isLeft shouldBe true
       response.leftMap { error =>
@@ -31,7 +31,7 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         SectionRule(List("yes","no" ,""   ), CarryOverImpl("medium", true)),
         SectionRule(List("no" ,""   ,""   ), CarryOverImpl("low"   , false))
       )
-      val ruleSet = SectionRuleSet(List("question1", "question2", "question3"), rules)
+      val ruleSet = SectionRuleSet("sectionName",List("question1", "question2", "question3"), rules)
       val response = SectionFactMatcher.matchFacts(fact, ruleSet)
       response.isRight shouldBe true
       response.map { r =>

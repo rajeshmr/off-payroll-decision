@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice.model.rules
 
 case class SectionRule(values:List[String], result:CarryOverImpl)
 
-case class SectionRuleSet(headings:List[String],rules:List[SectionRule])
+case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule])
 
 sealed trait CarryOver {
   def value:String

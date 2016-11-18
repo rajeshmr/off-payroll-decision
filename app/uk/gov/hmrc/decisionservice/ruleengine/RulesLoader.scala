@@ -1,13 +1,15 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
+import java.io.IOException
+
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.model.{_}
+import uk.gov.hmrc.decisionservice.model._
 
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
-case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String){
+case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:String){
   def numCols = valueCols + resultCols
 }
 
@@ -23,7 +25,8 @@ trait RulesLoader {
 
   def load(rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
       Try {
-        val is = getClass.getResourceAsStream(rulesFileMetaData.path)
+          val is = getClass.getResourceAsStream(rulesFileMetaData.path)
+          if (is == null) { throw new IOException(s"resource not found: ${rulesFileMetaData.path}") }
         using(Source.fromInputStream(is)) { res =>
           val tokens = res.getLines.map(_.split(Separator).map(_.trim).toList).toList
           val (headings::rest) = tokens
@@ -32,11 +35,12 @@ trait RulesLoader {
               case t if isValidRule(t, rulesFileMetaData) => createRule(t, rulesFileMetaData)
             }
           }
-          createRuleSet(rules, headings)
+          createRuleSet(rulesFileMetaData.name, rules, headings)
         }
       } match {
         case Success(content) => Xor.right(content)
-        case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
+        case Failure(e) =>
+          Xor.left(RulesFileLoadError(e.getMessage))
       }
     }
 
@@ -46,7 +50,7 @@ trait RulesLoader {
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
 
-  def createRuleSet(rules:List[Rule], headings:List[String]):RuleSet
+  def createRuleSet(name:String, rules:List[Rule], headings:List[String]):RuleSet
 }
 
 
@@ -61,8 +65,8 @@ object SectionRulesLoader extends RulesLoader {
     SectionRule(values, result)
   }
 
-  def createRuleSet(rules:List[SectionRule], headings:List[String]):SectionRuleSet = {
-    SectionRuleSet(headings, rules)
+  def createRuleSet(name:String, rules:List[SectionRule], headings:List[String]):SectionRuleSet = {
+    SectionRuleSet(name, headings, rules)
   }
 }
 
@@ -78,7 +82,7 @@ object MatrixRulesLoader extends RulesLoader {
     MatrixRule(values, result)
   }
 
-  def createRuleSet(rules:List[MatrixRule], headings:List[String]):MatrixRuleSet = {
+  def createRuleSet(name:String, rules:List[MatrixRule], headings:List[String]):MatrixRuleSet = {
     MatrixRuleSet(headings, rules)
   }
 }
