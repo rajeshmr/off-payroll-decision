@@ -12,14 +12,14 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
   "matrix fact with empty values matcher" should {
     "produce fact error when fact is missing answers for which rule values are not empty" in {
       val matrixFacts = Map(
-        ("BusinessStructure" -> CarryOverImpl("high", true)),
+        ("BusinessStructure" -> CarryOverImpl("high", false)),
         ("Substitute" -> CarryOverImpl("" , false)),
         ("FinancialRisk" -> CarryOverImpl("" , false))
       )
       val matrixRules = List(
-        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("high" , true ),CarryOverImpl("low" , true )), DecisionInIR35),
-        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("low" , false),CarryOverImpl("low" , true )), DecisionInIR35),
-        MatrixRule(List(CarryOverImpl("medium", true ),CarryOverImpl("high", true ),CarryOverImpl("low" , true )), DecisionOutOfIR35)
+        MatrixRule(List(CarryOverImpl("high"  , false ),CarryOverImpl("high" , false ),CarryOverImpl("low" , false )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("high"  , false ),CarryOverImpl("low" , false),CarryOverImpl("low" , false )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("medium", false ),CarryOverImpl("high", false ),CarryOverImpl("low" , false )), DecisionOutOfIR35)
       )
       val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 
@@ -32,14 +32,14 @@ class MatrixEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wit
     }
     "produce 'not valid use case' result when fact is missing answers for which there is no match but corresponding rule values are empty in at least one rule" in {
       val matrixFacts = Map(
-        ("BusinessStructure" -> CarryOverImpl("high", true)),
+        ("BusinessStructure" -> CarryOverImpl("high", false)),
         ("Substitute" -> CarryOverImpl("" , false)),
         ("FinancialRisk" -> CarryOverImpl("" , false))
       )
       val matrixRules = List(
-        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("high" , true ),CarryOverImpl("low" , true )), DecisionInIR35),
-        MatrixRule(List(CarryOverImpl("high"  , true ),CarryOverImpl("low" , false),CarryOverImpl("low" , true )), DecisionInIR35),
-        MatrixRule(List(CarryOverImpl("medium", true ),CarryOverImpl("", true ),CarryOverImpl("" , true )), DecisionOutOfIR35)
+        MatrixRule(List(CarryOverImpl("high"  , false ),CarryOverImpl("high" , false ),CarryOverImpl("low" , false )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("high"  , false ),CarryOverImpl("low" , false),CarryOverImpl("low" , false )), DecisionInIR35),
+        MatrixRule(List(CarryOverImpl("medium", false ),CarryOverImpl("", false ),CarryOverImpl("" , false )), DecisionOutOfIR35)
       )
       val matrixRuleSet = MatrixRuleSet(List("BusinessStructure", "Substitute", "FinancialRisk"), matrixRules)
 

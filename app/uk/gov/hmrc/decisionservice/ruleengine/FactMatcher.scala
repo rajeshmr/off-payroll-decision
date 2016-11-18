@@ -79,4 +79,13 @@ object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
   def valueEmpty(v:CarryOver) = v.value.isEmpty
 
   def notValidUseCase: MatrixDecision = DecisionNotValidUseCase
+
+  override def matchFacts(facts: Map[String,CarryOver], ruleSet: RuleSet): Xor[DecisionServiceError,RuleResult] = {
+    val maybeExitValue = facts.values.collectFirst{case co if co.exit => co.value}
+    maybeExitValue match {
+      case Some(value) => Xor.right(MatrixDecisionImpl(value))
+      case None => super.matchFacts(facts, ruleSet)
+    }
+  }
+
 }
