@@ -67,7 +67,7 @@ object SectionRuleValidator extends RulesFileValidator {
       case r@Xor.Left(_) => r
       case Xor.Right(_) =>
         val (values, results) = row.splitAt(rulesFileMetaData.valueCols)
-        val validationErrors = values.map(a => validateAnswer(a.trim, possibleAnswers, s"Invalid answer value on row $rowNumber").fold(e => Some(e),r => None)).flatten
+        val validationErrors = values.map(a => validateAnswer(a.trim, possibleAnswers, s"Invalid answer value on row $rowNumber")).collect { case Xor.Left(e) => e }
         validationErrors.headOption.fold(validateResultColumnPair(results, rulesFileMetaData, rowNumber))(Xor.left(_))
     }
 }
@@ -78,7 +78,7 @@ object MatrixRuleValidator extends RulesFileValidator {
       case r@Xor.Left(_) => r
       case Xor.Right(_) =>
         val (values, results) = row.splitAt(rulesFileMetaData.valueCols)
-        val validationErrors = values.map(a => validateAnswer(a.trim, possibleCarryOverValues, s"Invalid CarryOver value on row $rowNumber").fold(e => Some(e),r => None)).flatten
+        val validationErrors = values.map(a => validateAnswer(a.trim, possibleCarryOverValues, s"Invalid CarryOver value on row $rowNumber")).collect { case Xor.Left(e) => e }
         validationErrors.headOption.fold(validateAnswer(results.head, possibleDecisionValues, s"Invalid Decision value on row $rowNumber"))(Xor.left(_))
     }
 }
