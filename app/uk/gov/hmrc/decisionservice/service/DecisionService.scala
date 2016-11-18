@@ -13,10 +13,16 @@ trait DecisionService {
 
 
 object DecisionServiceInstance extends DecisionService {
+
+  lazy val maybeSectionRules = loadSectionRules()
+
+  lazy val maybeMatrixRules = loadMatrixRules()
+
   val csvSectionMetadata = List(
     (7, 2, "/business_structure.csv", "BusinessStructure"),
     (9, 2, "/personal_service.csv", "PersonalService")
   ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+
   val csvMatrixMetadata = RulesFileMetaData(2, 1, "/matrix.csv", "matrix")
 
   def loadSectionRules():Xor[DecisionServiceError,List[SectionRuleSet]] = {
@@ -26,15 +32,13 @@ object DecisionServiceInstance extends DecisionService {
     if (rulesErrors.isEmpty) Xor.right(rules) else Xor.left(rulesErrors.head) // TODO aggregate multiple errors here
   }
 
-  def loadMatrixRules():Xor[DecisionServiceError,MatrixRuleSet] = {
-    val maybeRules = MatrixRulesLoader.load(csvMatrixMetadata)
-    maybeRules
-  }
+  def loadMatrixRules():Xor[DecisionServiceError,MatrixRuleSet] =
+    MatrixRulesLoader.load(csvMatrixMetadata)
 
   def evaluate(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision] = {
     val maybeDecision = for {
-      sectionRules <- loadSectionRules()
-      matrixRules <- loadMatrixRules()
+      sectionRules <- maybeSectionRules
+      matrixRules <- maybeMatrixRules
       carryOvers <- applyToSectionRules(questionSet, sectionRules)
       decision <- applyToMatrixRules(carryOvers, matrixRules)
     }
