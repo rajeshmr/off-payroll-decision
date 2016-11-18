@@ -33,7 +33,8 @@ class DecisionServiceErrorSpec extends UnitSpec {
 
       maybeDecision.isLeft shouldBe true
       maybeDecision.leftMap { error =>
-        error.message shouldBe "resource not found: business_structure.csv resource not found: personal_service.csv"
+        error.message.contains("business_structure.csv") shouldBe true
+        error.message.contains("personal_service.csv") shouldBe true
       }
     }
   }
