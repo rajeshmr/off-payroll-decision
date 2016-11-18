@@ -41,6 +41,39 @@ class DecisionServiceSpec extends UnitSpec {
       }
 
     }
+    "produce 'in IR35' decision for certain facts" in {
+
+      val facts =
+      Map(
+        "BusinessStructure" -> Map(
+                                  "8a" -> "yes",
+                                  "8b" -> "yes",
+                                  "8c" -> "yes",
+                                  "8d" -> "yes",
+                                  "8e" -> "no",
+                                  "8f" -> "no",
+                                  "8g" -> "no"),
+        "PersonalService" -> Map(
+                                  "2" -> "yes",
+                                  "3" -> "yes",
+                                  "4" -> "yes",
+                                  "5" -> "no",
+                                  "6" -> "no",
+                                  "7" -> "no",
+                                  "8" -> "no",
+                                  "9" -> "no",
+                                  "10" -> "no")
+      )
+      val questionSet = QuestionSet("1.0", facts)
+
+      val maybeDecision = DecisionServiceInstance.evaluate(questionSet)
+
+      maybeDecision.isRight shouldBe true
+      maybeDecision.map { decision =>
+        decision.value shouldBe "in IR35"
+      }
+
+    }
   }
 
 }
