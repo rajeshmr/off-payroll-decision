@@ -21,7 +21,7 @@ trait DecisionService {
     val maybeRules = csvSectionMetadata.map(SectionRulesLoader.load(_))
     val rulesErrors = maybeRules.map(_.fold(e => Some(e),r => None)).flatten
     val rules = maybeRules.collect{case Xor.Right(x) => x}
-    if (rulesErrors.isEmpty) Xor.right(rules) else Xor.left(rulesErrors.head) // TODO aggregate multiple errors here
+    if (rulesErrors.isEmpty) Xor.right(rules) else Xor.left(rulesErrors.foldLeft(RulesFileLoadError(""))(_ ++ _))
   }
 
   def loadMatrixRules():Xor[DecisionServiceError,MatrixRuleSet] =
@@ -47,9 +47,9 @@ trait DecisionService {
     } yield {
       (sectionRuleSet.section, SectionFactMatcher.matchFacts(sectionFacts, sectionRuleSet))
     }
-    val rulesErrors = pairs.map(_._2.fold(e => Some(e),r => None)).flatten
+    val rulesErrors = pairs.collect {case (a,Xor.Left(x)) => x}
     val entries = pairs.collect{case (sectionName,Xor.Right(x)) => (sectionName,x)}
-    if (rulesErrors.isEmpty) Xor.right(Map(entries: _*)) else Xor.left(rulesErrors.head) // TODO aggregate multiple errors here
+    if (rulesErrors.isEmpty) Xor.right(Map(entries: _*)) else Xor.left(rulesErrors.head)
   }
 
   def applyToMatrixRules(carryOvers:Map[String,CarryOver], matrixRules:MatrixRuleSet):Xor[DecisionServiceError,MatrixDecision] =
