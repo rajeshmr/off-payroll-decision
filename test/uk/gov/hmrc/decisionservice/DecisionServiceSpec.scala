@@ -8,8 +8,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 class DecisionServiceSpec extends UnitSpec {
 
   "decision service" should {
-    "produce correct decision for a sample fact set" in {
-
+    "produce correct decision for a sample fact set leading to section exit" in {
       val facts =
       Map(
         "BusinessStructure" -> Map(
@@ -41,8 +40,7 @@ class DecisionServiceSpec extends UnitSpec {
       }
 
     }
-    "produce 'in IR35' decision for certain facts" in {
-
+    "produce correct decision for a sample fact set with no section exit" in {
       val facts =
       Map(
         "BusinessStructure" -> Map(
