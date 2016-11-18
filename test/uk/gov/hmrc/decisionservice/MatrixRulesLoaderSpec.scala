@@ -39,7 +39,7 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
     }
     "provide valid input for an inference against fact" in {
       val matrixFacts = Map(
-        ("BusinessStructure" -> CarryOverImpl("high", true)), ("Substitute" -> CarryOverImpl("high" , false))
+        ("BusinessStructure" -> CarryOverImpl("high", true)), ("PersonalService" -> CarryOverImpl("high" , false))
       )
       val maybeRules = MatrixRulesLoader.load(csvMetadata)
       maybeRules.isRight shouldBe true
