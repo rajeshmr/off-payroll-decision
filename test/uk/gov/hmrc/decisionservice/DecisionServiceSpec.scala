@@ -37,7 +37,7 @@ class DecisionServiceSpec extends UnitSpec {
 
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
-        decision.value shouldBe "out of IR35"
+        decision.value shouldBe "exit - out of IR35"
       }
 
     }
