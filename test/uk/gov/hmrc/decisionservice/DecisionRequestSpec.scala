@@ -13,9 +13,9 @@ class DecisionRequestSpec extends UnitSpec {
       |  "sections" : {
       |    "personal-service":
       |    {
-      |      "1" : true,
-      |      "2" : false,
-      |      "3" : true
+      |      "1" : "Yes",
+      |      "2" : "No",
+      |      "3" : "Yes"
       |    }
       |  }
       |}
@@ -33,16 +33,16 @@ class DecisionRequestSpec extends UnitSpec {
       section.isDefined shouldBe true
       section.map { m =>
         val res = (1 to 3).flatMap(i => m.get(i.toString))
-        res should contain theSameElementsInOrderAs (List(true, false, true))
+        res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
       }
     }
   }
 
   "decision request Scala object" should {
     "be correctly converted to json object" in {
-      val personalServiceQuestions = Map("1" -> true, "2" -> false, "3" -> true)
-      val helperQuestions = Map("1" -> false, "2" -> false, "3" -> false)
-      val controlQuestions = Map("1" -> true, "2" -> true, "3" -> true)
+      val personalServiceQuestions = Map("1" -> "Yes", "2" -> "No", "3" -> "Yes")
+      val helperQuestions = Map("1" -> "No", "2" -> "No", "3" -> "No")
+      val controlQuestions = Map("1" -> "Yes", "2" -> "Yes", "3" -> "Yes")
       val questionSet = Map(
         "personal-service" -> personalServiceQuestions,
         "helper" -> helperQuestions,

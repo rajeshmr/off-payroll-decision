@@ -12,9 +12,9 @@ class SectionRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach wit
   var resultPair = List("CarryOver", "Exit")
 
   var headerRow = headers ::: resultPair
-  var validHeaderMetaData: RulesFileMetaData = RulesFileMetaData(4, 2, "")
+  var validHeaderMetaData: RulesFileMetaData = RulesFileMetaData(4, 2, "", "")
 
-  var metaData_HeaderSizeMismatch: RulesFileMetaData = RulesFileMetaData(9, 2, "")
+  var metaData_HeaderSizeMismatch: RulesFileMetaData = RulesFileMetaData(9, 2, "", "")
 
 
   var validAnswers = List("Yes", "No", "Yes", "")
@@ -22,24 +22,24 @@ class SectionRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach wit
 
   var validRuleRow = validAnswers ::: validAnswers_resultPair
 
-  var validAnswerMetaData: RulesFileMetaData = RulesFileMetaData(4, 2, "")
+  var validAnswerMetaData: RulesFileMetaData = RulesFileMetaData(4, 2, "", "")
 
-  var answerMetaDataSizeMismatch: RulesFileMetaData = RulesFileMetaData(23, 2, "")
+  var answerMetaDataSizeMismatch: RulesFileMetaData = RulesFileMetaData(23, 2, "", "")
 
   var invalidAnswers = List("Yes", "Bob", "Yes", "")
 
   var ruleRowWithInvalidRuleText = invalidAnswers ::: validAnswers_resultPair
-  var metaData_withInvalidAnswer: RulesFileMetaData = RulesFileMetaData(4, 2, "")
+  var metaData_withInvalidAnswer: RulesFileMetaData = RulesFileMetaData(4, 2, "", "")
 
 
   var invalidAnswers_carryOver = List("whatever", "true")
 
   var ruleRowWithInvalidCarryOverText = validAnswers ::: invalidAnswers_carryOver
-  var metaData_withInvalidCarryOver: RulesFileMetaData = RulesFileMetaData(4, 2, "")
+  var metaData_withInvalidCarryOver: RulesFileMetaData = RulesFileMetaData(4, 2, "", "")
 
   var invalidAnswers_exit = List("low", "wrong!!!")
   var ruleRowWithInvalidExitText = validAnswers ::: invalidAnswers_exit
-  var metaData_withInvalidExit: RulesFileMetaData = RulesFileMetaData(4, 2, "")
+  var metaData_withInvalidExit: RulesFileMetaData = RulesFileMetaData(4, 2, "", "")
 
 
   "section rules file validator" should {

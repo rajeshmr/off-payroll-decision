@@ -11,8 +11,8 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
 
   val csvFilePath = "/matrix.csv"
   val csvFilePathError = "/matrix_error.csv"
-  val csvMetadata = RulesFileMetaData(2, 1, csvFilePath)
-  val csvMetadataError = RulesFileMetaData(2, 1, csvFilePathError)
+  val csvMetadata = RulesFileMetaData(2, 1, csvFilePath, "matrix")
+  val csvMetadataError = RulesFileMetaData(2, 1, csvFilePathError, "matrix")
 
   "matrix rules loader" should {
     "load matrix rules from a csv file" in {
@@ -24,7 +24,7 @@ class MatrixRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaF
       }
     }
     "return error if file is not found" in {
-      val maybeRules = MatrixRulesLoader.load(RulesFileMetaData(2, 1, csvFilePath + "xx"))
+      val maybeRules = MatrixRulesLoader.load(RulesFileMetaData(2, 1, csvFilePath + "xx", ""))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
