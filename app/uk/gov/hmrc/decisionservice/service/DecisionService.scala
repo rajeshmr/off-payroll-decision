@@ -8,22 +8,14 @@ import uk.gov.hmrc.decisionservice.ruleengine._
 
 
 trait DecisionService {
-  def evaluate(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision]
-}
 
+  val maybeSectionRules:Xor[DecisionServiceError,List[SectionRuleSet]]
 
-object DecisionServiceInstance extends DecisionService {
+  val maybeMatrixRules:Xor[DecisionServiceError,MatrixRuleSet]
 
-  lazy val maybeSectionRules = loadSectionRules()
+  val csvSectionMetadata:List[RulesFileMetaData]
 
-  lazy val maybeMatrixRules = loadMatrixRules()
-
-  val csvSectionMetadata = List(
-    (7, 2, "/business_structure.csv", "BusinessStructure"),
-    (9, 2, "/personal_service.csv", "PersonalService")
-  ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
-
-  val csvMatrixMetadata = RulesFileMetaData(2, 1, "/matrix.csv", "matrix")
+  val csvMatrixMetadata:RulesFileMetaData
 
   def loadSectionRules():Xor[DecisionServiceError,List[SectionRuleSet]] = {
     val maybeRules = csvSectionMetadata.map(SectionRulesLoader.load(_))
@@ -45,7 +37,6 @@ object DecisionServiceInstance extends DecisionService {
     yield {
       decision
     }
-
     maybeDecision
   }
 
@@ -63,5 +54,17 @@ object DecisionServiceInstance extends DecisionService {
 
   def applyToMatrixRules(carryOvers:Map[String,CarryOver], matrixRules:MatrixRuleSet):Xor[DecisionServiceError,MatrixDecision] =
     MatrixFactMatcher.matchFacts(carryOvers, matrixRules)
+}
 
+
+object DecisionServiceInstance extends DecisionService {
+  lazy val maybeSectionRules = loadSectionRules()
+  lazy val maybeMatrixRules = loadMatrixRules()
+
+  val csvSectionMetadata = List(
+    (7, 2, "/business_structure.csv", "BusinessStructure"),
+    (9, 2, "/personal_service.csv", "PersonalService")
+  ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+
+  val csvMatrixMetadata = RulesFileMetaData(2, 1, "/matrix.csv", "matrix")
 }
