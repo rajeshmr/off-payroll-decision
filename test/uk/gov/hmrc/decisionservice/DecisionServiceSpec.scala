@@ -32,7 +32,7 @@ class DecisionServiceSpec extends UnitSpec {
       )
       val questionSet = QuestionSet("1.0", facts)
 
-      val maybeDecision = DecisionServiceInstance.evaluate(questionSet)
+      val maybeDecision = questionSet >>>: DecisionServiceInstance
 
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
@@ -64,7 +64,7 @@ class DecisionServiceSpec extends UnitSpec {
       )
       val questionSet = QuestionSet("1.0", facts)
 
-      val maybeDecision = DecisionServiceInstance.evaluate(questionSet)
+      val maybeDecision = questionSet >>>: DecisionServiceInstance
 
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>

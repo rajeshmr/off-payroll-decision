@@ -23,28 +23,38 @@ trait RulesLoader {
 
   def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
 
-  def load(rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
+  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
       val tryTokens = Try {
-          val is = getClass.getResourceAsStream(rulesFileMetaData.path)
-          if (is == null) { throw new IOException(s"resource not found: ${rulesFileMetaData.path}") }
-        using(Source.fromInputStream(is)) { res =>
-          res.getLines.map(_.split(Separator).map(_.trim).toList).toList
-        }
+        tokenize
       }
       tryTokens match {
         case Success(tokens) =>
-          val (headings::rest) = tokens
-          val errorRuleTokens = rest.zipWithIndex.map(p => isValidRule(p, rulesFileMetaData)).collect{case Xor.Left(e) => e}
-          errorRuleTokens match {
-            case Nil => createRuleSet(rulesFileMetaData, rest, headings)
-            case l => Xor.left(errorRuleTokens.foldLeft(RulesFileLoadError(""))(_ ++ _))
-          }
+          tokens >>: this
         case Failure(e) =>
           Xor.left(RulesFileLoadError(e.getMessage))
       }
     }
 
-  def isValidRule(tokensWithIndex:(List[String],Int), rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
+  private def tokenize(implicit rulesFileMetaData: RulesFileMetaData): List[List[String]] = {
+    val is = getClass.getResourceAsStream(rulesFileMetaData.path)
+    if (is == null) {
+      throw new IOException(s"resource not found: ${rulesFileMetaData.path}")
+    }
+    using(Source.fromInputStream(is)) { res =>
+      res.getLines.map(_.split(Separator).map(_.trim).toList).toList
+    }
+  }
+
+  private def >>:(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, RuleSet] = {
+    val (headings :: rest) = tokens
+    val errorRuleTokens = rest.zipWithIndex.map(p => isValidRule(p)).collect { case Xor.Left(e) => e }
+    errorRuleTokens match {
+      case Nil => createRuleSet(rulesFileMetaData, rest, headings)
+      case l => Xor.left(errorRuleTokens.foldLeft(RulesFileLoadError(""))(_ ++ _))
+    }
+  }
+
+  private def isValidRule(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
         Xor.left(RulesFileLoadError(s"in line $l all result tokens are empty"))

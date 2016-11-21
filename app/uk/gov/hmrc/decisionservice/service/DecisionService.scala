@@ -30,7 +30,7 @@ trait DecisionService {
   def loadMatrixRules():Xor[DecisionServiceError,MatrixRuleSet] =
     MatrixRulesLoader.load(csvMatrixMetadata)
 
-  def evaluate(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision] = {
+  def >>>:(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision] = {
     val maybeDecision = for {
       sectionRules <- maybeSectionRules
       matrixRules <- maybeMatrixRules

@@ -51,7 +51,7 @@ class DecisionServiceErrorSpec extends UnitSpec {
 
   "decision service with initialization error" should {
     "correctly report multiple aggregated error information" in {
-      val maybeDecision = DecisionServiceNotExistingCsvTestInstance.evaluate(questionSet)
+      val maybeDecision = questionSet >>>: DecisionServiceNotExistingCsvTestInstance
       maybeDecision.isLeft shouldBe true
       maybeDecision.leftMap { error =>
         error.message.contains("business_structure_not_existing.csv") shouldBe true
@@ -59,7 +59,7 @@ class DecisionServiceErrorSpec extends UnitSpec {
       }
     }
     "correctly report errors in csv files" in {
-      val maybeDecision = DecisionServiceCsvWithErrorsTestInstance.evaluate(questionSet)
+      val maybeDecision = questionSet >>>: DecisionServiceCsvWithErrorsTestInstance
       maybeDecision.isLeft shouldBe true
       maybeDecision.leftMap { error =>
         error shouldBe a [DecisionServiceError]
@@ -67,7 +67,7 @@ class DecisionServiceErrorSpec extends UnitSpec {
       }
     }
     "correctly report errors in metadata files" in {
-      val maybeDecision = DecisionServiceCsvWithBadMetadataTestInstance.evaluate(questionSet)
+      val maybeDecision = questionSet >>>: DecisionServiceCsvWithBadMetadataTestInstance
       maybeDecision.isLeft shouldBe true
       maybeDecision.leftMap { error =>
         error shouldBe a [DecisionServiceError]
