@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "correlationID": {
+      "type": "string"
+    },
+    "personalService": {
+      "type": "object",
+      "properties": {
+        "contractualRightForSubstitute": {
+          "type": "boolean"
+        },
+        "contractrualObligationForSubstitute": {
+          "type": "boolean"
+        },
+        "possibleSubstituteRejection": {
+          "type": "boolean"
+        },
+        "engagerArrangeWorker": {
+          "type": "boolean"
+        },
+        "contractTermsWorkerPaysSubstitute": {
+          "type": "boolean"
+        },
+        "workerSentActualSubstitiute": {
+          "type": "boolean"
+        },
+        "possibleHelper": {
+          "type": "boolean"
+        },
+        "workerSentActualHelper": {
+          "type": "boolean"
+        },
+        "workerPayActualHelper": {
+          "type": "boolean"
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "properties": {
+        "toldWhatToDo": {"type": "boolean"},
+        "engagerMovingWorker": {"type": "boolean"},
+        "workerDecidingHowWorkIsDone": {"type": "boolean"},
+        "workerLevelOfExpertise": {
+          "type": "string",
+          "enum": ["highExperience", "mediumExperience", "lowExperience"]
+        },
+        "whenWorkHasToBeDone": {
+          "type": "string",
+          "enum": ["engagerStipulated", "agreedWithEngager", "free", "agreedDeadlines"]
+        },
+        "workerDecideWhere": {
+          "type": "string",
+          "enum": ["toldWhere", "freeToDecide", "certainPlace"]
+        }
+      }
+    },
+    "financialRisk": {
+      "type": "object",
+      "properties": {
+        "provideVehicle": {
+          "type": "boolean"
+        },
+        "engagerPayForVehicle": {
+          "type": "boolean"
+        },
+        "workerNeedEquipment": {
+          "type": "boolean"
+        },
+        "workerProvideEquipment": {
+          "type": "boolean"
+        },
+        "workerProvideConsumablesMaterials": {
+          "type": "boolean"
+        },
+        "engagerPayForConsumablesMaterials": {
+          "type": "boolean"        
+        },
+        "workerIncurExpense": {
+          "type": "boolean"
+        },
+        "engagerPayExpense": {
+          "type": "boolean"
+        },
+        "workerMainIncome": {
+          "type": "string",
+          "enum": ["regular", "pieceRate", "commisionOnly", "commisionAndBasicSalary", 
+            "fixedPrice", "shareProfitLoss", "shareProfitOnly", "invoicedHourlyOrDaily"]
+        }
+      }
+    },
+    "businessStructure": {
+      "type": "object",
+      "properties": {
+        "workerVAT": {
+          "type": "boolean"
+        },
+        "businesAccount": {
+          "type": "boolean"
+        },
+        "advertiseForWork": {
+          "type": "boolean"
+        },
+        "businessWebsite": {
+          "type": "boolean"
+        },
+        "workerPayForTraining": {
+          "type": "boolean"
+        },
+        "workerExpenseRunningBusinessPremises": {
+          "type": "boolean"
+        },
+        "workerPaysForInsurance": {
+          "type": "boolean"
+        }
+      }
+    },
+    "partOfOrganisation": {
+      "type": "object",
+      "properties": {
+        "workerReceivesBenefits": {
+          "type": "boolean"
+        },
+        "workerAsLineManager": {
+          "type": "boolean"
+        },
+        "contactWithEngagerCustomer": {
+          "type": "boolean"
+        },
+        "workerRepresentsEngagerBusiness": {
+          "type": "boolean"
+        }
+      },
+      "miscalaneous": {
+        "type": "object",
+        "properties": {
+          "similarWork": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "version",
+    "correlationID"
+  ]
+}
