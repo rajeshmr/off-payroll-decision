@@ -33,7 +33,7 @@ private object AppDependencies {
   val droolsDependencies = Seq(
     "drools-compiler",
     "drools-core",
-    "drools-jsr94",
+    //"drools-jsr94",
     "drools-decisiontables",
     "knowledge-api"
   ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
