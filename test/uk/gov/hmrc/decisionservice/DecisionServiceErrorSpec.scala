@@ -1,5 +1,6 @@
 package uk.gov.hmrc.decisionservice
 
+import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.api.QuestionSet
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.decisionservice.service.DecisionService
@@ -51,7 +52,8 @@ class DecisionServiceErrorSpec extends UnitSpec {
       println(maybeDecision)
       maybeDecision.isLeft shouldBe true
       maybeDecision.leftMap { error =>
-        error.message.contains("Yes, Yes, Yes, Yes, Yes, No, No, High, false, a") shouldBe true // TODO rework this - we need more detailed info here
+        error shouldBe a [DecisionServiceError]
+        error.message.contains("line") shouldBe true
       }
     }
   }

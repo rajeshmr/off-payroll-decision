@@ -34,18 +34,20 @@ trait RulesLoader {
       tryTokens match {
         case Success(tokens) =>
           val (headings::rest) = tokens
-          val (ruleTokens, errorRuleTokens) = rest.partition { isValidRule(_, rulesFileMetaData) }
+          val errorRuleTokens = rest.zipWithIndex.map(p => isValidRule(p, rulesFileMetaData)).collect{case Xor.Left(e) => e}
           errorRuleTokens match {
-            case Nil => createRuleSet(rulesFileMetaData, ruleTokens, headings)
-            case l => Xor.left(RulesFileLoadError(createErrorMessage(l)))
+            case Nil => createRuleSet(rulesFileMetaData, rest, headings)
+            case l => Xor.left(errorRuleTokens.foldLeft(RulesFileLoadError(""))(_ ++ _))
           }
         case Failure(e) =>
           Xor.left(RulesFileLoadError(e.getMessage))
       }
     }
 
-  def isValidRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Boolean = {
-    tokens.size == rulesFileMetaData.numCols
+  def isValidRule(tokensWithIndex:(List[String],Int), rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
+    val (tokens, line) = tokensWithIndex
+    if (tokens.size == rulesFileMetaData.numCols) Xor.right(())
+    else Xor.left(RulesFileLoadError(s"in line ${line} number of columns is ${tokens.size}, should be ${rulesFileMetaData.numCols}"))
   }
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
