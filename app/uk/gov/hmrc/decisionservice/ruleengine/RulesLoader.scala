@@ -24,20 +24,21 @@ trait RulesLoader {
   def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
 
   def load(rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
-      Try {
+      val tryTokens = Try {
           val is = getClass.getResourceAsStream(rulesFileMetaData.path)
           if (is == null) { throw new IOException(s"resource not found: ${rulesFileMetaData.path}") }
         using(Source.fromInputStream(is)) { res =>
-          val tokens = res.getLines.map(_.split(Separator).map(_.trim).toList).toList
-          val (headings::rest) = tokens
-          val (rules, errorRules) = rest.partition { isValidRule(_, rulesFileMetaData) }
-          errorRules match {
-            case Nil => createRuleSet(rulesFileMetaData.name, rules.map(createRule(_, rulesFileMetaData)), headings)
-            case l => throw new IOException(createErrorMessage(l)) // TODO refactor it out of try
-          }
+          res.getLines.map(_.split(Separator).map(_.trim).toList).toList
         }
-      } match {
-        case Success(content) => Xor.right(content)
+      }
+      tryTokens match {
+        case Success(tokens) =>
+          val (headings::rest) = tokens
+          val (ruleTokens, errorRuleTokens) = rest.partition { isValidRule(_, rulesFileMetaData) }
+          errorRuleTokens match {
+            case Nil => createRuleSet(rulesFileMetaData, ruleTokens, headings)
+            case l => Xor.left(RulesFileLoadError(createErrorMessage(l)))
+          }
         case Failure(e) =>
           Xor.left(RulesFileLoadError(e.getMessage))
       }
@@ -49,7 +50,7 @@ trait RulesLoader {
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
 
-  def createRuleSet(name:String, rules:List[Rule], headings:List[String]):RuleSet
+  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,RuleSet]
 
   def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
@@ -66,8 +67,15 @@ object SectionRulesLoader extends RulesLoader {
     SectionRule(values, result)
   }
 
-  def createRuleSet(name:String, rules:List[SectionRule], headings:List[String]):SectionRuleSet = {
-    SectionRuleSet(name, headings, rules)
+  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,SectionRuleSet] = {
+    Try {
+      val rules = ruleTokens.map(createRule(_, rulesFileMetaData))
+      SectionRuleSet(rulesFileMetaData.name, headings, rules)
+    }
+    match {
+      case Success(sectionRuleSet) => Xor.right(sectionRuleSet)
+      case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
+    }
   }
 }
 
@@ -83,7 +91,14 @@ object MatrixRulesLoader extends RulesLoader {
     MatrixRule(values, result)
   }
 
-  def createRuleSet(name:String, rules:List[MatrixRule], headings:List[String]):MatrixRuleSet = {
-    MatrixRuleSet(headings, rules)
+  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,MatrixRuleSet] = {
+    Try {
+      val rules = ruleTokens.map(createRule(_, rulesFileMetaData))
+      MatrixRuleSet(headings, rules)
+    }
+    match {
+      case Success(matrixRuleSet) => Xor.right(matrixRuleSet)
+      case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
+    }
   }
 }
