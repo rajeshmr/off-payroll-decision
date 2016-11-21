@@ -30,6 +30,17 @@ class DecisionServiceErrorSpec extends UnitSpec {
     val csvMatrixMetadata = RulesFileMetaData(2, 1, "/matrix.csv", "matrix")
   }
 
+  object DecisionServiceCsvWithBadMetadataTestInstance extends DecisionService {
+    lazy val maybeSectionRules = loadSectionRules()
+    lazy val maybeMatrixRules = loadMatrixRules()
+
+    val csvSectionMetadata = List(
+    (17, 5, "/business_structure.csv", "BusinessStructure"),
+    (19, 5, "/personal_service.csv", "PersonalService")
+    ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+    val csvMatrixMetadata = RulesFileMetaData(12, 20, "/matrix.csv", "matrix")
+  }
+
   val facts =
     Map(
       "BusinessStructure" -> Map("8a" -> "yes", "8g" -> "no"),
@@ -49,7 +60,14 @@ class DecisionServiceErrorSpec extends UnitSpec {
     }
     "correctly report errors in csv files" in {
       val maybeDecision = DecisionServiceCsvWithErrorsTestInstance.evaluate(questionSet)
-      println(maybeDecision)
+      maybeDecision.isLeft shouldBe true
+      maybeDecision.leftMap { error =>
+        error shouldBe a [DecisionServiceError]
+        error.message.contains("line") shouldBe true
+      }
+    }
+    "correctly report errors in metadata files" in {
+      val maybeDecision = DecisionServiceCsvWithBadMetadataTestInstance.evaluate(questionSet)
       maybeDecision.isLeft shouldBe true
       maybeDecision.leftMap { error =>
         error shouldBe a [DecisionServiceError]
