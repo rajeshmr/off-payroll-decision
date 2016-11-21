@@ -45,9 +45,14 @@ trait RulesLoader {
     }
 
   def isValidRule(tokensWithIndex:(List[String],Int), rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
-    val (tokens, line) = tokensWithIndex
-    if (tokens.size == rulesFileMetaData.numCols) Xor.right(())
-    else Xor.left(RulesFileLoadError(s"in line ${line} number of columns is ${tokens.size}, should be ${rulesFileMetaData.numCols}"))
+    tokensWithIndex match {
+      case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
+        Xor.left(RulesFileLoadError(s"in line $l all result tokens are empty"))
+      case (t, l) if t.size != rulesFileMetaData.numCols =>
+        Xor.left(RulesFileLoadError(s"in line $l number of columns is ${t.size}, should be ${rulesFileMetaData.numCols}"))
+      case _ =>
+        Xor.right(())
+    }
   }
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
