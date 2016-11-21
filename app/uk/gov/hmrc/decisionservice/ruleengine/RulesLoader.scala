@@ -30,12 +30,11 @@ trait RulesLoader {
         using(Source.fromInputStream(is)) { res =>
           val tokens = res.getLines.map(_.split(Separator).map(_.trim).toList).toList
           val (headings::rest) = tokens
-          val rules = for (lineTokens <- rest) yield {
-            lineTokens match {
-              case t if isValidRule(t, rulesFileMetaData) => createRule(t, rulesFileMetaData)
-            }
+          val (rules, errorRules) = rest.partition { isValidRule(_, rulesFileMetaData) }
+          errorRules match {
+            case Nil => createRuleSet(rulesFileMetaData.name, rules.map(createRule(_, rulesFileMetaData)), headings)
+            case l => throw new IOException(createErrorMessage(l)) // TODO refactor it out of try
           }
-          createRuleSet(rulesFileMetaData.name, rules, headings)
         }
       } match {
         case Success(content) => Xor.right(content)
@@ -51,6 +50,8 @@ trait RulesLoader {
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
 
   def createRuleSet(name:String, rules:List[Rule], headings:List[String]):RuleSet
+
+  def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
 
 
