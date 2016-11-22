@@ -1,7 +1,7 @@
 package uk.gov.hmrc.decisionservice
 import cats.data.Xor
 import org.scalacheck.{Gen, Prop, Properties}
-import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, CarryOverImpl, SectionRuleSet}
+import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, >>>, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, SectionFactMatcher, SectionRulesLoader}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -11,7 +11,7 @@ trait CsvCheck {
 
   def check(l: List[String], ruleSet: SectionRuleSet):Boolean = {
     println
-    val ll = l map (CarryOverImpl(_,false))
+    val ll = l map (>>>(_,false))
     val pairs = ruleSet.headings zip ll
     val m = Map(pairs: _*)
     prettyPrint(m)
