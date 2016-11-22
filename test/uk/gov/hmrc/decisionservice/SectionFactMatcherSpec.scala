@@ -63,7 +63,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       val response = SectionFactMatcher.matchFacts(facts.facts, ruleSet)
       response.isRight shouldBe true
       response.map { r =>
-        r shouldBe SectionNotValidUseCase
+        r shouldBe NotValidUseCase
       }
     }
   }

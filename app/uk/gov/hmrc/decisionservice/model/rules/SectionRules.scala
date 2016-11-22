@@ -9,7 +9,7 @@ sealed trait CarryOver {
   def exit:Boolean
 }
 
-object SectionNotValidUseCase extends CarryOver {
+object NotValidUseCase extends CarryOver {
   override def value = "NotValidUseCase"
   override def exit = false
 }
