@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.model.rules.{CarryOverImpl, SectionNotValidUseCase, SectionRule, SectionRuleSet}
+import uk.gov.hmrc.decisionservice.model.rules.{>>>, SectionNotValidUseCase, SectionRule, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
 import uk.gov.hmrc.play.test.UnitSpec
 
