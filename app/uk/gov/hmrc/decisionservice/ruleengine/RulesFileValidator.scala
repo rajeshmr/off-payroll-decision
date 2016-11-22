@@ -72,13 +72,3 @@ object SectionRuleValidator extends RulesFileValidator {
     }
 }
 
-object MatrixRuleValidator extends RulesFileValidator {
-  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] =
-    validateRowSize(row, rulesFileMetaData, rowNumber) match {
-      case r@Xor.Left(_) => r
-      case Xor.Right(_) =>
-        val (values, results) = row.splitAt(rulesFileMetaData.valueCols)
-        val validationErrors = values.map(a => validateAnswer(a.trim, possibleCarryOverValues, s"Invalid CarryOver value on row $rowNumber")).collect { case Xor.Left(e) => e }
-        validationErrors.headOption.fold(validateAnswer(results.head, possibleDecisionValues, s"Invalid Decision value on row $rowNumber"))(Xor.left(_))
-    }
-}

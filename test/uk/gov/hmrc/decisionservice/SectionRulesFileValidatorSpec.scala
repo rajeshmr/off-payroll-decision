@@ -82,16 +82,6 @@ class SectionRulesFileValidatorSpec extends UnitSpec with BeforeAndAfterEach wit
       }
     }
 
-
-    "return error for rule row size mismatch" in {
-      val mayBeValid = MatrixRuleValidator.validateRuleRow(validRuleRow, answerMetaDataSizeMismatch, 3)
-      mayBeValid.isLeft shouldBe true
-      mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileError]
-        error.message shouldBe "Row size does not match metadata on row 3"
-      }
-    }
-
     "return error for invalid exit text" in {
       val mayBeValid = SectionRuleValidator.validateRuleRow(ruleRowWithInvalidExitText, metaData_withInvalidExit, 2)
       mayBeValid.isLeft shouldBe true

@@ -1,10 +1,14 @@
 package uk.gov.hmrc.decisionservice
 
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.ruleengine.MatrixRuleValidator._
 import uk.gov.hmrc.decisionservice.ruleengine._
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.decisionservice.ruleengine.SectionRuleValidator._
 
+
+/**
+  * TODO merge it with SectionRulesFileValidatorSpec
+  */
 class MatrixRulesFileValidatorSpec extends UnitSpec {
 
   object RowFixture {
@@ -32,7 +36,7 @@ class MatrixRulesFileValidatorSpec extends UnitSpec {
   "section rules file validator" should {
 
     "validate correct column header size" in {
-      val mayBeValid = validateColumnHeaders(RowFixture.validHeaderRow, MetadataFixture.valid)
+      val mayBeValid = SectionRuleValidator.validateColumnHeaders(RowFixture.validHeaderRow, MetadataFixture.valid)
       mayBeValid.isRight shouldBe true
     }
 
@@ -45,36 +49,12 @@ class MatrixRulesFileValidatorSpec extends UnitSpec {
       }
     }
 
-    "correctly validate valid rule row" in {
-      val mayBeValid = validateRuleRow(RowFixture.validRuleRow, MetadataFixture.validAnswer, 3)
-      mayBeValid.isRight shouldBe true
-
-    }
-
     "return error for rule row size mismatch" in {
       val mayBeValid = validateRuleRow(RowFixture.validRuleRow, MetadataFixture.answerSizeMismatch, 3)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
         error shouldBe a[RulesFileError]
         error.message shouldBe "Row size does not match metadata on row 3"
-      }
-    }
-
-    "return error for invalid rule text" in {
-      val mayBeValid = validateRuleRow(RowFixture.ruleRowWithInvalidRuleText, MetadataFixture.invalidAnswer, 3)
-      mayBeValid.isLeft shouldBe true
-      mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileError]
-        error.message shouldBe "Invalid CarryOver value on row 3"
-      }
-    }
-
-    "return error for invalid decision text" in {
-      val mayBeValid = validateRuleRow(RowFixture.ruleRowWithInvalidDecision, MetadataFixture.invalidCarryOver, 2)
-      mayBeValid.isLeft shouldBe true
-      mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileError]
-        error.message shouldBe "Invalid Decision value on row 2"
       }
     }
   }
