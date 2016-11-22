@@ -15,15 +15,11 @@ case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:St
 
 
 trait RulesLoader {
-  type ValueType
-  type Rule
-  type RuleSet
-
   val Separator = ','
 
   def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
 
-  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
+  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet] = {
       val tryTokens = Try {
         tokenize
       }
@@ -45,7 +41,7 @@ trait RulesLoader {
     }
   }
 
-  private def >>:(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, RuleSet] = {
+  private def >>:(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = {
     val (headings :: rest) = tokens
     val errorRuleTokens = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
     errorRuleTokens match {
@@ -65,19 +61,6 @@ trait RulesLoader {
     }
   }
 
-  def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
-
-  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,RuleSet]
-
-  def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
-}
-
-
-object SectionRulesLoader extends RulesLoader {
-  type ValueType = String
-  type Rule = SectionRule
-  type RuleSet = SectionRuleSet
-
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
     val result = >>>(tokens.drop(rulesFileMetaData.valueCols).head, tokens.last.toBoolean)
     val values = tokens.take(rulesFileMetaData.valueCols)
@@ -94,5 +77,9 @@ object SectionRulesLoader extends RulesLoader {
       case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
     }
   }
+
+  def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
 
+
+object SectionRulesLoader extends RulesLoader

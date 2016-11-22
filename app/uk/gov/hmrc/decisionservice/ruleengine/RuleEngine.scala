@@ -30,14 +30,14 @@ object RuleEngine extends App {
             case x :: xs =>
               x >>>: facts match {
                 case Xor.Right(newFacts) => go(xs, newFacts)
-                case ee@Xor.Left(e) => ee
+                case e@Xor.Left(_) => e
               }
           }
       }
     }
     val maybeFacts = go(rules.rules, facts)
     maybeFacts match {
-      case ee@Xor.Left(e) => ee
+      case e@Xor.Left(_) => e
       case Xor.Right(facts) => facts match {
         case FinalFact(ff) => Xor.right(RuleEngineDecisionImpl(ff.value))
         case _ => Xor.right(RuleEngineUndecided)
