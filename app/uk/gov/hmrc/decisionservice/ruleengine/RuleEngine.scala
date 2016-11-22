@@ -4,21 +4,39 @@ import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.rules._
 
+sealed trait RuleEngineDecision { def value:String }
+object RuleEngineUndecided extends RuleEngineDecision { override def value = "Undecided" }
+case class RuleEngineDecisionImpl(value:String) extends RuleEngineDecision
+
+object FinalFact {
+  def unapply(facts:Facts) = facts.facts.values.find(_.exit)
+}
+
 object RuleEngine extends App {
 
-  def processRules(rules:Rules, facts:Facts):Xor[DecisionServiceError,Facts] = {
+  def processRules(rules:Rules, facts:Facts):Xor[DecisionServiceError,RuleEngineDecision] = {
     def go(rules:List[SectionRuleSet], facts:Facts): Xor[DecisionServiceError,Facts] = {
-      rules match {
-        case Nil => Xor.right(facts)
-        case x::xs =>
-          x >>>: facts match {
-            case Xor.Right(newFacts) => go(xs, newFacts)
-            case ee@Xor.Left(e) => ee
+      facts match {
+        case FinalFact(_) => Xor.right(facts)
+        case _ =>
+          rules match {
+            case Nil => Xor.right(facts)
+            case x::xs =>
+              x >>>: facts match {
+                case Xor.Right(newFacts) => go(xs, newFacts)
+                case ee@Xor.Left(e) => ee
+              }
           }
       }
     }
     val maybeFacts = go(rules.rules, facts)
-    maybeFacts
+    maybeFacts match {
+      case ee@Xor.Left(e) => ee
+      case Xor.Right(facts) => facts match {
+        case FinalFact(ff) => Xor.right(RuleEngineDecisionImpl(ff.value))
+        case _ => Xor.right(RuleEngineUndecided)
+      }
+    }
   }
 
 
