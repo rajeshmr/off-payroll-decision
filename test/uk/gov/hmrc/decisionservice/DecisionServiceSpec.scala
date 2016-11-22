@@ -28,7 +28,7 @@ class DecisionServiceSpec extends UnitSpec {
         "10" -> >>>("yes"))
       )
 
-      val maybeDecision = facts >>>: DecisionServiceInstance
+      val maybeDecision = facts ==>: DecisionServiceInstance
       println(maybeDecision)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
