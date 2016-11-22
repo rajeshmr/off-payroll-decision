@@ -2,6 +2,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 
 
 import cats.data.Xor
+import play.api.i18n.Messages
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, _}
 
@@ -10,12 +11,10 @@ import scala.annotation.tailrec
 
 
 sealed trait FactMatcher {
-  self:EmptyValuesValidator =>
-
-  def matchFacts(facts: Map[String,ValueType], ruleSet: SectionRuleSet): Xor[DecisionServiceError,CarryOver] =
+  def matchFacts(facts: Map[String,CarryOver], ruleSet: SectionRuleSet): Xor[DecisionServiceError,CarryOver] =
   {
     @tailrec
-    def go(factValues: List[ValueType], rules:List[Rule]):Xor[DecisionServiceError,CarryOver] = rules match {
+    def go(factValues: List[CarryOver], rules:List[SectionRule]):Xor[DecisionServiceError,CarryOver] = rules match {
       case Nil => noMatchResult(facts, ruleSet.rules)
       case rule :: xs =>
         if (!validateFacts(factValues, rule))
@@ -28,9 +27,9 @@ sealed trait FactMatcher {
         }
     }
 
-    def validateFacts(factValues: List[ValueType], rule:Rule):Boolean = factValues.size == rule.values.size
+    def validateFacts(factValues: List[CarryOver], rule:SectionRule):Boolean = factValues.size == rule.values.size
 
-    def factMatches(factValues: List[ValueType], rule:Rule):Option[CarryOver] = {
+    def factMatches(factValues: List[CarryOver], rule:SectionRule):Option[CarryOver] = {
       factValues.zip(rule.values).filterNot(equivalent(_)) match {
         case Nil => Some(rule.result)
         case _ => None
@@ -41,20 +40,28 @@ sealed trait FactMatcher {
     go(factValues, ruleSet.rules)
   }
 
-  def equivalent(p:(ValueType,ValueType)):Boolean
-}
-
-
-object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
-//  type Rule = SectionRule
-//  type CarryOver = CarryOver
-
   def equivalent(p:(CarryOver,CarryOver)):Boolean = p match {
     case (a,b) => a.value.toLowerCase == b.value.toLowerCase || valueEmpty(b)
   }
 
-  def valueEmpty(v:CarryOver) = v.value.isEmpty
+  def noMatchResult(facts: Map[String,CarryOver], rules: List[SectionRule]): Xor[DecisionServiceError,CarryOver] = {
+    val factSet = factsEmptySet(facts)
+    val rulesSet = rulesMaxEmptySet(rules)
+    if (factSet.subsetOf(rulesSet)) Xor.Right(NotValidUseCase) else Xor.Left(FactError(Messages("facts.empty.values.error")))
+  }
 
-  def notValidUseCase: CarryOver = SectionNotValidUseCase
+  def emptyPositions(values: Iterable[CarryOver]):Set[Int] = values.zipWithIndex.collect { case (a,i) if(valueEmpty(a)) => i }.toSet
+
+  def factsEmptySet(facts:Map[String,CarryOver]):Set[Int] = emptyPositions(facts.values)
+
+  def rulesMaxEmptySet(rules: List[SectionRule]):Set[Int] = {
+    def ruleEmptySet(rules: SectionRule):Set[Int] = emptyPositions(rules.values)
+    val sets = for { r <- rules } yield { ruleEmptySet(r) }
+    sets.foldLeft(Set[Int]())((a,b) => a ++ b)
+  }
+
+  def valueEmpty(c:CarryOver) = c.value.isEmpty
 }
+
+object SectionFactMatcher extends FactMatcher
 

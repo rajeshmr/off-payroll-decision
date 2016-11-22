@@ -35,7 +35,7 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
       val response = SectionFactMatcher.matchFacts(facts.facts, sectionRuleSet)
       response.isRight shouldBe true
       response.map { r =>
-        r shouldBe SectionNotValidUseCase
+        r shouldBe NotValidUseCase
       }
     }
   }
