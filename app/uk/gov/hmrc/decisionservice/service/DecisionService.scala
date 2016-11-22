@@ -27,7 +27,7 @@ trait DecisionService {
     maybeSectionRules match {
       case Xor.Right(sectionRules) =>
         RuleEngine.processRules(Rules(sectionRules),facts)
-      case ee@Xor.Left(_) => ee
+      case e@Xor.Left(_) => e
     }
   }
 }
