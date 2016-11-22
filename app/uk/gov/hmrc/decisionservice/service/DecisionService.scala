@@ -7,46 +7,44 @@ import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.ruleengine._
 
 
-//trait DecisionService {
-//
-//  type SectionRules = List[SectionRuleSet]
-//  type CarryOverFacts = Map[String,CarryOver]
-//
-//  val maybeSectionRules:Xor[DecisionServiceError,SectionRules]
-//
-//  val maybeMatrixRules:Xor[DecisionServiceError,MatrixRuleSet]
-//
-//  val csvSectionMetadata:List[RulesFileMetaData]
-//
-//  val csvMatrixMetadata:RulesFileMetaData
-//
-//  def loadSectionRules():Xor[DecisionServiceError,SectionRules] = {
-//    val maybeRules = csvSectionMetadata.map(SectionRulesLoader.load(_))
-//    val rulesErrors = maybeRules.collect {case Xor.Left(x) => x}
-//    val rules = maybeRules.collect{case Xor.Right(x) => x}
-//    rulesErrors match {
-//      case Nil => Xor.right(rules)
-//      case _ => Xor.left(rulesErrors.foldLeft(RulesFileLoadError(""))(_ ++ _))
-//    }
-//  }
-//
-//  def loadMatrixRules():Xor[DecisionServiceError,MatrixRuleSet] =
-//    MatrixRulesLoader.load(csvMatrixMetadata)
-//
-//  def >>>:(questionSet:QuestionSet):Xor[DecisionServiceError,MatrixDecision] = {
+trait DecisionService {
+
+  type CarryOverFacts = Map[String,CarryOver]
+
+  val maybeSectionRules:Xor[DecisionServiceError,List[SectionRuleSet]]
+
+  val csvSectionMetadata:List[RulesFileMetaData]
+
+  def loadSectionRules():Xor[DecisionServiceError,List[SectionRuleSet]] = {
+    val maybeRules = csvSectionMetadata.map(SectionRulesLoader.load(_))
+    val rulesErrors = maybeRules.collect {case Xor.Left(x) => x}
+    val rules = maybeRules.collect{case Xor.Right(x) => x}
+    rulesErrors match {
+      case Nil => Xor.right(rules)
+      case _ => Xor.left(rulesErrors.foldLeft(RulesFileLoadError(""))(_ ++ _))
+    }
+  }
+
+//  def >>>:(questionSet:QuestionSet):Xor[DecisionServiceError,RuleEngineDecision] = {
 //    val maybeDecision = for {
 //      sectionRules <- maybeSectionRules
-//      matrixRules <- maybeMatrixRules
 //      carryOvers <- applyToSectionRules(questionSet, sectionRules)
-//      decision <- applyToMatrixRules(carryOvers, matrixRules)
 //    }
 //    yield {
 //      decision
 //    }
 //    maybeDecision
 //  }
-//
-//  private def applyToSectionRules(questionSet:QuestionSet,sectionRules:SectionRules):Xor[DecisionServiceError,CarryOverFacts] = {
+
+  def >>>:(facts:Facts):Xor[DecisionServiceError,RuleEngineDecision] = {
+    maybeSectionRules match {
+      case Xor.Right(sectionRules) =>
+        RuleEngine.processRules(Rules(sectionRules),facts)
+      case ee@Xor.Left(_) => ee
+    }
+  }
+
+//  private def applyToSectionRules(questionSet:QuestionSet,sectionRules:List[SectionRuleSet]):Xor[DecisionServiceError,CarryOverFacts] = {
 //    val pairs = for {
 //      sectionRuleSet <- sectionRules
 //      sectionFacts <- questionSet.sections.get(sectionRuleSet.section)
@@ -60,20 +58,15 @@ import uk.gov.hmrc.decisionservice.ruleengine._
 //      case _ => Xor.left(rulesErrors.head)
 //    }
 //  }
-//
-//  def applyToMatrixRules(carryOvers:CarryOverFacts, matrixRules:MatrixRuleSet):Xor[DecisionServiceError,MatrixDecision] =
-//    MatrixFactMatcher.matchFacts(carryOvers, matrixRules)
-//}
-//
-//
-//object DecisionServiceInstance extends DecisionService {
-//  lazy val maybeSectionRules = loadSectionRules()
-//  lazy val maybeMatrixRules = loadMatrixRules()
-//
-//  val csvSectionMetadata = List(
-//    (7, 2, "/business_structure.csv", "BusinessStructure"),
-//    (9, 2, "/personal_service.csv", "PersonalService")
-//  ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
-//
-//  val csvMatrixMetadata = RulesFileMetaData(2, 1, "/matrix.csv", "matrix")
-//}
+
+}
+
+
+object DecisionServiceInstance extends DecisionService {
+  lazy val maybeSectionRules = loadSectionRules()
+  val csvSectionMetadata = List(
+    (7, 2, "/business_structure.csv", "BusinessStructure"),
+    (9, 2, "/personal_service.csv", "PersonalService"),
+    (2, 2, "/matrix.csv", "matrix")
+  ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+}

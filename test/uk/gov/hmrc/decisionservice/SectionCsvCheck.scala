@@ -11,7 +11,7 @@ trait CsvCheck {
 
   def check(l: List[String], ruleSet: SectionRuleSet):Boolean = {
     println
-    val ll = l map (>>>(_,false))
+    val ll = l map (>>>(_))
     val pairs = ruleSet.headings zip ll
     val m = Map(pairs: _*)
     prettyPrint(m)
