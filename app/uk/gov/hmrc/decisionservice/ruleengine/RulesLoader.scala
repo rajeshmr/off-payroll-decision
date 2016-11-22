@@ -96,26 +96,3 @@ object SectionRulesLoader extends RulesLoader {
   }
 }
 
-
-object MatrixRulesLoader extends RulesLoader {
-  type ValueType = CarryOver
-  type Rule = MatrixRule
-  type RuleSet = MatrixRuleSet
-
-  def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):MatrixRule = {
-    val result = MatrixDecisionImpl(tokens.last)
-    val values = tokens.take(tokens.size-1).map(>>>(_,false))
-    MatrixRule(values, result)
-  }
-
-  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,MatrixRuleSet] = {
-    Try {
-      val rules = ruleTokens.map(createRule(_, rulesFileMetaData))
-      MatrixRuleSet(headings, rules)
-    }
-    match {
-      case Success(matrixRuleSet) => Xor.right(matrixRuleSet)
-      case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
-    }
-  }
-}

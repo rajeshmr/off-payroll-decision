@@ -9,7 +9,7 @@ import uk.gov.hmrc.decisionservice.ruleengine.SectionRuleValidator._
 /**
   * TODO merge it with SectionRulesFileValidatorSpec
   */
-class MatrixRulesFileValidatorSpec extends UnitSpec {
+class Section2RulesFileValidatorSpec extends UnitSpec {
 
   object RowFixture {
     private val headers = List("Section1", "Section2", "Section3", "Section4")
