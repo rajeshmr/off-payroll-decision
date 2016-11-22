@@ -1,17 +1,18 @@
 package uk.gov.hmrc.decisionservice
 import cats.data.Xor
 import org.scalacheck.{Gen, Prop, Properties}
-import uk.gov.hmrc.decisionservice.model.rules.SectionRuleSet
+import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, CarryOverImpl, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, SectionFactMatcher, SectionRulesLoader}
 import uk.gov.hmrc.play.test.UnitSpec
 
 
 trait CsvCheck {
-  def prettyPrint(m: Map[String, String]): Unit = print(m.keySet.toList.sorted.map(a=>s"${a} ${m(a)}").mkString("\t"))
+  def prettyPrint(m: Map[String, CarryOver]): Unit = print(m.keySet.toList.sorted.map(a=>s"${a} ${m(a)}").mkString("\t"))
 
   def check(l: List[String], ruleSet: SectionRuleSet):Boolean = {
     println
-    val pairs = ruleSet.headings zip l
+    val ll = l map (CarryOverImpl(_,false))
+    val pairs = ruleSet.headings zip ll
     val m = Map(pairs: _*)
     prettyPrint(m)
     val response = SectionFactMatcher.matchFacts(m, ruleSet)

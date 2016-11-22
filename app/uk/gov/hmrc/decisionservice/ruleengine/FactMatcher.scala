@@ -11,15 +11,11 @@ import scala.annotation.tailrec
 
 sealed trait FactMatcher {
   self:EmptyValuesValidator =>
-  type ValueType
-  type Rule  <: { def values:List[ValueType]; def result:RuleResult }
-  type RuleResult
-  type RuleSet <: { def headings:List[String]; def rules:List[Rule] }
 
-  def matchFacts(facts: Facts, ruleSet: RuleSet): Xor[DecisionServiceError,RuleResult] =
+  def matchFacts(facts: Map[String,ValueType], ruleSet: SectionRuleSet): Xor[DecisionServiceError,CarryOver] =
   {
     @tailrec
-    def go(factValues: List[ValueType], rules:List[Rule]):Xor[DecisionServiceError,RuleResult] = rules match {
+    def go(factValues: List[ValueType], rules:List[Rule]):Xor[DecisionServiceError,CarryOver] = rules match {
       case Nil => noMatchResult(facts, ruleSet.rules)
       case rule :: xs =>
         if (!validateFacts(factValues, rule))
@@ -34,7 +30,7 @@ sealed trait FactMatcher {
 
     def validateFacts(factValues: List[ValueType], rule:Rule):Boolean = factValues.size == rule.values.size
 
-    def factMatches(factValues: List[ValueType], rule:Rule):Option[RuleResult] = {
+    def factMatches(factValues: List[ValueType], rule:Rule):Option[CarryOver] = {
       factValues.zip(rule.values).filterNot(equivalent(_)) match {
         case Nil => Some(rule.result)
         case _ => None
@@ -50,27 +46,8 @@ sealed trait FactMatcher {
 
 
 object SectionFactMatcher extends FactMatcher with EmptyValuesValidator {
-  type ValueType = String
-  type Rule = SectionRule
-  type RuleResult = CarryOver
-  type RuleSet = SectionRuleSet
-
-  def equivalent(p:(String,String)):Boolean = p match {
-    case (a,b) => a.toLowerCase == b.toLowerCase || valueEmpty(b)
-  }
-
-  def valueEmpty(s:String) = s.isEmpty
-
-  def notValidUseCase: CarryOver = SectionNotValidUseCase
-
-}
-
-
-object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
-  type ValueType = CarryOver
-  type Rule = MatrixRule
-  type RuleResult = MatrixDecision
-  type RuleSet = MatrixRuleSet
+//  type Rule = SectionRule
+//  type CarryOver = CarryOver
 
   def equivalent(p:(CarryOver,CarryOver)):Boolean = p match {
     case (a,b) => a.value.toLowerCase == b.value.toLowerCase || valueEmpty(b)
@@ -78,14 +55,6 @@ object MatrixFactMatcher extends FactMatcher with EmptyValuesValidator {
 
   def valueEmpty(v:CarryOver) = v.value.isEmpty
 
-  def notValidUseCase: MatrixDecision = DecisionNotValidUseCase
-
-  override def matchFacts(facts: Map[String,CarryOver], ruleSet: RuleSet): Xor[DecisionServiceError,RuleResult] = {
-    val maybeExitValue = facts.values.collectFirst{case co if co.exit => co.value}
-    maybeExitValue match {
-      case Some(value) => Xor.right(MatrixDecisionImpl(value))
-      case None => super.matchFacts(facts, ruleSet)
-    }
-  }
-
+  def notValidUseCase: CarryOver = SectionNotValidUseCase
 }
+

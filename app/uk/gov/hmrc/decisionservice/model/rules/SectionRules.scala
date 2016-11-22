@@ -1,6 +1,6 @@
 package uk.gov.hmrc.decisionservice.model.rules
 
-case class SectionRule(values:List[String], result:CarryOverImpl)
+case class SectionRule(values:List[CarryOver], result:CarryOverImpl)
 
 case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule])
 
