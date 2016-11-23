@@ -16,6 +16,16 @@ class CarryOverSpec extends UnitSpec {
       >>>("abc", false, Some("factName")).toString shouldBe ">>>(abc,factName)"
       >>>("abc", true, Some("factName")).toString shouldBe ">>>(abc,true,factName)"
     }
+    "produce correct equivalence results" in {
+      >>>.equivalent((>>>(""),>>>(""))) shouldBe true
+      >>>.equivalent((>>>(""),>>>("a"))) shouldBe false
+      >>>.equivalent((>>>("a"),>>>(""))) shouldBe true
+    }
+    "produce correct empty position sets" in {
+      >>>.emptyPositions(Seq(>>>(""),>>>("a"),>>>(""),>>>("a"))) should contain theSameElementsAs(Seq(0,2))
+      >>>.emptyPositions(Seq(>>>("a"),>>>(""),>>>(""),>>>(""))) should contain theSameElementsAs(Seq(1,2,3))
+      >>>.emptyPositions(Seq(>>>("a"),>>>("",true,Some("abc")),>>>(""),>>>("",true))) should contain theSameElementsAs(Seq(1,2,3))
+    }
   }
 
 }

@@ -8,9 +8,8 @@ case class Facts(facts:Map[String,CarryOver]){
 
   def ==+>:(rules:SectionRuleSet):Xor[DecisionServiceError,Facts] = {
     val defaultFactName = rules.section
-    SectionFactMatcher.matchFacts(facts,rules) match {
-      case x@Xor.Right(_) => x.map(co => Facts(facts + (co.name.getOrElse(defaultFactName) -> co)))
-      case e@Xor.Left(_) => e
+    SectionFactMatcher.matchFacts(facts,rules).map { carryOver =>
+      Facts(facts + (carryOver.name.getOrElse(defaultFactName) -> carryOver))
     }
   }
 

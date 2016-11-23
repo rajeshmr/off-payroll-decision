@@ -10,12 +10,6 @@ import scala.annotation.tailrec
 
 
 sealed trait FactMatcher {
-  def matchFacts(facts: Map[String, CarryOver], ruleSet: SectionRuleSet): Xor[DecisionServiceError, CarryOver]
-  def noMatchResult(facts: Map[String, CarryOver], rules: List[SectionRule]): Xor[DecisionServiceError, CarryOver]
-}
-
-
-object SectionFactMatcher extends FactMatcher {
   import FactMatcherHelper._
 
   def matchFacts(facts: Map[String,CarryOver], ruleSet: SectionRuleSet): Xor[DecisionServiceError,CarryOver] =
@@ -36,7 +30,7 @@ object SectionFactMatcher extends FactMatcher {
   }
 
   def factMatches(factValues: List[CarryOver], rule:SectionRule):Option[CarryOver] = {
-    factValues.zip(rule.values).filterNot(equivalent(_)) match {
+    factValues.zip(rule.values).filterNot(>>>.equivalent(_)) match {
       case Nil => Some(rule.result)
       case _ => None
     }
@@ -50,13 +44,13 @@ object SectionFactMatcher extends FactMatcher {
 
 }
 
+object SectionFactMatcher extends FactMatcher
+
 object FactMatcherHelper {
-  def equivalent(p:(CarryOver,CarryOver)):Boolean = p match { case (a,b) => a.equivalent(b) }
   def factsValid(factValues: List[CarryOver], rule:SectionRule):Boolean = factValues.size == rule.values.size
-  def emptyPositions(values: Iterable[CarryOver]):Set[Int] = values.zipWithIndex.collect { case (a,i) if(a.isEmpty) => i }.toSet
-  def factsEmptySet(facts:Map[String,CarryOver]):Set[Int] = emptyPositions(facts.values)
+  def factsEmptySet(facts:Map[String,CarryOver]):Set[Int] = >>>.emptyPositions(facts.values)
   def rulesMaxEmptySet(rules: List[SectionRule]):Set[Int] = {
-    def ruleEmptySet(rules: SectionRule):Set[Int] = emptyPositions(rules.values)
+    def ruleEmptySet(rules: SectionRule):Set[Int] = >>>.emptyPositions(rules.values)
     val sets = for { r <- rules } yield { ruleEmptySet(r) }
     sets.foldLeft(Set[Int]())((a,b) => a ++ b)
   }
