@@ -1,0 +1,51 @@
+{
+  "version": "0.0.1-alpha",
+  "correlationID": "12345",
+  "personalService": {
+    "contractualRightForSubstitute": true,
+    "contractrualObligationForSubstitute": false,
+    "possibleSubstituteRejection": false,
+    "engagerArrangeWorker": true,
+    "contractTermsWorkerPaysSubstitute": false,
+    "workerSentActualSubstitiute": true,
+    "possibleHelper": true,
+    "workerSentActualHelper": false,
+    "workerPayActualHelper": false
+  },
+  "control": {
+    "toldWhatToDo": true,
+    "engagerMovingWorker": true,
+    "workerDecidingHowWorkIsDone": true,
+    "whenWorkHasToBeDone": "free",
+    "workerLevelOfExpertise": "lowExperience"
+  },
+  "financialRisk": {
+    "provideVehicle": false,
+    "engagerPayForVehicle": true,
+    "workerNeedEquipment": false,
+    "workerProvideEquipment": true,
+    "workerProvideConsumablesMaterials": true,
+    "engagerPayForConsumablesMaterials": false,
+    "workerIncurExpense": true,
+    "engagerPayExpense": true,
+    "workerMainIncome": "invoicedHourlyOrDaily"
+  },
+  "businessStructure": {
+    "workerVAT": false,
+    "businesAccount": false,
+    "advertiseForWork": false,
+    "businessWebsite": true,
+    "workerPayForTraining": false,
+    "workerExpenseRunningBusinessPremises": true,
+    "workerPaysForInsurance": true
+  },
+  "partOfOrganisation": {
+    "workerReceivesBenefits": false,
+    "workerAsLineManager": true,
+    "contactWithEngagerCustomer": false,
+    "workerRepresentsEngagerBusiness": true
+  },
+  "miscalaneous": {
+    "similarWork": true
+  }
+}
