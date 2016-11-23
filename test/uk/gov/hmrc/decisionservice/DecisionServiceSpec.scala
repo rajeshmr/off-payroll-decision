@@ -29,10 +29,36 @@ class DecisionServiceSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceInstance
-      println(maybeDecision)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "exit - out of IR35"
+      }
+    }
+    "produce correct decision for a special custom fact" in {
+      val facts =
+      Facts(Map(
+        "8a" -> >>>("no"),
+        "8b" -> >>>("no"),
+        "8c" -> >>>("no"),
+        "8d" -> >>>("no"),
+        "8e" -> >>>("no"),
+        "8f" -> >>>("no"),
+        "8g" -> >>>("no"),
+        "2" -> >>>("yes"),
+        "3" -> >>>("no" ),
+        "4" -> >>>("yes"),
+        "5" -> >>>("yes"),
+        "6" -> >>>("yes"),
+        "7" -> >>>("no" ),
+        "8" -> >>>("yes"),
+        "9" -> >>>("yes"),
+        "10" -> >>>("yes"))
+      )
+
+      val maybeDecision = facts ==>: DecisionServiceInstance
+      maybeDecision.isRight shouldBe true
+      maybeDecision.map { decision =>
+        decision.value shouldBe "specialCase"
       }
     }
   }

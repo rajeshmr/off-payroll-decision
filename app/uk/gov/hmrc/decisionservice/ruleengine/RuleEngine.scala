@@ -4,11 +4,13 @@ import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.rules._
 
+import scala.annotation.tailrec
+
 sealed trait RuleEngineDecision {
   def value: String
 }
 
-object RuleEngineUndecided extends RuleEngineDecision {
+object RuleEngineDecisionUndecided extends RuleEngineDecision {
   override def value = "Undecided"
 }
 
@@ -19,17 +21,17 @@ object FinalFact {
 }
 
 object RuleEngine extends App {
-
   def processRules(rules: Rules, facts: Facts): Xor[DecisionServiceError, RuleEngineDecision] = {
+    @tailrec
     def go(rules: List[SectionRuleSet], facts: Facts): Xor[DecisionServiceError, Facts] = {
       facts match {
         case FinalFact(_) => Xor.right(facts)
         case _ =>
           rules match {
             case Nil => Xor.right(facts)
-            case x :: xs =>
-              x >>>: facts match {
-                case Xor.Right(newFacts) => go(xs, newFacts)
+            case ruleSet :: ruleSets =>
+              ruleSet ==+>: facts match {
+                case Xor.Right(newFacts) => go(ruleSets, newFacts)
                 case e@Xor.Left(_) => e
               }
           }
@@ -40,34 +42,8 @@ object RuleEngine extends App {
       case e@Xor.Left(_) => e
       case Xor.Right(facts) => facts match {
         case FinalFact(ff) => Xor.right(RuleEngineDecisionImpl(ff.value))
-        case _ => Xor.right(RuleEngineUndecided)
+        case _ => Xor.right(RuleEngineDecisionUndecided)
       }
     }
   }
-
-
-  val facts = Facts(Map(
-    "question1" -> >>>("yes"),
-    "question2" -> >>>("no" ),
-    "question3" -> >>>("yes"),
-    "question4" -> >>>("no" ),
-    "question6" -> >>>("yes")))
-  val sectionRules1 = List(
-    SectionRule(List(>>>("yes"), >>>("yes"), >>>("yes")),   >>>("high"  , true)),
-    SectionRule(List(>>>("yes"), >>>("no") , >>>("no")) ,   >>>("medium", true)),
-    SectionRule(List(>>>("yes"), >>>("no") , >>>("yes")),   >>>("low"   , false)),
-    SectionRule(List(>>>("yes"), >>>("")   , >>>("yes")),   >>>("low"   ))
-  )
-  val sectionRules2 = List(
-    SectionRule(List(>>>("no"), >>>("low"   ), >>>("yes")),   >>>("medium"  , true)),
-    SectionRule(List(>>>("no"), >>>("medium"), >>>("yes")),   >>>("high"    , true)),
-    SectionRule(List(>>>("no"), >>>("high"  ), >>>("yes")),   >>>("low"     , true))
-  )
-  val ruleSet1 = SectionRuleSet("sectionName1", List("question1", "question2", "question3"), sectionRules1)
-  val ruleSet2 = SectionRuleSet("sectionName2", List("question4", "sectionName1", "question6"), sectionRules2)
-
-  val rules = Rules(List(ruleSet1,ruleSet2))
-
-  println(processRules(rules, facts))
-
 }

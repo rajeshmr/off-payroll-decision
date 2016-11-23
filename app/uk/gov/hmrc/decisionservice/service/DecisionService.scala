@@ -36,8 +36,8 @@ trait DecisionService {
 object DecisionServiceInstance extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
   val csvSectionMetadata = List(
-    (7, 2, "/business_structure.csv", "BusinessStructure"),
+    (7, 3, "/business_structure.csv", "BusinessStructure"),
     (9, 2, "/personal_service.csv", "PersonalService"),
-    (2, 2, "/matrix.csv", "matrix")
+    (3, 2, "/matrix.csv", "matrix")
   ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
 }

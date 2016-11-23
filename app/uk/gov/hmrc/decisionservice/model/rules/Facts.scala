@@ -6,9 +6,10 @@ import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
 
 case class Facts(facts:Map[String,CarryOver]){
 
-  def >>>:(rules:SectionRuleSet):Xor[DecisionServiceError,Facts] = {
+  def ==+>:(rules:SectionRuleSet):Xor[DecisionServiceError,Facts] = {
+    val defaultFactName = rules.section
     SectionFactMatcher.matchFacts(facts,rules) match {
-      case x@Xor.Right(_) => x.map(a => Facts(facts + (rules.section -> a)))
+      case x@Xor.Right(_) => x.map(co => Facts(facts + (co.name.getOrElse(defaultFactName) -> co)))
       case e@Xor.Left(_) => e
     }
   }

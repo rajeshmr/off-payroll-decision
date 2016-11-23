@@ -40,23 +40,23 @@ object SectionRulesLoader extends RulesLoader {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
         Xor.left(RulesFileLoadError(s"in line $l all result tokens are empty"))
-      case (t, l) if t.size != rulesFileMetaData.numCols =>
-        Xor.left(RulesFileLoadError(s"in line $l number of columns is ${t.size}, should be ${rulesFileMetaData.numCols}"))
+      case (t, l) if t.size > rulesFileMetaData.numCols =>
+        Xor.left(RulesFileLoadError(s"in line $l number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols}"))
       case _ =>
         Xor.right(())
     }
   }
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
-    val result = >>>(tokens.drop(rulesFileMetaData.valueCols).head, tokens.last.toBoolean)
+    val result = >>>(tokens.drop(rulesFileMetaData.valueCols))
     val values = tokens.take(rulesFileMetaData.valueCols)
-    SectionRule(values.map(>>>(_,false)), result)
+    SectionRule(values.map(>>>(_)), result)
   }
 
   def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,SectionRuleSet] = {
     Try {
       val rules = ruleTokens.map(createRule(_, rulesFileMetaData))
-      SectionRuleSet(rulesFileMetaData.name, headings, rules)
+      SectionRuleSet(rulesFileMetaData.name, headings.take(rulesFileMetaData.valueCols), rules)
     }
     match {
       case Success(sectionRuleSet) => Xor.right(sectionRuleSet)
