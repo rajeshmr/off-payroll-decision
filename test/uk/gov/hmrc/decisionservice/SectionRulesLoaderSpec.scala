@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model.RulesFileLoadError
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
+import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, SectionFactMatcher, SectionRulesLoader}
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -11,8 +11,12 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
 
   val csvFilePath = "/section_rules_sample.csv"
   val csvFilePathError = "/section_rules_sample_error.csv"
+  val csvFileEmpty = "/section_rules_empty.csv"
+  val csvFileHeadersOnly = "/section_rules_headers_only.csv"
   val csvMetadata = RulesFileMetaData(3, 2, csvFilePath, "sectionName")
   val csvMetadataError = RulesFileMetaData(3, 2, csvFilePathError, "sectionName")
+  val csvMetadataEmpty = RulesFileMetaData(3, 2, csvFileEmpty, "sectionName")
+  val csvMetadataHeadersOnly = RulesFileMetaData(3, 2, csvFileHeadersOnly, "sectionName")
 
   "section rules loader" should {
     "load section rules from a csv file" in {
@@ -30,11 +34,27 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
         error shouldBe a [RulesFileLoadError]
       }
     }
-    "return error if a csv file contains invalid data" in {
+    "return error if the csv file contains invalid data" in {
       val maybeRules = SectionRulesLoader.load(csvMetadataError)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
+      }
+    }
+    "return error if the csv file is empty" in {
+      val maybeRules = SectionRulesLoader.load(csvMetadataEmpty)
+      maybeRules.isLeft shouldBe true
+      maybeRules.leftMap { error =>
+        error shouldBe a [RulesFileLoadError]
+      }
+    }
+    "return no error if the csv file contains only headers" in {
+      val maybeRules = SectionRulesLoader.load(csvMetadataHeadersOnly)
+      println(maybeRules)
+      maybeRules.isRight shouldBe true
+      maybeRules.map { ruleSet =>
+        ruleSet shouldBe a [SectionRuleSet]
+        ruleSet.rules should have size (0)
       }
     }
     "provide valid input rules for a matcher against a given fact" in {

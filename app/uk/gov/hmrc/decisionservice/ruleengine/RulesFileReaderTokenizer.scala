@@ -3,7 +3,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 import java.io.IOException
 
 import scala.io.Source
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 object RulesFileReaderTokenizer {
   private val Separator = ','
@@ -16,8 +16,8 @@ object RulesFileReaderTokenizer {
       Failure(new IOException(s"resource not found: ${rulesFileMetaData.path}"))
     }
     else {
-      Try(using(Source.fromInputStream(is)) { res =>
-        res.getLines.map(_.split(Separator).map(_.trim).toList).toList
+      Try(using(Source.fromInputStream(is)) { source =>
+        source.getLines.map(_.split(Separator).map(_.trim).toList).toList
       })
     }
   }
