@@ -31,4 +31,6 @@ object >>> {
     val n = tokens.drop(2).headOption.collect{ case s if !s.isEmpty => s}
     new >>>(v,x,n)
   }
+  def equivalent(p:(CarryOver,CarryOver)):Boolean = p match { case (a,b) => a.equivalent(b) }
+  def emptyPositions(cos: Iterable[CarryOver]):Set[Int] = cos.zipWithIndex.collect { case (a,i) if(a.isEmpty) => i }.toSet
 }
