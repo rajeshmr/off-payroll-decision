@@ -20,7 +20,7 @@ object FinalFact {
   def unapply(facts: Facts) = facts.facts.values.find(_.exit)
 }
 
-object RuleEngine extends App {
+trait RuleEngine {
   def processRules(rules: Rules, facts: Facts): Xor[DecisionServiceError, RuleEngineDecision] = {
     @tailrec
     def go(rules: List[SectionRuleSet], facts: Facts): Xor[DecisionServiceError, Facts] = {
@@ -38,12 +38,11 @@ object RuleEngine extends App {
       }
     }
     val maybeFacts = go(rules.rules, facts)
-    maybeFacts match {
-      case e@Xor.Left(_) => e
-      case Xor.Right(facts) => facts match {
-        case FinalFact(ff) => Xor.right(RuleEngineDecisionImpl(ff.value))
-        case _ => Xor.right(RuleEngineDecisionUndecided)
-      }
+    maybeFacts.map {
+      case FinalFact(ff) => RuleEngineDecisionImpl(ff.value)
+      case _ => RuleEngineDecisionUndecided
     }
   }
 }
+
+object RuleEngineInstance extends RuleEngine

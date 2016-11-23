@@ -7,7 +7,7 @@ import uk.gov.hmrc.decisionservice.ruleengine._
 
 
 trait DecisionService {
-  type CarryOverFacts = Map[String,CarryOver]
+  val ruleEngine:RuleEngine = RuleEngineInstance
 
   val maybeSectionRules:Xor[DecisionServiceError,List[SectionRuleSet]]
 
@@ -26,18 +26,9 @@ trait DecisionService {
   def ==>:(facts:Facts):Xor[DecisionServiceError,RuleEngineDecision] = {
     maybeSectionRules match {
       case Xor.Right(sectionRules) =>
-        RuleEngine.processRules(Rules(sectionRules),facts)
+        ruleEngine.processRules(Rules(sectionRules),facts)
       case e@Xor.Left(_) => e
     }
   }
 }
 
-
-object DecisionServiceInstance extends DecisionService {
-  lazy val maybeSectionRules = loadSectionRules()
-  val csvSectionMetadata = List(
-    (7, 3, "/business_structure.csv", "BusinessStructure"),
-    (9, 2, "/personal_service.csv", "PersonalService"),
-    (3, 2, "/matrix.csv", "matrix")
-  ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
-}
