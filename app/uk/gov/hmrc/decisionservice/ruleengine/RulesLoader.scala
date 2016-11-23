@@ -1,13 +1,10 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import java.io.IOException
-
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.model._
-
-import scala.io.Source
+import uk.gov.hmrc.decisionservice.model.rules._
 import scala.util.{Failure, Success, Try}
+import RulesFileReaderTokenizer._
 
 case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:String){
   def numCols = valueCols + resultCols
@@ -15,33 +12,22 @@ case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:St
 
 
 trait RulesLoader {
-  val Separator = ','
 
-  def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
+  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet]
 
-  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet] = {
-      val tryTokens = Try {
-        tokenize
-      }
-      tryTokens match {
-        case Success(tokens) =>
-          tokens >>: this
-        case Failure(e) =>
-          Xor.left(RulesFileLoadError(e.getMessage))
-      }
+}
+
+object SectionRulesLoader extends RulesLoader {
+
+  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet] =
+    tokenize match {
+      case Success(tokens) =>
+        parseRules(tokens)
+      case Failure(e) =>
+        Xor.left(RulesFileLoadError(e.getMessage))
     }
 
-  private def tokenize(implicit rulesFileMetaData: RulesFileMetaData): List[List[String]] = {
-    val is = getClass.getResourceAsStream(rulesFileMetaData.path)
-    if (is == null) {
-      throw new IOException(s"resource not found: ${rulesFileMetaData.path}")
-    }
-    using(Source.fromInputStream(is)) { res =>
-      res.getLines.map(_.split(Separator).map(_.trim).toList).toList
-    }
-  }
-
-  private def >>:(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = {
+  private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = {
     val (headings :: rest) = tokens
     val errorRuleTokens = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
     errorRuleTokens match {
@@ -80,6 +66,3 @@ trait RulesLoader {
 
   def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
-
-
-object SectionRulesLoader extends RulesLoader

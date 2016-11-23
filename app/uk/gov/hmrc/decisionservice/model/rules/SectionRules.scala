@@ -16,5 +16,6 @@ object NotValidUseCase extends CarryOver {
   override def exit = false
 }
 
-case class >>>(value:String, exit:Boolean = false) extends CarryOver
-
+case class >>>(value:String, exit:Boolean = false) extends CarryOver {
+  override def toString: String = if (exit) super.toString else s">>>($value)"
+}
