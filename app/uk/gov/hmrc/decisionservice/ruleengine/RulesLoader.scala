@@ -27,13 +27,14 @@ object SectionRulesLoader extends RulesLoader {
         Xor.left(RulesFileLoadError(e.getMessage))
     }
 
-  private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = {
-    val (headings :: rest) = tokens
-    val errorRuleTokens = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
-    errorRuleTokens match {
-      case Nil => createRuleSet(rulesFileMetaData, rest, headings)
-      case l => Xor.left(errorRuleTokens.foldLeft(RulesFileLoadError(""))(_ ++ _))
-    }
+  private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = tokens match {
+    case Nil => Xor.left(RulesFileLoadError(s"empty rules file ${rulesFileMetaData.path}"))
+    case (headings :: rest) =>
+      val errorRuleTokens = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
+      errorRuleTokens match {
+        case Nil => createRuleSet(rulesFileMetaData, rest, headings)
+        case l => Xor.left(errorRuleTokens.foldLeft(RulesFileLoadError(""))(_ ++ _))
+      }
   }
 
   private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
