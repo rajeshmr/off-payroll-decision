@@ -4,7 +4,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model.RulesFileLoadError
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, SectionRuleSet}
-import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, SectionFactMatcher, SectionRulesLoader}
+import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, SectionRulesLoader}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
@@ -67,7 +67,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       maybeRules.map { ruleSet =>
         ruleSet.rules should have size 4
         ruleSet.headings should have size 3
-        val response = SectionFactMatcher.matchFacts(facts.facts, ruleSet)
+        val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
         response.isRight shouldBe true
         response.map { sectionResult =>
           sectionResult.value shouldBe "low"

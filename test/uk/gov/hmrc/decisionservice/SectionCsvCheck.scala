@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 import cats.data.Xor
 import org.scalacheck.{Gen, Prop, Properties}
 import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, >>>, SectionRuleSet}
-import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, SectionFactMatcher, SectionRulesLoader}
+import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, SectionRulesLoader}
 import uk.gov.hmrc.play.test.UnitSpec
 
 
@@ -15,7 +15,7 @@ trait CsvCheck {
     val pairs = ruleSet.headings zip ll
     val m = Map(pairs: _*)
     prettyPrint(m)
-    val response = SectionFactMatcher.matchFacts(m, ruleSet)
+    val response = FactMatcherInstance.matchFacts(m, ruleSet)
     response match {
       case Xor.Right(sectionResult) =>
         print(s"\t${sectionResult.value}")
