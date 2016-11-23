@@ -4,7 +4,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
+import uk.gov.hmrc.decisionservice.ruleengine.FactMatcherInstance
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
@@ -22,7 +22,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List(>>>("no" ),>>>(""   ),>>>("yes")), >>>("low"         ))
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
-      val response = SectionFactMatcher.matchFacts(facts.facts, ruleSet)
+      val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
       response.isRight shouldBe true
       response.map { sectionResult =>
         sectionResult.value shouldBe "low"
@@ -40,7 +40,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List(>>>("no" ),>>>(""   ),>>>("yes")), >>>("low"         ))
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
-      val response = SectionFactMatcher.matchFacts(facts.facts, ruleSet)
+      val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
       response.isRight shouldBe true
       response.map { sectionResult =>
         sectionResult shouldBe NotValidUseCase
@@ -57,7 +57,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         SectionRule(List(>>>("no" ),>>>(""   ),>>>("yes")), >>>("low"         ))
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
-      val response = SectionFactMatcher.matchFacts(facts.facts, ruleSet)
+      val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
       response.isRight shouldBe true
       response.map { r =>
         r shouldBe NotValidUseCase

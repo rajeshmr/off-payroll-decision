@@ -44,7 +44,7 @@ sealed trait FactMatcher {
 
 }
 
-object SectionFactMatcher extends FactMatcher
+object FactMatcherInstance extends FactMatcher
 
 object FactMatcherHelper {
   def factsValid(factValues: List[CarryOver], rule:SectionRule):Boolean = factValues.size == rule.values.size

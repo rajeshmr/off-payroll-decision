@@ -4,7 +4,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules.{SectionRuleSet, _}
-import uk.gov.hmrc.decisionservice.ruleengine.SectionFactMatcher
+import uk.gov.hmrc.decisionservice.ruleengine.FactMatcherInstance
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
@@ -19,7 +19,7 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         SectionRule(List(>>>("no" ),>>>("yes"),>>>(""   )), >>>("low"         ))
       )
       val sectionRuleSet = SectionRuleSet("sectionName",List("question1", "question2", "question3"), sectionRules)
-      val response = SectionFactMatcher.matchFacts(facts.facts, sectionRuleSet)
+      val response = FactMatcherInstance.matchFacts(facts.facts, sectionRuleSet)
       response.isLeft shouldBe true
       response.leftMap { error =>
         error shouldBe a [FactError]
@@ -32,7 +32,7 @@ class SectionEmptyValuesMatchingSpec extends UnitSpec with BeforeAndAfterEach wi
         SectionRule(List(>>>("no" ),>>>(""   ),>>>(""   )), >>>("low"         ))
       )
       val sectionRuleSet = SectionRuleSet("sectionName",List("question1", "question2", "question3"), sectionRules)
-      val response = SectionFactMatcher.matchFacts(facts.facts, sectionRuleSet)
+      val response = FactMatcherInstance.matchFacts(facts.facts, sectionRuleSet)
       response.isRight shouldBe true
       response.map { r =>
         r shouldBe NotValidUseCase
