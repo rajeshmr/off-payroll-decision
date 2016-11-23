@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 import cats.data.Xor
 import org.scalacheck.{Gen, Prop, Properties}
 import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, >>>, SectionRuleSet}
-import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, SectionRulesLoader}
+import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, RulesLoaderInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
 
@@ -33,7 +33,7 @@ object BusinessStructureCheck extends Properties("business structure check") wit
   } yield {
     y
   }
-  val maybeRules = SectionRulesLoader.load(csvMetadata)
+  val maybeRules = RulesLoaderInstance.load(csvMetadata)
   maybeRules.map { ruleSet =>
     property("rule should match all possible facts") =
       Prop.forAll(gen) { l =>
@@ -50,7 +50,7 @@ object PersonalServiceCheck extends Properties("personal service check") with Cs
   } yield {
     y
   }
-  val maybeRules = SectionRulesLoader.load(csvMetadata)
+  val maybeRules = RulesLoaderInstance.load(csvMetadata)
   maybeRules.map { ruleSet =>
     property("rule should match all possible facts") =
       Prop.forAll(gen) { l =>
