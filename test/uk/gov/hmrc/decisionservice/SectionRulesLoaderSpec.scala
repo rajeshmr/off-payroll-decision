@@ -4,7 +4,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model.RulesFileLoadError
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, SectionRuleSet}
-import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, SectionRulesLoader}
+import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, RulesLoaderInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
@@ -20,7 +20,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
 
   "section rules loader" should {
     "load section rules from a csv file" in {
-      val maybeRules = SectionRulesLoader.load(csvMetadata)
+      val maybeRules = RulesLoaderInstance.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleSet =>
         ruleSet.rules should have size 4
@@ -28,28 +28,28 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
       }
     }
     "return error if a csv file is not found" in {
-      val maybeRules = SectionRulesLoader.load(RulesFileMetaData(3, 2, csvFilePath + "xx", ""))
+      val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(3, 2, csvFilePath + "xx", ""))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
       }
     }
     "return error if the csv file contains invalid data" in {
-      val maybeRules = SectionRulesLoader.load(csvMetadataError)
+      val maybeRules = RulesLoaderInstance.load(csvMetadataError)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
       }
     }
     "return error if the csv file is empty" in {
-      val maybeRules = SectionRulesLoader.load(csvMetadataEmpty)
+      val maybeRules = RulesLoaderInstance.load(csvMetadataEmpty)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]
       }
     }
     "return no error if the csv file contains only headers" in {
-      val maybeRules = SectionRulesLoader.load(csvMetadataHeadersOnly)
+      val maybeRules = RulesLoaderInstance.load(csvMetadataHeadersOnly)
       println(maybeRules)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleSet =>
@@ -62,7 +62,7 @@ class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with Scala
         "Q1" -> >>>("yes"),
         "Q2" -> >>>("no"),
         "Q3" -> >>>("yes")))
-      val maybeRules = SectionRulesLoader.load(csvMetadata)
+      val maybeRules = RulesLoaderInstance.load(csvMetadata)
       maybeRules.isRight shouldBe true
       maybeRules.map { ruleSet =>
         ruleSet.rules should have size 4

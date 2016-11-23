@@ -13,12 +13,6 @@ case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:St
 
 trait RulesLoader {
 
-  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet]
-
-}
-
-object SectionRulesLoader extends RulesLoader {
-
   def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet] =
     tokenize match {
       case Success(tokens) =>
@@ -67,3 +61,5 @@ object SectionRulesLoader extends RulesLoader {
 
   def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
+
+object RulesLoaderInstance extends RulesLoader

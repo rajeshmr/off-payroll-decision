@@ -14,7 +14,7 @@ trait DecisionService {
   val csvSectionMetadata:List[RulesFileMetaData]
 
   def loadSectionRules():Xor[DecisionServiceError,List[SectionRuleSet]] = {
-    val maybeRules = csvSectionMetadata.map(SectionRulesLoader.load(_))
+    val maybeRules = csvSectionMetadata.map(RulesLoaderInstance.load(_))
     val rulesErrors = maybeRules.collect {case Xor.Left(x) => x}
     val rules = maybeRules.collect{case Xor.Right(x) => x}
     rulesErrors match {
