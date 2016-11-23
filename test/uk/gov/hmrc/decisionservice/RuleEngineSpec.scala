@@ -1,9 +1,10 @@
 package uk.gov.hmrc.decisionservice
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngine, RuleEngineDecisionUndecided}
+import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngine, RuleEngineDecisionUndecided, RuleEngineInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class RuleEngineSpec extends UnitSpec {
+  val ruleEngine = RuleEngineInstance
   val sectionRules1 = List(
     SectionRule(List(>>>("yes"), >>>("yes"), >>>("yes")),   >>>("high"  , true)),
     SectionRule(List(>>>("yes"), >>>("no") , >>>("no")) ,   >>>("medium", true)),
@@ -28,7 +29,7 @@ class RuleEngineSpec extends UnitSpec {
         "question3" -> >>>("yes"),
         "question4" -> >>>("no" ),
         "question6" -> >>>("yes")))
-      val maybeDecision = RuleEngine.processRules(rules, facts)
+      val maybeDecision = ruleEngine.processRules(rules, facts)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "medium2"
@@ -51,7 +52,7 @@ class RuleEngineSpec extends UnitSpec {
         "question3" -> >>>("yes"),
         "question4" -> >>>("no" ),
         "question6" -> >>>("yes")))
-      val maybeDecision = RuleEngine.processRules(rules, facts)
+      val maybeDecision = ruleEngine.processRules(rules, facts)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "low2"
@@ -64,7 +65,7 @@ class RuleEngineSpec extends UnitSpec {
         "question3" -> >>>("yes"),
         "question4" -> >>>("no" ),
         "question6" -> >>>("yes")))
-      val maybeDecision = RuleEngine.processRules(rules, facts)
+      val maybeDecision = ruleEngine.processRules(rules, facts)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "high"
@@ -77,7 +78,7 @@ class RuleEngineSpec extends UnitSpec {
         "question3" -> >>>("yes"),
         "question4" -> >>>("yes"),
         "question6" -> >>>("yes")))
-      val maybeDecision = RuleEngine.processRules(rules, facts)
+      val maybeDecision = ruleEngine.processRules(rules, facts)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision shouldBe RuleEngineDecisionUndecided
