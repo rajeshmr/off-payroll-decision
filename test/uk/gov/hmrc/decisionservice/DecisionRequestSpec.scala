@@ -50,7 +50,6 @@ class DecisionRequestSpec extends UnitSpec {
       )
       val decisionRequest = QuestionSet("1.0", questionSet)
       val jsValue:JsValue = Json.toJson(decisionRequest)
-      println(jsValue)
       val sections = jsValue \\ "sections"
       val factsWith1 = jsValue \\ "1"
       sections should have size 1

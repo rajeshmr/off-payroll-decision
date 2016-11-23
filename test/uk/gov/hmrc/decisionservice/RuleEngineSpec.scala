@@ -1,6 +1,6 @@
 package uk.gov.hmrc.decisionservice
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngine, RuleEngineUndecided}
+import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngine, RuleEngineDecisionUndecided}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class RuleEngineSpec extends UnitSpec {
@@ -21,7 +21,7 @@ class RuleEngineSpec extends UnitSpec {
   val rules = Rules(List(ruleSet1,ruleSet2))
 
   "rule engine" should {
-    "produce correct decision for a sample fact and rules with a simple inference" in {
+    "produce correct decision for a sample fact and rules with a simple inference, new fact has a section name ('sectionName1')" in {
       val facts = Facts(Map(
         "question1" -> >>>("yes"),
         "question2" -> >>>("no" ),
@@ -32,6 +32,29 @@ class RuleEngineSpec extends UnitSpec {
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "medium2"
+      }
+    }
+    "produce correct decision for a sample fact and rules with a simple inference, new fact has a custom name ('customName')" in {
+      val customName = "customName"
+      val sectionRules1 = List(
+        SectionRule(List(>>>("yes"), >>>("yes"), >>>("yes")),   >>>("high"  , false, Some(customName))),
+        SectionRule(List(>>>("yes"), >>>("no") , >>>("no")) ,   >>>("medium", true , Some(customName))),
+        SectionRule(List(>>>("yes"), >>>("no") , >>>("yes")),   >>>("low"   , false, Some(customName))),
+        SectionRule(List(>>>("yes"), >>>("")   , >>>("yes")),   >>>("low"   ))
+      )
+      val ruleSet1 = SectionRuleSet("sectionName1", List("question1", "question2", "question3"), sectionRules1)
+      val ruleSet2 = SectionRuleSet("sectionName2", List("question4", customName, "question6"), sectionRules2)
+      val rules = Rules(List(ruleSet1,ruleSet2))
+      val facts = Facts(Map(
+        "question1" -> >>>("yes"),
+        "question2" -> >>>("yes" ),
+        "question3" -> >>>("yes"),
+        "question4" -> >>>("no" ),
+        "question6" -> >>>("yes")))
+      val maybeDecision = RuleEngine.processRules(rules, facts)
+      maybeDecision.isRight shouldBe true
+      maybeDecision.map { decision =>
+        decision.value shouldBe "low2"
       }
     }
     "produce correct decision for a sample fact and rules with a short-circuit exit" in {
@@ -57,7 +80,7 @@ class RuleEngineSpec extends UnitSpec {
       val maybeDecision = RuleEngine.processRules(rules, facts)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
-        decision shouldBe RuleEngineUndecided
+        decision shouldBe RuleEngineDecisionUndecided
       }
     }
   }

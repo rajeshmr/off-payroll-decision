@@ -31,7 +31,7 @@ object SectionFactMatcher extends FactMatcher {
         }
     }
 
-    val factValues = ruleSet.headings.flatMap(a => facts.get(a))
+    val factValues = ruleSet.headings.map(a => facts.getOrElse(a,EmptyCarryOver))
     go(factValues, ruleSet.rules)
   }
 

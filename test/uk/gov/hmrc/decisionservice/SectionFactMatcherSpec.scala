@@ -29,10 +29,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
         sectionResult.exit shouldBe true
       }
     }
-    "produce error for a fact with missing obligatory answers" in {
-      val fact = Map(
-        "question1" -> "yes",
-        "question3" -> "yes")
+    "produce 'section not valid use case' result for a fact with missing obligatory answers" in {
       val facts = Facts(Map(
         "question1" -> >>>("yes"),
         "question3" -> >>>("yes")))
@@ -44,9 +41,9 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = SectionFactMatcher.matchFacts(facts.facts, ruleSet)
-      response.isLeft shouldBe true
-      response.leftMap { error =>
-        error shouldBe a [FactError]
+      response.isRight shouldBe true
+      response.map { sectionResult =>
+        sectionResult shouldBe NotValidUseCase
       }
     }
     "produce 'section not valid use case' result when match is not found" in {
