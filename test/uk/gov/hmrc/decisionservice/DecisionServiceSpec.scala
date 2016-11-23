@@ -1,7 +1,7 @@
 package uk.gov.hmrc.decisionservice
 
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
-import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineInstance, RulesFileMetaData}
+import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.decisionservice.service.DecisionService
 import uk.gov.hmrc.play.test.UnitSpec
 

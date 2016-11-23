@@ -8,22 +8,20 @@ sealed trait CarryOver {
   def isEmpty = value.isEmpty
 }
 
-object NotValidUseCase extends CarryOver {
+case object NotValidUseCase extends CarryOver {
   override def value = "NotValidUseCase"
   override def exit = false
   override def name = None
-  override def toString = s">>>($value)"
 }
 
-object EmptyCarryOver extends CarryOver {
+case object EmptyCarryOver extends CarryOver {
   override def value = ""
   override def exit = false
   override def name = None
-  override def toString = ">>>(,)"
 }
 
 case class >>>(value:String, exit:Boolean = false, name:Option[String] = None) extends CarryOver {
-  override def toString: String = if (exit) s">>>($value,$exit,${name.getOrElse("")})" else s">>>($value,${name.getOrElse("")})"
+  override def toString: String = List(Some(value), if (exit) Some("true") else None, name).flatten.mkString(">>>(", ",", ")")
 }
 
 object >>> {
