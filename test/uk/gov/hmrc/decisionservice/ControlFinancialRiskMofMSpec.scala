@@ -14,6 +14,7 @@ class ControlFinancialRiskMofMSpec extends UnitSpec {
       (24, 3, "/tables/financial_risk.csv", "financial_risk"),
       (5,  3, "/tables/Part of organisation.csv", "part_of_organisation"),
       (1,  3, "/tables/Misc.csv", "miscellaneous"),
+      (7,  3, "/tables/Business Structure.csv", "business_structure"),
       (6,  3, "/tables/Matrix of Matrices.csv", "matrix")
     ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
   }
@@ -42,7 +43,13 @@ class ControlFinancialRiskMofMSpec extends UnitSpec {
           "personal_service" -> >>>("medium")
         ) ++
         Map(
-          "business_structure" -> >>>("low")
+          "workerVAT" -> >>>("yes"),
+          "businessAccount" -> >>>("yes"),
+          "advertiseForWork" -> >>>("yes"),
+          "businessWebsite" -> >>>("no"),
+          "workerPayForTraining" -> >>>("no"),
+          "workerExpenseRunningBusinessPremises" -> >>>("no"),
+          "workerPaysForInsurance" -> >>>("no")
         ) ++
         Map(
           "similarWork" -> >>>("yes")
