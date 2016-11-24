@@ -1,7 +1,7 @@
 {
   "id": "https://github.com/hmrc/off-payroll-decision-service",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
+  "description": "This schema defines the output message for the off-payroll-decision-service its root object is a Decision",
   "type": "object",
   "properties": {
     "version": {
@@ -17,7 +17,8 @@
         "Outside IR35",
         "Self-Employed",
         "Inside IR35",
-        "Employed"
+        "Employed",
+        "Unknown"
       ]
     },
     "carryOnWithQuestions": {

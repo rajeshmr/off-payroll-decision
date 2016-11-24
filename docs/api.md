@@ -32,7 +32,7 @@ Requests use the HTTP `POST` method
 | control           | false              | 2nd section  of the Question Set |
 | financialRisk   | false              | 3rd section  of the Question Set |
 | businesStructure| false              | 4th section  of the Question Set |
-| section OfOrganisation| false              | 5th section  of the Question Set |
+| partOfOrganisation| false              | 5th section  of the Question Set |
 | miscellaneous| false              | 6th section  of the Question Set |
 
  _Note:_ The __QuestionSet__ does not need to contain all the sections apsection  from the first mandatory 'personalService' section. The QuestionSet __Sections__ from two onwards are optional but they must be supplied in order. For example section three should not be supplied without two and so on. Within each section there are a number of __Scenarios__, for a complete list refer to the [JSON Schema](off-payroll-question-set-schema.json) Once all the sections are present in this QuestionSet then a __Decision__ response will be present. Though depending on the QuestionSet a __Decision__ may be arrived at before all sections are present, this is known as a 'hard-exit'
@@ -52,7 +52,7 @@ Requests use the HTTP `POST` method
 | correlationID        | true               | Unique number to identify this QuestionSet and correlate it to its  decision |
 | result               | true               | An enumeration of "Outside IR35" &#124; "Inside IR35" &#124; "Unknown"|
 | carryOnWithQuestions | true               | true if the input QuestionSet that created this Decision is incomplete <br /> or false if a QuestionSet has been completed and the Decision is therefore final|
-| score                | optionaly empty    | A map of scores fully populated only when attribute "carryOnWithQuestions" is false and therefore a Decision is final |
+| score                | true               | A map of scores fully populated only when attribute "carryOnWithQuestions" is false and therefore a Decision is final |
 
 
 * HTTP 400 Bad Request for invalid/error scenarios
