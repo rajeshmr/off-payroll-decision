@@ -81,7 +81,12 @@ class RuleEngineSpec extends UnitSpec {
       val maybeDecision = ruleEngine.processRules(rules, facts)
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
-        decision shouldBe RuleEngineDecisionUndecided
+        decision shouldBe a [RuleEngineDecisionUndecided]
+        val maybeCarryOver = decision.facts.get("sectionName2")
+        maybeCarryOver.isDefined shouldBe true
+        maybeCarryOver.map{ carryOver =>
+          carryOver shouldBe NotValidUseCase
+        }
       }
     }
   }
