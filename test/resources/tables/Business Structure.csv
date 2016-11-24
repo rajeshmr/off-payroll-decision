@@ -1,4 +1,4 @@
-workerVAT,businesAccount,advertiseForWork,businessWebsite,workerPayForTraining,workerExpenseRunningBusinessPremises,workerPaysForInsurance,CarryOverValue ,Exit,CarryOverFactName
+workerVAT,businessAccount,advertiseForWork,businessWebsite,workerPayForTraining,workerExpenseRunningBusinessPremises,workerPaysForInsurance,CarryOverValue ,Exit,CarryOverFactName
 Yes,Yes,Yes,Yes,Yes,Yes,Yes,High,FALSE,
 Yes,Yes,Yes,Yes,Yes,Yes,No,High,FALSE,
 Yes,Yes,Yes,Yes,Yes,No,No,High,FALSE,
