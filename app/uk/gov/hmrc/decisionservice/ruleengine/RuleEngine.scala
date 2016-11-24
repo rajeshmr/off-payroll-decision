@@ -9,13 +9,14 @@ import scala.annotation.tailrec
 
 sealed trait RuleEngineDecision {
   def value: String
+  def facts: Map[String,CarryOver]
 }
 
-object RuleEngineDecisionUndecided extends RuleEngineDecision {
+case class RuleEngineDecisionUndecided(facts: Map[String,CarryOver]) extends RuleEngineDecision {
   override def value = "Undecided"
 }
 
-case class RuleEngineDecisionImpl(value: String) extends RuleEngineDecision
+case class RuleEngineDecisionImpl(value: String, facts: Map[String,CarryOver]) extends RuleEngineDecision
 
 object FinalFact {
   def unapply(facts: Facts) = facts.facts.values.find(_.exit)
@@ -40,12 +41,12 @@ trait RuleEngine {
     }
     val maybeFacts = go(rules.rules, facts)
     maybeFacts.map {
-      case FinalFact(ff) =>
+      case f@FinalFact(ff) =>
         Logger.info(s"decision found: '${ff.value}'\n")
-        RuleEngineDecisionImpl(ff.value)
-      case _ =>
+        RuleEngineDecisionImpl(ff.value, f.facts)
+      case f =>
         Logger.info(s"decision not found - undecided\n")
-        RuleEngineDecisionUndecided
+        RuleEngineDecisionUndecided(f.facts)
     }
   }
 }

@@ -10,7 +10,7 @@ workPatternImpact,provideVehicle,engagerPayForVehicle,workerNeedEquipment,worker
 ,,,,,,,,,,,Yes,,,,,,Yes,Yes,Yes,,,,,HiIGH,FALSE,
 ,,,,,,,Yes,No,,,Yes,,,,,,,,,,,,,HiIGH,FALSE,
 ,,,,,,,,,,,Yes,,,,,,,,,,,Yes,Yes,HiIGH,FALSE,
-Yes,,,,,,,,,,,,,Yes,,,,,,,,,,,HiIGH,FALSE,
+high,,,,,,,,,,,,,Yes,,,,,,,,,,,high2,FALSE,
 ,,,,,,,Yes,,,,,,,Yes,,,Yes,Yes,Yes,,,,,HiIGH,FALSE,
 ,,,,,,,Yes,,,,,,,Yes,,,,,,,,Yes,Yes,HiIGH,FALSE,
 ,,,,,,,,No,,,,,,Yes,,,,,,,,,,HIGH,FALSE,
