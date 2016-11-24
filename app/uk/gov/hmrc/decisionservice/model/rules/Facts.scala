@@ -10,8 +10,8 @@ case class Facts(facts:Map[String,CarryOver]){
   def ==+>:(rules:SectionRuleSet):Xor[DecisionServiceError,Facts] = {
     val defaultFactName = rules.section
     Logger.info(s"matching for section:\t'$defaultFactName'")
-    Logger.info(s"headings:\t${rules.headings.mkString("\t")}")
-    Logger.info(s"facts:   \t${rules.headings.map(facts.getOrElse(_, >>>("")).value).mkString("\t")}")
+    Logger.info(s"headings:\t${rules.headings.mkString("\t,")}")
+    Logger.info(s"facts:   \t${rules.headings.map(facts.getOrElse(_, >>>("")).value).mkString("\t,")}")
     FactMatcherInstance.matchFacts(facts,rules).map { carryOver =>
       val factName = carryOver.name.getOrElse(defaultFactName)
       val newFact = (factName -> carryOver)
