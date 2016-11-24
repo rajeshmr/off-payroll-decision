@@ -33,7 +33,7 @@ sealed trait FactMatcher {
   def factMatches(factValues: List[CarryOver], rule:SectionRule):Option[CarryOver] = {
     factValues.zip(rule.values).filterNot(>>>.equivalent(_)) match {
       case Nil =>
-        Logger.info(s"matched:\t${rule.values.map(_.value).mkString("\t")}")
+        Logger.info(s"matched:\t${rule.values.map(_.value).mkString("\t,")}")
         Some(rule.result)
       case _ => None
     }
