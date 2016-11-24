@@ -7,7 +7,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 
 trait CsvCheck {
-  def prettyPrint(m: Map[String, CarryOver]): Unit = print(m.keySet.toList.sorted.map(a=>s"${a} ${m(a)}").mkString("\t"))
+  def prettyPrint(m: Map[String, CarryOver]): Unit = print(m.keySet.toList.sorted.map(a=>s"${a} ${m(a).value}").mkString("\t"))
 
   def check(l: List[String], ruleSet: SectionRuleSet):Boolean = {
     println
