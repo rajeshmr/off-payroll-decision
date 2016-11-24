@@ -6,7 +6,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object MicroServiceBuild extends Build with MicroService {
 
-  val appName = "decision-service"
+  val appName = "off-payroll-decision-service"
 
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
@@ -33,7 +33,7 @@ private object AppDependencies {
   val droolsDependencies = Seq(
     "drools-compiler",
     "drools-core",
-    "drools-jsr94",
+    //"drools-jsr94",
     "drools-decisiontables",
     "knowledge-api"
   ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
