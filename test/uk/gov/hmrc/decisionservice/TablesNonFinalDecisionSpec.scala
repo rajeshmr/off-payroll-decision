@@ -5,7 +5,7 @@ import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.decisionservice.service.DecisionService
 import uk.gov.hmrc.play.test.UnitSpec
 
-class ControlFinancialRiskSpec extends UnitSpec {
+class TablesNonFinalDecisionSpec extends UnitSpec {
 
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
