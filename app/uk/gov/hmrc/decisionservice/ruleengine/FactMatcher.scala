@@ -2,6 +2,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 
 
 import cats.data.Xor
+import play.api.Logger
 import play.api.i18n.Messages
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, _}
@@ -31,7 +32,9 @@ sealed trait FactMatcher {
 
   def factMatches(factValues: List[CarryOver], rule:SectionRule):Option[CarryOver] = {
     factValues.zip(rule.values).filterNot(>>>.equivalent(_)) match {
-      case Nil => Some(rule.result)
+      case Nil =>
+        Logger.info(s"matched:\t${rule.values.map(_.value).mkString("\t")}")
+        Some(rule.result)
       case _ => None
     }
   }

@@ -1,6 +1,7 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
+import play.api.Logger
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.rules._
 
@@ -39,8 +40,12 @@ trait RuleEngine {
     }
     val maybeFacts = go(rules.rules, facts)
     maybeFacts.map {
-      case FinalFact(ff) => RuleEngineDecisionImpl(ff.value)
-      case _ => RuleEngineDecisionUndecided
+      case FinalFact(ff) =>
+        Logger.info(s"decision found: '${ff.value}'\n")
+        RuleEngineDecisionImpl(ff.value)
+      case _ =>
+        Logger.info(s"decision not found - undecided\n")
+        RuleEngineDecisionUndecided
     }
   }
 }
