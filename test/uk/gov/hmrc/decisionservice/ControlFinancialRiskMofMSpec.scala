@@ -12,6 +12,8 @@ class ControlFinancialRiskMofMSpec extends UnitSpec {
     val csvSectionMetadata = List(
       (13, 3, "/tables/control.csv", "control"),
       (24, 3, "/tables/financial_risk.csv", "financial_risk"),
+      (5,  3, "/tables/Part of organisation.csv", "part_of_organisation"),
+      (1,  3, "/tables/Misc.csv", "miscellaneous"),
       (6,  3, "/tables/Matrix of Matrices.csv", "matrix")
     ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
   }
@@ -34,7 +36,16 @@ class ControlFinancialRiskMofMSpec extends UnitSpec {
           "workerMainIncome.incomeFixed" -> >>>("yes")
         ) ++
         Map(
+          "workerReceivesBenefits" -> >>>("yes")
+        ) ++
+        Map(
           "personal_service" -> >>>("medium")
+        ) ++
+        Map(
+          "business_structure" -> >>>("low")
+        ) ++
+        Map(
+          "similarWork" -> >>>("yes")
         )
       )
 
