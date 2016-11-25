@@ -15,6 +15,7 @@ class TablesFinalDecisionSpec extends UnitSpec {
       (5,  3, "/tables/Part of organisation.csv", "part_of_organisation"),
       (1,  3, "/tables/Misc.csv", "miscellaneous"),
       (7,  3, "/tables/Business Structure.csv", "business_structure"),
+      (13, 3, "/tables/Personal Service.csv", "personal_service"),
       (6,  3, "/tables/Matrix of Matrices.csv", "matrix")
     ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
   }
@@ -40,7 +41,9 @@ class TablesFinalDecisionSpec extends UnitSpec {
           "workerReceivesBenefits" -> >>>("yes")
         ) ++
         Map(
-          "personal_service" -> >>>("medium")
+          "contractrualObligationForSubstitute" -> >>>("yes"),
+          "contractualObligationInPractise" -> >>>("yes"),
+          "contractTermsWorkerPaysSubstitute" -> >>>("yes")
         ) ++
         Map(
           "workerVAT" -> >>>("yes"),
