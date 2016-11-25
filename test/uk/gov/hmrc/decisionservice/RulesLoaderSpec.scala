@@ -2,7 +2,7 @@ package uk.gov.hmrc.decisionservice
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
-import uk.gov.hmrc.decisionservice.model.RulesFileLoadError
+import uk.gov.hmrc.decisionservice.model.RulesFileError
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, RulesLoaderInstance}
 import uk.gov.hmrc.play.test.UnitSpec
@@ -33,21 +33,21 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
       val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(3, csvFilePath + "xx", ""))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
-        error shouldBe a [RulesFileLoadError]
+        error shouldBe a [RulesFileError]
       }
     }
     "return error if the csv file contains invalid data" in {
       val maybeRules = RulesLoaderInstance.load(csvMetadataError)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
-        error shouldBe a [RulesFileLoadError]
+        error shouldBe a [RulesFileError]
       }
     }
     "return error if the csv file is empty" in {
       val maybeRules = RulesLoaderInstance.load(csvMetadataEmpty)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
-        error shouldBe a [RulesFileLoadError]
+        error shouldBe a [RulesFileError]
       }
     }
     "return no error if the csv file contains only headers" in {
@@ -62,7 +62,7 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
       val maybeRules = RulesLoaderInstance.load(csvMetadataHeadersError)
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
-        error shouldBe a [RulesFileLoadError]
+        error shouldBe a [RulesFileError]
       }
     }
     "provide valid input rules for a matcher against a given fact" in {
