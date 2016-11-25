@@ -19,7 +19,7 @@ class RulesFileValidatorSpec extends UnitSpec {
       val mayBeValid = validateColumnHeaders(v, RulesFileMetaData(v.size+1, "", ""))
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileLoadError]
+        error shouldBe a[RulesFileError]
       }
     }
     "return error for rule row size mismatch" in {
@@ -27,7 +27,7 @@ class RulesFileValidatorSpec extends UnitSpec {
       val mayBeValid = validateLine(v ::: r, RulesFileMetaData(41, "path", ""), 3)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileLoadError]
+        error shouldBe a[RulesFileError]
         error.message shouldBe "row size is 5, expected greater than 41 in row 3 in file path"
       }
     }
@@ -41,7 +41,7 @@ class RulesFileValidatorSpec extends UnitSpec {
       val mayBeValid = validateLine(v ::: r, RulesFileMetaData(v.size, "path", ""), 4)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileLoadError]
+        error shouldBe a[RulesFileError]
         error.message shouldBe "invalid value in row 4 in file path"
       }
     }
@@ -50,7 +50,7 @@ class RulesFileValidatorSpec extends UnitSpec {
       val mayBeValid = validateLine(v ::: r, RulesFileMetaData(v.size, "path", ""), 2)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileLoadError]
+        error shouldBe a[RulesFileError]
         error.message shouldBe "invalid carry over value whatever in row 2 in file path"
       }
     }
@@ -59,7 +59,7 @@ class RulesFileValidatorSpec extends UnitSpec {
       val mayBeValid = validateLine(v ::: r, RulesFileMetaData(v.size, "path", ""), 2)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileLoadError]
+        error shouldBe a[RulesFileError]
         error.message shouldBe "row size is 4, expected greater than 4 in row 2 in file path"
       }
     }
@@ -78,7 +78,7 @@ class RulesFileValidatorSpec extends UnitSpec {
       val mayBeValid = validateLine(v ::: r, RulesFileMetaData(v.size, "path", ""), 2)
       mayBeValid.isLeft shouldBe true
       mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileLoadError]
+        error shouldBe a[RulesFileError]
         error.message shouldBe "invalid exit value in row 2 in file path"
       }
     }

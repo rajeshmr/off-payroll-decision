@@ -16,31 +16,31 @@ trait RulesLoader {
 
   val rulesFileLineValidator:RulesFileLineValidator
 
-  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet] =
+  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileError,SectionRuleSet] =
     tokenize match {
       case Success(tokens) =>
         parseRules(tokens)
       case Failure(e) =>
-        Xor.left(RulesFileLoadError(e.getMessage))
+        Xor.left(RulesFileError(e.getMessage))
     }
 
-  private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = tokens match {
-    case Nil => Xor.left(RulesFileLoadError(s"empty rules file ${rulesFileMetaData.path}"))
+  private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, SectionRuleSet] = tokens match {
+    case Nil => Xor.left(RulesFileError(s"empty rules file ${rulesFileMetaData.path}"))
     case (headings :: rest) =>
       val errorsInHeadings = rulesFileLineValidator.validateColumnHeaders(headings, rulesFileMetaData).swap.toList
       val errorsInRules = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
       errorsInRules ::: errorsInHeadings match {
         case Nil => createRuleSet(rulesFileMetaData, rest, headings)
-        case l => Xor.left(errorsInRules.foldLeft(RulesFileLoadError(""))(_ ++ _))
+        case l => Xor.left(errorsInRules.foldLeft(RulesFileError(""))(_ ++ _))
       }
   }
 
-  private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
+  private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileError,Unit] = {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
-        Xor.left(RulesFileLoadError(s"in line ${l+2} all result tokens are empty in file ${rulesFileMetaData.path}"))
+        Xor.left(RulesFileError(s"in line ${l+2} all result tokens are empty in file ${rulesFileMetaData.path}"))
       case (t, l) if t.size > rulesFileMetaData.numCols =>
-        Xor.left(RulesFileLoadError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
+        Xor.left(RulesFileError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
       case (t, l) =>
         rulesFileLineValidator.validateLine(t, rulesFileMetaData, l+2)
       case _ =>
@@ -54,14 +54,14 @@ trait RulesLoader {
     SectionRule(values.map(>>>(_)), result)
   }
 
-  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileLoadError,SectionRuleSet] = {
+  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileError,SectionRuleSet] = {
     Try {
       val rules = ruleTokens.map(createRule(_, rulesFileMetaData))
       SectionRuleSet(rulesFileMetaData.name, headings.take(rulesFileMetaData.valueCols), rules)
     }
     match {
       case Success(sectionRuleSet) => Xor.right(sectionRuleSet)
-      case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
+      case Failure(e) => Xor.left(RulesFileError(e.getMessage))
     }
   }
 

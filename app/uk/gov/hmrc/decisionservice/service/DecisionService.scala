@@ -1,7 +1,7 @@
 package uk.gov.hmrc.decisionservice.service
 
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileLoadError}
+import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.ruleengine._
 
@@ -19,7 +19,7 @@ trait DecisionService {
     val rules = maybeRules.collect{case Xor.Right(x) => x}
     rulesErrors match {
       case Nil => Xor.right(rules)
-      case _ => Xor.left(rulesErrors.foldLeft(RulesFileLoadError(""))(_ ++ _))
+      case _ => Xor.left(rulesErrors.foldLeft(RulesFileError(""))(_ ++ _))
     }
   }
 
