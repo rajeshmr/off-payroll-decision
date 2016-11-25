@@ -11,28 +11,28 @@ class DecisionServiceErrorSpec extends UnitSpec {
   object DecisionServiceNotExistingCsvTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (7, 2, "business_structure_not_existing.csv", "BusinessStructure"),
-      (9, 2, "personal_service_not_existing.csv", "PersonalService"),
-      (2, 1, "/matrix.csv", "matrix")
-    ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+      (7, "business_structure_not_existing.csv", "BusinessStructure"),
+      (9, "personal_service_not_existing.csv", "PersonalService"),
+      (2, "/matrix.csv", "matrix")
+    ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
   object DecisionServiceCsvWithErrorsTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (7, 2, "/business_structure_errors.csv", "BusinessStructure"),
-      (9, 2, "/personal_service_errors.csv", "PersonalService"),
-      (2, 1, "/matrix.csv", "matrix")
-    ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+      (7, "/business_structure_errors.csv", "BusinessStructure"),
+      (9, "/personal_service_errors.csv", "PersonalService"),
+      (2, "/matrix.csv", "matrix")
+    ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
   object DecisionServiceCsvWithBadMetadataTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (17, 5, "/business_structure.csv", "BusinessStructure"),
-      (19, 5, "/personal_service.csv", "PersonalService"),
-      (12, 20, "/matrix.csv", "matrix")
-    ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+      (17, "/business_structure.csv", "BusinessStructure"),
+      (19, "/personal_service.csv", "PersonalService"),
+      (12, "/matrix.csv", "matrix")
+    ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
   val facts = Facts(Map("8a" -> >>>("yes"), "8g" -> >>>("no"), "2" -> >>>("yes"), "10" -> >>>("yes")))

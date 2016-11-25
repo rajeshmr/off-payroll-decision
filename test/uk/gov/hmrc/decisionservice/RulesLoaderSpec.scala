@@ -14,11 +14,11 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
   val csvFileEmpty = "/section_rules_empty.csv"
   val csvFileHeadersOnly = "/section_rules_headers_only.csv"
   val csvFileHeadersError = "/section_rules_headers_error.csv"
-  val csvMetadata = RulesFileMetaData(3, 2, csvFilePath, "sectionName")
-  val csvMetadataError = RulesFileMetaData(3, 2, csvFilePathError, "sectionName")
-  val csvMetadataEmpty = RulesFileMetaData(3, 2, csvFileEmpty, "sectionName")
-  val csvMetadataHeadersOnly = RulesFileMetaData(3, 2, csvFileHeadersOnly, "sectionName")
-  val csvMetadataHeadersError = RulesFileMetaData(3, 2, csvFileHeadersError, "sectionName")
+  val csvMetadata = RulesFileMetaData(3, csvFilePath, "sectionName")
+  val csvMetadataError = RulesFileMetaData(3, csvFilePathError, "sectionName")
+  val csvMetadataEmpty = RulesFileMetaData(3, csvFileEmpty, "sectionName")
+  val csvMetadataHeadersOnly = RulesFileMetaData(3, csvFileHeadersOnly, "sectionName")
+  val csvMetadataHeadersError = RulesFileMetaData(3, csvFileHeadersError, "sectionName")
 
   "section rules loader" should {
     "load section rules from a csv file" in {
@@ -30,7 +30,7 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
       }
     }
     "return error if a csv file is not found" in {
-      val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(3, 2, csvFilePath + "xx", ""))
+      val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(3, csvFilePath + "xx", ""))
       maybeRules.isLeft shouldBe true
       maybeRules.leftMap { error =>
         error shouldBe a [RulesFileLoadError]

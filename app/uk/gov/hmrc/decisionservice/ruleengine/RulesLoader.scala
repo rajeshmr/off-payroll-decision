@@ -6,8 +6,9 @@ import uk.gov.hmrc.decisionservice.model.rules._
 import scala.util.{Failure, Success, Try}
 import RulesFileReaderTokenizer._
 
-case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:String){
-  def numCols = valueCols + resultCols
+case class RulesFileMetaData(valueCols:Int, path:String, name:String){
+  val ResultColumns = 3
+  def numCols = valueCols + ResultColumns
 }
 
 
