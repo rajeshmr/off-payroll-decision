@@ -51,7 +51,7 @@ sealed trait RulesFileValidator {
 
   def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = (row, rulesFileMetaData.numCols) match {
     case IsValidSize() => Xor.right(())
-    case _ => Xor.left(RulesFileError("Column header size does not match metadata"))
+    case _ => Xor.left(RulesFileError(s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols}"))
   }
 
   def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileError, Unit] = (row, rulesFileMetaData.numCols) match {
