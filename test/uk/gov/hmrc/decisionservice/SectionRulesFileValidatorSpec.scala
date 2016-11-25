@@ -6,7 +6,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.decisionservice.ruleengine.SectionRuleValidator._
 
 
-class Section2RulesFileValidatorSpec extends UnitSpec {
+class SectionRulesFileValidatorSpec extends UnitSpec {
 
   object RowFixture {
     private val headers = List("Section1", "Section2", "Section3", "Section4")
