@@ -38,9 +38,9 @@ trait RulesLoader {
   private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
-        Xor.left(RulesFileLoadError(s"in line ${l+2} all result tokens are empty"))
+        Xor.left(RulesFileLoadError(s"in line ${l+2} all result tokens are empty in file ${rulesFileMetaData.path}"))
       case (t, l) if t.size > rulesFileMetaData.numCols =>
-        Xor.left(RulesFileLoadError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols}"))
+        Xor.left(RulesFileLoadError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
       case (t, l) =>
         rulesFileLineValidator.validateLine(t, rulesFileMetaData, l+2)
       case _ =>

@@ -25,15 +25,13 @@ sealed trait RulesFileLineValidator {
       case _ => Xor.right(())
     }
 
-  def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileLoadError, Unit] = (row, rulesFileMetaData.numCols) match {
-    case _ if row.size > (rulesFileMetaData.valueCols) => Xor.right(())
-    case _ => Xor.left(RulesFileLoadError(s"row size is ${row.size}, expected greater than ${rulesFileMetaData.valueCols} in row $rowNumber in file ${rulesFileMetaData.path}"))
-  }
+  def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileLoadError, Unit] =
+    if (row.size > rulesFileMetaData.valueCols) Xor.right(())
+    else Xor.left(RulesFileLoadError(s"row size is ${row.size}, expected greater than ${rulesFileMetaData.valueCols} in row $rowNumber in file ${rulesFileMetaData.path}"))
 
-  def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, Unit] = (row, rulesFileMetaData.numCols) match {
-    case _ if row.size >= rulesFileMetaData.valueCols => Xor.right(())
-    case _ => Xor.left(RulesFileLoadError(s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
-  }
+  def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, Unit] =
+    if (row.size >= rulesFileMetaData.valueCols) Xor.right(())
+    else Xor.left(RulesFileLoadError(s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
 
   def validateLine(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileLoadError, Unit] = {
     for {
