@@ -10,7 +10,7 @@ import uk.gov.hmrc.decisionservice.model.RulesFileError
 sealed trait RulesFileValidator {
 
   var allowedCarryOverValues = List("low", "medium", "high")
-  var allowedValues = List("yes", "no") ::: allowedCarryOverValues
+  var allowedValues = List("yes", "no", "") ::: allowedCarryOverValues
   var allowedDecisionValues = List("in ir35", "outside ir35", "employed", "self-employed", "unknown")
 
   object IsValidSize {
@@ -19,11 +19,8 @@ sealed trait RulesFileValidator {
     }
   }
 
-  def validateValue(value: String, possibleValues:List[String], errorMessage:String): Xor[RulesFileError, Unit] =
-    if(possibleValues.contains(value.toLowerCase) || value.equals(""))
-      Xor.right(())
-    else
-      Xor.left(RulesFileError(errorMessage))
+  def validateValue(value: String, errorMessage:String): Xor[RulesFileError, Unit] =
+    Xor.fromOption(allowedValues.find(_ == value.trim.toLowerCase).map(_ => ()),RulesFileError(errorMessage))
 
   def validateResultCells(resultCells: List[String], rulesFileMetaData: RulesFileMetaData, row:Int): Xor[RulesFileError, Unit] =
     resultCells match {
@@ -48,7 +45,7 @@ sealed trait RulesFileValidator {
     for {
       _ <- validateRowSize(row, rulesFileMetaData, rowNumber)
       (valueCells, resultCells) = row.splitAt(rulesFileMetaData.valueCols)
-      validationErrors = valueCells.map(cell => validateValue(cell.trim, allowedValues, s"invalid value in row $rowNumber")).collect { case Xor.Left(e) => e }
+      validationErrors = valueCells.map(cell => validateValue(cell.trim, s"invalid value in row $rowNumber")).collect { case Xor.Left(e) => e }
       _ <- Xor.fromOption(validationErrors.headOption, ()).swap
       _ <- validateResultCells(resultCells, rulesFileMetaData, rowNumber)
     }
