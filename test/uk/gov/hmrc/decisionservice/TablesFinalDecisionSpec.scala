@@ -10,14 +10,14 @@ class TablesFinalDecisionSpec extends UnitSpec {
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (13, 3, "/tables/control.csv", "control"),
-      (24, 3, "/tables/financial_risk.csv", "financial_risk"),
-      (5,  3, "/tables/Part of organisation.csv", "part_of_organisation"),
-      (1,  3, "/tables/Misc.csv", "miscellaneous"),
-      (7,  3, "/tables/Business Structure.csv", "business_structure"),
-      (13, 3, "/tables/Personal Service.csv", "personal_service"),
-      (6,  3, "/tables/Matrix of Matrices.csv", "matrix")
-    ).collect{case (q,r,f,n) => RulesFileMetaData(q,r,f,n)}
+      (13, "/tables/control.csv", "control"),
+      (24, "/tables/financial_risk.csv", "financial_risk"),
+      (5,  "/tables/Part of organisation.csv", "part_of_organisation"),
+      (1,  "/tables/Misc.csv", "miscellaneous"),
+      (7,  "/tables/Business Structure.csv", "business_structure"),
+      (13, "/tables/Personal Service.csv", "personal_service"),
+      (6,  "/tables/Matrix of Matrices.csv", "matrix")
+    ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
   "decision service" should {
