@@ -5,16 +5,13 @@ import uk.gov.hmrc.decisionservice.model.RulesFileError
 
 /**
   * Created by habeeb on 11/11/2016.
-  *
-  * FIXME: this class is to be refactored!!
-  *
-  *
+  * Modified by Mimu on 25/11/2016.
   */
 sealed trait RulesFileValidator {
 
-  var possibleAnswers = List("yes", "no")
-  var possibleCarryOverValues = List("low", "medium", "high")
-  var possibleDecisionValues = List("in ir35", "outside ir35", "employed", "self-employed", "unknown")
+  var allowedCarryOverValues = List("low", "medium", "high")
+  var allowedValues = List("yes", "no") ::: allowedCarryOverValues
+  var allowedDecisionValues = List("in ir35", "outside ir35", "employed", "self-employed", "unknown")
 
   object IsValidSize {
     def unapply(p:(List[String],Int)): Boolean = p match {
@@ -22,30 +19,20 @@ sealed trait RulesFileValidator {
     }
   }
 
-  def validateAnswer(answer: String, possibleValues:List[String], errorMessage:String): Xor[RulesFileError, Unit] =
-    if(possibleValues.contains(answer.toLowerCase) || answer.equals(""))
+  def validateValue(value: String, possibleValues:List[String], errorMessage:String): Xor[RulesFileError, Unit] =
+    if(possibleValues.contains(value.toLowerCase) || value.equals(""))
       Xor.right(())
     else
       Xor.left(RulesFileError(errorMessage))
 
-  def validateResultColumnPair(resultColumnPair: List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
-    val carryOverValue: String = resultColumnPair.head.trim
-    val exit: String = resultColumnPair.last.trim
-    if (exit.isEmpty || exit == "false") {
-      if (possibleCarryOverValues.contains(carryOverValue.toLowerCase) || carryOverValue.isEmpty)
-        Xor.right(())
-      else
-        Xor.left(RulesFileError("Invalid CarryOver value for row "+rowNumber))
+  def validateResultCells(resultCells: List[String], rulesFileMetaData: RulesFileMetaData, row:Int): Xor[RulesFileError, Unit] =
+    resultCells match {
+      case Nil => Xor.left(RulesFileError(s"missing carry over in row $row"))
+      case x::xs if !allowedCarryOverValues.contains(x.trim.toLowerCase) && !x.isEmpty => Xor.left(RulesFileError(s"invalid carry over value in row $row"))
+      case x::Nil => Xor.right(())
+      case x::exit::xs if !exit.isEmpty && exit.trim.toLowerCase() != "true" && exit.trim.toLowerCase() != "false" => Xor.left(RulesFileError(s"invalid exit value in row $row"))
+      case _ => Xor.right(())
     }
-    else if (exit.equals("true")) {
-      if (carryOverValue.isEmpty)
-        Xor.right(())
-      else
-        Xor.left(RulesFileError("Invalid CarryOver value for row "+rowNumber))
-    }
-    else
-      Xor.left(RulesFileError("Invalid Exit value for row "+rowNumber))
-  }
 
   def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] = (row, rulesFileMetaData.numCols) match {
     case IsValidSize() => Xor.right(())
@@ -54,17 +41,21 @@ sealed trait RulesFileValidator {
 
   def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileError, Unit] = (row, rulesFileMetaData.numCols) match {
     case IsValidSize() => Xor.right(())
-    case _ => Xor.left(RulesFileError(s"Row size does not match metadata on row $rowNumber"))
+    case _ => Xor.left(RulesFileError(s"row size does not match metadata in row $rowNumber"))
   }
 
-  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] =
-    validateRowSize(row, rulesFileMetaData, rowNumber) match {
-      case r@Xor.Left(_) => r
-      case Xor.Right(_) =>
-        val (values, results) = row.splitAt(rulesFileMetaData.valueCols)
-        val validationErrors = values.map(a => validateAnswer(a.trim, possibleAnswers, s"Invalid answer value on row $rowNumber")).collect { case Xor.Left(e) => e }
-        validationErrors.headOption.fold(validateResultColumnPair(results, rulesFileMetaData, rowNumber))(Xor.left(_))
+  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
+    for {
+      _ <- validateRowSize(row, rulesFileMetaData, rowNumber)
+      (valueCells, resultCells) = row.splitAt(rulesFileMetaData.valueCols)
+      validationErrors = valueCells.map(cell => validateValue(cell.trim, allowedValues, s"invalid value in row $rowNumber")).collect { case Xor.Left(e) => e }
+      _ <- Xor.fromOption(validationErrors.headOption, ()).swap
+      _ <- validateResultCells(resultCells, rulesFileMetaData, rowNumber)
     }
+    yield {
+      ()
+    }
+  }
 
 }
 
