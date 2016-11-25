@@ -13,6 +13,8 @@ case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String, name:St
 
 trait RulesLoader {
 
+  val rulesFileLineValidator:RulesFileLineValidator
+
   def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,SectionRuleSet] =
     tokenize match {
       case Success(tokens) =>
@@ -34,9 +36,11 @@ trait RulesLoader {
   private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,Unit] = {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
-        Xor.left(RulesFileLoadError(s"in line $l all result tokens are empty"))
+        Xor.left(RulesFileLoadError(s"in line ${l+2} all result tokens are empty"))
       case (t, l) if t.size > rulesFileMetaData.numCols =>
-        Xor.left(RulesFileLoadError(s"in line $l number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols}"))
+        Xor.left(RulesFileLoadError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols}"))
+      case (t, l) =>
+        rulesFileLineValidator.validateLine(t, rulesFileMetaData, l+2)
       case _ =>
         Xor.right(())
     }
@@ -62,4 +66,6 @@ trait RulesLoader {
   def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
 
-object RulesLoaderInstance extends RulesLoader
+object RulesLoaderInstance extends RulesLoader {
+  val rulesFileLineValidator = RulesFileLineValidatorInstance
+}

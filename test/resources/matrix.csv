@@ -1,5 +1,5 @@
 Custom  , BusinessStructure, PersonalService
-        , high             , low              , in1 IR35, true
-        , high             , high             , out of IR35, true
-        , medium           , high             , in2 IR35, true
-Low     ,                  ,                  , specialCase, true
+        , high             , low              , inIR35, true
+        , high             , high             , outofIR35, true
+        , medium           , high             , inIR35, true
+Low     ,                  ,                  , outofIR35, true
