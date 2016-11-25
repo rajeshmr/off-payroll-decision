@@ -1,7 +1,7 @@
 {
-  "id": "https://github.com/hmrc/off-payroll-decision-service#",
+  "id": "https://github.com/hmrc/off-payroll-decision",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Strict implementation: everything is required for test data creation use https://github.com/hmrc/off-payroll-decision-service/docs/off-payroll-decision-service.json. This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
+  "description": "Strict implementation: everything is required for test data creation use https://github.com/hmrc/off-payroll-decision/docs/off-payroll-decision-service.json. This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
   "type": "object",
   "properties": {
     "version": {
