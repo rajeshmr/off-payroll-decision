@@ -1,5 +1,5 @@
 
-# off-payroll-decision-service
+# off-payroll-decision
 
 
 ## Endpoint URLs
