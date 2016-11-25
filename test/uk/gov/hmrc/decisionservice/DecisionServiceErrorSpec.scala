@@ -13,25 +13,25 @@ class DecisionServiceErrorSpec extends UnitSpec {
     val csvSectionMetadata = List(
       (7, "business_structure_not_existing.csv", "BusinessStructure"),
       (9, "personal_service_not_existing.csv", "PersonalService"),
-      (2, "/matrix.csv", "matrix")
+      (2, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
   object DecisionServiceCsvWithErrorsTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (7, "/business_structure_errors.csv", "BusinessStructure"),
-      (9, "/personal_service_errors.csv", "PersonalService"),
-      (2, "/matrix.csv", "matrix")
+      (7, "/decisionservicespec/business_structure_errors.csv", "BusinessStructure"),
+      (9, "/decisionservicespec/personal_service_errors.csv", "PersonalService"),
+      (2, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
   object DecisionServiceCsvWithBadMetadataTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (17, "/business_structure.csv", "BusinessStructure"),
-      (19, "/personal_service.csv", "PersonalService"),
-      (12, "/matrix.csv", "matrix")
+      (17, "/decisionservicespec/business_structure.csv", "BusinessStructure"),
+      (19, "/decisionservicespec/personal_service.csv", "PersonalService"),
+      (12, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
