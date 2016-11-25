@@ -7,7 +7,7 @@ import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, SectionRuleSet}
 import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, RulesLoaderInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
-class SectionRulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
+class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
 
   val csvFilePath = "/section_rules_sample.csv"
   val csvFilePathError = "/section_rules_sample_error.csv"

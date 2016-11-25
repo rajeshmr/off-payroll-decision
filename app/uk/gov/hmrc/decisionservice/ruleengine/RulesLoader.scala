@@ -26,10 +26,11 @@ trait RulesLoader {
   private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileLoadError, SectionRuleSet] = tokens match {
     case Nil => Xor.left(RulesFileLoadError(s"empty rules file ${rulesFileMetaData.path}"))
     case (headings :: rest) =>
-      val errorRuleTokens = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
-      errorRuleTokens match {
+      val errorsInHeadings = rulesFileLineValidator.validateColumnHeaders(headings, rulesFileMetaData).swap.toList
+      val errorsInRules = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
+      errorsInRules ::: errorsInHeadings match {
         case Nil => createRuleSet(rulesFileMetaData, rest, headings)
-        case l => Xor.left(errorRuleTokens.foldLeft(RulesFileLoadError(""))(_ ++ _))
+        case l => Xor.left(errorsInRules.foldLeft(RulesFileLoadError(""))(_ ++ _))
       }
   }
 
