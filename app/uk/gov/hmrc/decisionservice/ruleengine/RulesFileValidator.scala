@@ -16,8 +16,6 @@ sealed trait RulesFileValidator {
   var possibleCarryOverValues = List("low", "medium", "high")
   var possibleDecisionValues = List("in ir35", "outside ir35", "employed", "self-employed", "unknown")
 
-  def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit]
-
   object IsValidSize {
     def unapply(p:(List[String],Int)): Boolean = p match {
       case (row, sz) => row.size == sz
@@ -59,9 +57,6 @@ sealed trait RulesFileValidator {
     case _ => Xor.left(RulesFileError(s"Row size does not match metadata on row $rowNumber"))
   }
 
-}
-
-object SectionRuleValidator extends RulesFileValidator {
   def validateRuleRow(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] =
     validateRowSize(row, rulesFileMetaData, rowNumber) match {
       case r@Xor.Left(_) => r
@@ -70,5 +65,8 @@ object SectionRuleValidator extends RulesFileValidator {
         val validationErrors = values.map(a => validateAnswer(a.trim, possibleAnswers, s"Invalid answer value on row $rowNumber")).collect { case Xor.Left(e) => e }
         validationErrors.headOption.fold(validateResultColumnPair(results, rulesFileMetaData, rowNumber))(Xor.left(_))
     }
+
 }
+
+object SectionRuleValidator extends RulesFileValidator
 
