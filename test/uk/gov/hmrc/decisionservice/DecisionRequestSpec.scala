@@ -26,13 +26,18 @@ class DecisionRequestSpec extends UnitSpec {
     """
       |{
       |  "version" : "1.0",
-      |  "sections" : {
-      |    "personal-service":
-      |    {
-      |      "contractualRightForSubstitute" : "Yes",
-      |      "2" : "No",
-      |      "3" : "Yes"
-      |    }
+      |  "correlationID": "12345",
+      |  "personalService":
+      |  {
+      |    "contractualRightForSubstitute" : "Yes",
+      |    "contractrualObligationForSubstitute" : "No",
+      |    "possibleSubstituteRejection" : "Yes",
+      |    "engagerArrangeWorker" : "Yes",
+      |    "contractTermsWorkerPaysSubstitute" : "Yes",
+      |    "workerSentActualSubstitiute" : "Yes",
+      |    "possibleHelper" : "Yes",
+      |    "workerSentActualHelper" : "Yes",
+      |    "workerPayActualHelper" : "Yes"
       |  }
       |}
       |
@@ -44,32 +49,23 @@ class DecisionRequestSpec extends UnitSpec {
       val jsResult = Json.fromJson[QuestionSet](parsed)
       jsResult.isSuccess shouldBe true
       val obj = jsResult.get
-      obj.sections should have size 1
-      val section = obj.sections.get("personal-service")
-      section.isDefined shouldBe true
-      section.map { m =>
-        val res = List("contractualRightForSubstitute", "2", "3").flatMap(m.get(_))
-        res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
-      }
+      val m = obj.personalService
+      m should have size 9
+      val res = List("contractualRightForSubstitute", "contractrualObligationForSubstitute", "possibleSubstituteRejection").flatMap(m.get(_))
+      res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
     }
   }
 
   "decision request Scala object" should {
     "be correctly converted to json object" in {
-      val personalServiceQuestions = Map("contractualRightForSubstitute" -> "Yes", "2" -> "No", "3" -> "Yes")
-      val helperQuestions = Map("1" -> "No", "2" -> "No", "3" -> "No")
-      val controlQuestions = Map("1" -> "Yes", "2" -> "Yes", "3" -> "Yes")
-      val questionSet = Map(
-        "personal-service" -> personalServiceQuestions,
-        "helper" -> helperQuestions,
-        "control" -> controlQuestions
-      )
-      val decisionRequest = QuestionSet("1.0", questionSet)
+      val personalServiceQuestions = Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes")
+      val decisionRequest = QuestionSet("0.0.1-alpha", "12345", personalServiceQuestions)
       val jsValue:JsValue = Json.toJson(decisionRequest)
-      val sections = jsValue \\ "sections"
+      val personalService = jsValue \\ "personalService"
       val factsWithContractualRight = jsValue \\ "contractualRightForSubstitute"
-      sections should have size 1
+      personalService should have size 1
       factsWithContractualRight should have size 1
+      println(jsValue)
     }
   }
 
