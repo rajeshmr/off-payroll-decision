@@ -3,10 +3,6 @@ package uk.gov.hmrc.decisionservice.ruleengine
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model.RulesFileError
 
-/**
-  * Created by habeeb on 11/11/2016.
-  * Modified by Mimu on 25/11/2016.
-  */
 sealed trait RulesFileLineValidator {
 
   val allowedCarryOverValues:List[String]
