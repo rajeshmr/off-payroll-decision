@@ -1,5 +1,6 @@
 package uk.gov.hmrc.decisionservice
 
+import play.api.Logger
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.decisionservice.service.DecisionService
@@ -60,6 +61,7 @@ class TablesFinalDecisionSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
+      Logger.info(s"decision=$maybeDecision")
       maybeDecision.isRight shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "OutOfIR35"
