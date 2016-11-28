@@ -38,6 +38,9 @@ private object AppDependencies {
     "knowledge-api"
   ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
 
+  val jsonValidationDependencies = Seq(
+    "com.github.fge" % "json-schema-validator" % "2.2.6")
+
   val compile = Seq(
     "uk.gov.hmrc" %% "play-reactivemongo" % playReactivemongoVersion,
 
@@ -50,7 +53,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "org.typelevel" %% "cats" % catsVersion
-  )
+  ) ++ droolsDependencies ++jsonValidationDependencies
 
   trait TestDependencies {
     lazy val scope: String = "test"
