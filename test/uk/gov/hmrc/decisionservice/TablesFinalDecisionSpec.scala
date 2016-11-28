@@ -12,11 +12,11 @@ class TablesFinalDecisionSpec extends UnitSpec {
     val csvSectionMetadata = List(
       (13, "/tables/control.csv", "control"),
       (24, "/tables/financial_risk.csv", "financial_risk"),
-      (5,  "/tables/Part of organisation.csv", "part_of_organisation"),
-      (1,  "/tables/Misc.csv", "miscellaneous"),
-      (7,  "/tables/Business Structure.csv", "business_structure"),
-      (13, "/tables/Personal Service.csv", "personal_service"),
-      (6,  "/tables/Matrix of Matrices.csv", "matrix")
+      (5,  "/tables/part_of_organisation.csv", "part_of_organisation"),
+      (1,  "/tables/misc.csv", "miscellaneous"),
+      (7,  "/tables/business_structure.csv", "business_structure"),
+      (13, "/tables/personal_service.csv", "personal_service"),
+      (6,  "/tables/matrix_of_matrices.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
