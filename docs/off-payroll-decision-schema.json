@@ -1,0 +1,82 @@
+{
+  "id": "https://github.com/hmrc/off-payroll-decision",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "This schema defines the output message for the off-payroll-decision-service its root object is a Decision",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]$"
+    },
+    "correlationID": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "Outside IR35",
+        "Self-Employed",
+        "Inside IR35",
+        "Employed",
+        "Unknown"
+      ]
+    },
+    "carryOnWithQuestions": {
+      "type": "boolean"
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "personalService": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "controll": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "financialRisk": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "businessStructure": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "partOfOrganisation": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "miscalaneous": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        }
+      },
+      "required": ["personalService"]
+    }
+  },
+  "required": [
+    "version",
+    "correlationID",
+    "carryOnWithQuestions",
+    "score"
+  ]
+}
