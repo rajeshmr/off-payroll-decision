@@ -12,4 +12,4 @@
 To run the application execute
 
 ```
-sbt ~run 9000 -Drule_sheets.location=[Path to Excel File]” (e.g. -Drule_sheets.location=~/hmrc/off-payroll-decision/sheets/kb-rules-01.xls)
+sbt ~run 9000
