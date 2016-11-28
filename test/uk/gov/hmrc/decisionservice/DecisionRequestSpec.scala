@@ -29,7 +29,7 @@ class DecisionRequestSpec extends UnitSpec {
       |  "sections" : {
       |    "personal-service":
       |    {
-      |      "1" : "Yes",
+      |      "contractualRightForSubstitute" : "Yes",
       |      "2" : "No",
       |      "3" : "Yes"
       |    }
@@ -48,7 +48,7 @@ class DecisionRequestSpec extends UnitSpec {
       val section = obj.sections.get("personal-service")
       section.isDefined shouldBe true
       section.map { m =>
-        val res = (1 to 3).flatMap(i => m.get(i.toString))
+        val res = List("contractualRightForSubstitute", "2", "3").flatMap(m.get(_))
         res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
       }
     }
@@ -56,7 +56,7 @@ class DecisionRequestSpec extends UnitSpec {
 
   "decision request Scala object" should {
     "be correctly converted to json object" in {
-      val personalServiceQuestions = Map("1" -> "Yes", "2" -> "No", "3" -> "Yes")
+      val personalServiceQuestions = Map("contractualRightForSubstitute" -> "Yes", "2" -> "No", "3" -> "Yes")
       val helperQuestions = Map("1" -> "No", "2" -> "No", "3" -> "No")
       val controlQuestions = Map("1" -> "Yes", "2" -> "Yes", "3" -> "Yes")
       val questionSet = Map(
@@ -67,9 +67,9 @@ class DecisionRequestSpec extends UnitSpec {
       val decisionRequest = QuestionSet("1.0", questionSet)
       val jsValue:JsValue = Json.toJson(decisionRequest)
       val sections = jsValue \\ "sections"
-      val factsWith1 = jsValue \\ "1"
+      val factsWithContractualRight = jsValue \\ "contractualRightForSubstitute"
       sections should have size 1
-      factsWith1 should have size 3
+      factsWithContractualRight should have size 1
     }
   }
 
