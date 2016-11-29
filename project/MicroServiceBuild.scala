@@ -30,14 +30,6 @@ private object AppDependencies {
   private val catsVersion = "0.6.0"
   private val droolsVersion = "6.5.0.Final"
 
-  val droolsDependencies = Seq(
-    "drools-compiler",
-    "drools-core",
-    //"drools-jsr94",
-    "drools-decisiontables",
-    "knowledge-api"
-  ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
-
   val jsonValidationDependencies = Seq(
     "com.github.fge" % "json-schema-validator" % "2.2.6")
 
@@ -53,7 +45,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
     "org.typelevel" %% "cats" % catsVersion
-  ) ++ droolsDependencies ++jsonValidationDependencies
+  ) ++ jsonValidationDependencies
 
   trait TestDependencies {
     lazy val scope: String = "test"
