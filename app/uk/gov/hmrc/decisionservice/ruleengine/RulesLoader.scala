@@ -17,84 +17,73 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
+import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.model.{_}
-
-import scala.io.Source
 import scala.util.{Failure, Success, Try}
+import RulesFileReaderTokenizer._
 
-case class RulesFileMetaData(valueCols:Int, resultCols:Int, path:String){
-  def numCols = valueCols + resultCols
+case class RulesFileMetaData(valueCols:Int, path:String, name:String){
+  val ResultColumns = 3
+  def numCols = valueCols + ResultColumns
 }
 
 
 trait RulesLoader {
-  type ValueType
-  type Rule
-  type RuleSet
 
-  val Separator = ','
+  val rulesFileLineValidator:RulesFileLineValidator
 
-  def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
-
-  def load(rulesFileMetaData: RulesFileMetaData):Xor[RulesFileLoadError,RuleSet] = {
-      Try {
-        val is = getClass.getResourceAsStream(rulesFileMetaData.path)
-        using(Source.fromInputStream(is)) { res =>
-          val tokens = res.getLines.map(_.split(Separator).map(_.trim).toList).toList
-          val (headings::rest) = tokens
-          val rules = (for (lineTokens <- rest) yield {
-            lineTokens match {
-              case t if isValidRule(t, rulesFileMetaData) => createRule(t, rulesFileMetaData)
-            }
-          })
-          createRuleSet(rules, headings)
-        }
-      } match {
-        case Success(content) => Xor.right(content)
-        case Failure(e) => Xor.left(RulesFileLoadError(e.getMessage))
-      }
+  def load(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileError,SectionRuleSet] =
+    tokenize match {
+      case Success(tokens) =>
+        parseRules(tokens)
+      case Failure(e) =>
+        Xor.left(RulesFileError(e.getMessage))
     }
 
-  def isValidRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Boolean = {
-    tokens.size == rulesFileMetaData.numCols
+  private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, SectionRuleSet] = tokens match {
+    case Nil => Xor.left(RulesFileError(s"empty rules file ${rulesFileMetaData.path}"))
+    case (headings :: rest) =>
+      val errorsInHeadings = rulesFileLineValidator.validateColumnHeaders(headings, rulesFileMetaData).swap.toList
+      val errorsInRules = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
+      errorsInRules ::: errorsInHeadings match {
+        case Nil => createRuleSet(rulesFileMetaData, rest, headings)
+        case l => Xor.left(errorsInRules.foldLeft(RulesFileError(""))(_ ++ _))
+      }
   }
 
-  def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):Rule
-
-  def createRuleSet(rules:List[Rule], headings:List[String]):RuleSet
-}
-
-
-object SectionRulesLoader extends RulesLoader {
-  type ValueType = String
-  type Rule = SectionRule
-  type RuleSet = SectionRuleSet
+  private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileError,Unit] = {
+    tokensWithIndex match {
+      case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
+        Xor.left(RulesFileError(s"in line ${l+2} all result tokens are empty in file ${rulesFileMetaData.path}"))
+      case (t, l) if t.size > rulesFileMetaData.numCols =>
+        Xor.left(RulesFileError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
+      case (t, l) =>
+        rulesFileLineValidator.validateLine(t, rulesFileMetaData, l+2)
+      case _ =>
+        Xor.right(())
+    }
+  }
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
-    val result = SectionCarryOver(tokens.drop(rulesFileMetaData.valueCols).head, tokens.last.toBoolean)
+    val result = >>>(tokens.drop(rulesFileMetaData.valueCols))
     val values = tokens.take(rulesFileMetaData.valueCols)
-    SectionRule(values, result)
+    SectionRule(values.map(>>>(_)), result)
   }
 
-  def createRuleSet(rules:List[SectionRule], headings:List[String]):SectionRuleSet = {
-    SectionRuleSet(headings, rules)
+  def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Xor[RulesFileError,SectionRuleSet] = {
+    Try {
+      val rules = ruleTokens.map(createRule(_, rulesFileMetaData))
+      SectionRuleSet(rulesFileMetaData.name, headings.take(rulesFileMetaData.valueCols), rules)
+    }
+    match {
+      case Success(sectionRuleSet) => Xor.right(sectionRuleSet)
+      case Failure(e) => Xor.left(RulesFileError(e.getMessage))
+    }
   }
+
+  def createErrorMessage(tokens:List[List[String]]):String = tokens.map(a => s"$a").mkString(" ")
 }
 
-
-object MatrixRulesLoader extends RulesLoader {
-  type ValueType = SectionCarryOver
-  type Rule = MatrixRule
-  type RuleSet = MatrixRuleSet
-
-  def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):MatrixRule = {
-    val result = MatrixDecision(tokens.last)
-    val values = tokens.take(tokens.size-1).map(SectionCarryOver(_,false))
-    MatrixRule(values, result)
-  }
-
-  def createRuleSet(rules:List[MatrixRule], headings:List[String]):MatrixRuleSet = {
-    MatrixRuleSet(headings, rules)
-  }
+object RulesLoaderInstance extends RulesLoader {
+  val rulesFileLineValidator = RulesFileLineValidatorInstance
 }

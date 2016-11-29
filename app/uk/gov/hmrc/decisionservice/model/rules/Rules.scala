@@ -16,16 +16,8 @@
 
 package uk.gov.hmrc.decisionservice.model.rules
 
-case class SectionRule(values:List[String], result:SectionCarryOver)
+case class SectionRule(values:List[CarryOver], result:CarryOver)
 
-case class SectionRuleSet(headings:List[String],rules:List[SectionRule])
+case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule])
 
-case class SectionCarryOver(value:String, exit:Boolean)
-
-
-
-case class MatrixRule(values:List[SectionCarryOver], result:MatrixDecision)
-
-case class MatrixRuleSet(headings:List[String],rules:List[MatrixRule])
-
-case class MatrixDecision(value:String)
+case class Rules(rules:List[SectionRuleSet])
