@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.controllers
+package uk.gov.hmrc.decisionservice.model.rules
 
-import uk.gov.hmrc.play.microservice.controller.BaseController
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.mvc._
-import scala.concurrent.Future
+case class SectionRule(values:List[CarryOver], result:CarryOver)
 
-object MicroserviceHelloWorld extends MicroserviceHelloWorld
+case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule])
 
-trait MicroserviceHelloWorld extends BaseController {
-
-	def hello() = Action.async { implicit request =>
-		Future.successful(Ok("Hello world"))
-	}
-}
+case class Rules(rules:List[SectionRuleSet])

@@ -30,14 +30,6 @@ private object AppDependencies {
   private val catsVersion = "0.6.0"
   private val droolsVersion = "6.5.0.Final"
 
-  val droolsDependencies = Seq(
-    "drools-compiler",
-    "drools-core",
-    //"drools-jsr94",
-    "drools-decisiontables",
-    "knowledge-api"
-  ).map("org.drools" % _ % droolsVersion) ++ Seq("org.codehaus.janino" % "janino" % "2.5.16")
-
   val jsonValidationDependencies = Seq(
     "com.github.fge" % "json-schema-validator" % "2.2.6")
 
@@ -52,9 +44,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion,
-    "org.typelevel" %% "cats" % catsVersion,
-    "org.codehaus.janino"      % "janino"            % "2.5.16"   // For drools
-  ) ++ droolsDependencies ++jsonValidationDependencies
+    "org.typelevel" %% "cats" % catsVersion
+  ) ++ jsonValidationDependencies
 
   trait TestDependencies {
     lazy val scope: String = "test"
@@ -67,7 +58,8 @@ private object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion
       )
     }.test
   }
