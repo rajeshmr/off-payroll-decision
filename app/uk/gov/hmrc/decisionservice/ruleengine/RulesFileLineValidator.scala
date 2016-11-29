@@ -61,7 +61,7 @@ sealed trait RulesFileLineValidator {
 }
 
 object RulesFileLineValidatorInstance extends RulesFileLineValidator {
-  val allowedDecisionValues = List("inir35", "outofir35", "employed", "self-employed", "unknown")
+  val allowedDecisionValues = List("inir35", "outofir35", "unknown")
   val allowedCarryOverValues = List("low", "medium", "high") ::: allowedDecisionValues
   val allowedValues = List("yes", "no", "") ::: allowedCarryOverValues
 }
