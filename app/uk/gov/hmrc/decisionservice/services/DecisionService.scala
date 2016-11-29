@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.service
+package uk.gov.hmrc.decisionservice.services
 
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}

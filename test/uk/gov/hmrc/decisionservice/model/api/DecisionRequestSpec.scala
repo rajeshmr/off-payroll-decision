@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.model.api
 
 import play.api.libs.json.{JsValue, Json}
-import uk.gov.hmrc.decisionservice.model.api.QuestionSet
 import uk.gov.hmrc.play.test.UnitSpec
 
 class DecisionRequestSpec extends UnitSpec {

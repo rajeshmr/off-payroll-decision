@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.ruleengine
+
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngine, RuleEngineDecisionUndecided, RuleEngineInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class RuleEngineSpec extends UnitSpec {
