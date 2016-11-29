@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.services
 
 import play.api.Logger
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
-import uk.gov.hmrc.decisionservice.service.DecisionService
 import uk.gov.hmrc.play.test.UnitSpec
 
 class TablesFinalDecisionSpec extends UnitSpec {
