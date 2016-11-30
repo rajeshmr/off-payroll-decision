@@ -18,6 +18,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model.RulesFileError
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 
 sealed trait RulesFileLineValidator {
 
@@ -26,24 +27,24 @@ sealed trait RulesFileLineValidator {
   val allowedDecisionValues:List[String]
 
   def validateValue(value: String, errorMessage:String): Xor[RulesFileError, Unit] =
-    Xor.fromOption(allowedValues.find(_ == value.trim.toLowerCase).map(_ => ()),RulesFileError(errorMessage))
+    Xor.fromOption(allowedValues.find(_ == value.trim.toLowerCase).map(_ => ()),RulesFileError(INVALID_VALUE_IN_RULES_FILE, errorMessage))
 
   def validateResultCells(resultCells: List[String], rulesFileMetaData: RulesFileMetaData, row:Int): Xor[RulesFileError, Unit] =
     resultCells match {
-      case Nil => Xor.left(RulesFileError(s"missing carry over in row $row in file ${rulesFileMetaData.path}"))
-      case x::xs if !allowedCarryOverValues.contains(x.trim.toLowerCase) && !x.isEmpty => Xor.left(RulesFileError(s"invalid carry over value $x in row $row in file ${rulesFileMetaData.path}"))
+      case Nil => Xor.left(RulesFileError(MISSING_CARRY_OVER_IN_RULES_FILE, s"missing carry over in row $row in file ${rulesFileMetaData.path}"))
+      case x::xs if !allowedCarryOverValues.contains(x.trim.toLowerCase) && !x.isEmpty => Xor.left(RulesFileError(INVALID_CARRY_OVER_VALUE_IN_RULES_FILE, s"invalid carry over value $x in row $row in file ${rulesFileMetaData.path}"))
       case x::Nil => Xor.right(())
-      case x::exit::xs if !exit.isEmpty && exit.trim.toLowerCase() != "true" && exit.trim.toLowerCase() != "false" => Xor.left(RulesFileError(s"invalid exit value in row $row in file ${rulesFileMetaData.path}"))
+      case x::exit::xs if !exit.isEmpty && exit.trim.toLowerCase() != "true" && exit.trim.toLowerCase() != "false" => Xor.left(RulesFileError(INVALID_EXIT_VALUE_IN_RULES_FILE, s"invalid exit value in row $row in file ${rulesFileMetaData.path}"))
       case _ => Xor.right(())
     }
 
   def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileError, Unit] =
     if (row.size > rulesFileMetaData.valueCols) Xor.right(())
-    else Xor.left(RulesFileError(s"row size is ${row.size}, expected greater than ${rulesFileMetaData.valueCols} in row $rowNumber in file ${rulesFileMetaData.path}"))
+    else Xor.left(RulesFileError(INVALID_ROW_SIZE_IN_RULES_FILE, s"row size is ${row.size}, expected greater than ${rulesFileMetaData.valueCols} in row $rowNumber in file ${rulesFileMetaData.path}"))
 
   def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] =
     if (row.size >= rulesFileMetaData.valueCols) Xor.right(())
-    else Xor.left(RulesFileError(s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
+    else Xor.left(RulesFileError(INVALID_ROW_SIZE_IN_RULES_FILE, s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
 
   def validateLine(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
     for {
