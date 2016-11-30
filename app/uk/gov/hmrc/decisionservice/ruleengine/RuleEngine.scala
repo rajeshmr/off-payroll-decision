@@ -26,13 +26,17 @@ import scala.annotation.tailrec
 sealed trait RuleEngineDecision {
   def value: String
   def facts: Map[String,CarryOver]
+  def isFinal: Boolean
 }
 
 case class RuleEngineDecisionUndecided(facts: Map[String,CarryOver]) extends RuleEngineDecision {
   override def value = "Undecided"
+  override def isFinal = false
 }
 
-case class RuleEngineDecisionImpl(value: String, facts: Map[String,CarryOver]) extends RuleEngineDecision
+case class RuleEngineDecisionImpl(value: String, facts: Map[String,CarryOver]) extends RuleEngineDecision {
+  override def isFinal = true
+}
 
 object FinalFact {
   def unapply(facts: Facts) = facts.facts.values.find(_.exit)

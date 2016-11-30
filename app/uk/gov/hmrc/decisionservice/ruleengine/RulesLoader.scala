@@ -19,8 +19,10 @@ package uk.gov.hmrc.decisionservice.ruleengine
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules._
+
 import scala.util.{Failure, Success, Try}
 import RulesFileReaderTokenizer._
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 
 case class RulesFileMetaData(valueCols:Int, path:String, name:String){
   val ResultColumns = 3
@@ -37,26 +39,26 @@ trait RulesLoader {
       case Success(tokens) =>
         parseRules(tokens)
       case Failure(e) =>
-        Xor.left(RulesFileError(e.getMessage))
+        Xor.left(RulesFileError(UNABLE_TO_READ_OR_PARSE_RULES_FILE, e.getMessage))
     }
 
   private def parseRules(tokens: List[List[String]])(implicit rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, SectionRuleSet] = tokens match {
-    case Nil => Xor.left(RulesFileError(s"empty rules file ${rulesFileMetaData.path}"))
+    case Nil => Xor.left(RulesFileError(EMPTY_RULES_FILE, s"empty rules file ${rulesFileMetaData.path}"))
     case (headings :: rest) =>
       val errorsInHeadings = rulesFileLineValidator.validateColumnHeaders(headings, rulesFileMetaData).swap.toList
       val errorsInRules = rest.zipWithIndex.map(validateLine _).collect { case Xor.Left(e) => e }
       errorsInRules ::: errorsInHeadings match {
         case Nil => createRuleSet(rulesFileMetaData, rest, headings)
-        case l => Xor.left(errorsInRules.foldLeft(RulesFileError(""))(_ ++ _))
+        case l => Xor.left(errorsInRules.foldLeft(RulesFileError(0, ""))(_ ++ _))
       }
   }
 
   private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Xor[RulesFileError,Unit] = {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
-        Xor.left(RulesFileError(s"in line ${l+2} all result tokens are empty in file ${rulesFileMetaData.path}"))
+        Xor.left(RulesFileError(RESULT_MISSING_IN_RULES_FILE, s"in line ${l+2} all result tokens are empty in file ${rulesFileMetaData.path}"))
       case (t, l) if t.size > rulesFileMetaData.numCols =>
-        Xor.left(RulesFileError(s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
+        Xor.left(RulesFileError(TOO_MANY_COLUMNS_IN_RULES_FILE, s"in line ${l+2} number of columns is ${t.size}, should be no more than ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
       case (t, l) =>
         rulesFileLineValidator.validateLine(t, rulesFileMetaData, l+2)
       case _ =>
@@ -77,7 +79,7 @@ trait RulesLoader {
     }
     match {
       case Success(sectionRuleSet) => Xor.right(sectionRuleSet)
-      case Failure(e) => Xor.left(RulesFileError(e.getMessage))
+      case Failure(e) => Xor.left(RulesFileError(UNABLE_TO_CREATE_RULE, e.getMessage))
     }
   }
 

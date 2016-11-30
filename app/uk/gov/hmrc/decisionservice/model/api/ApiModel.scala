@@ -19,8 +19,26 @@ package uk.gov.hmrc.decisionservice.model.api
 import play.api.libs.json.{Format, Json}
 
 
-case class QuestionSet(version:String, sections:Map[String,Map[String,String]])
+case class DecisionRequest(version:String, correlationID:String, interview:Map[String,Map[String,String]])
 
-object QuestionSet {
-  implicit val questionSetFormat: Format[QuestionSet] = Json.format[QuestionSet]
+object DecisionRequest {
+  implicit val questionSetFormat: Format[DecisionRequest] = Json.format[DecisionRequest]
+}
+
+case class Score( score:Map[String,String])
+
+object Score {
+  implicit val scoreFormat: Format[Score] = Json.format[Score]
+}
+
+case class DecisionResponse(version:String, correlationID:String, carryOnWithQuestions: Boolean, score:Score, result:String)
+
+object DecisionResponse {
+  implicit val decisionResponseFormat: Format[DecisionResponse] = Json.format[DecisionResponse]
+}
+
+case class ErrorResponse(code:Int, message:String)
+
+object ErrorResponse {
+  implicit val errorResponseFormat: Format[ErrorResponse] = Json.format[ErrorResponse]
 }

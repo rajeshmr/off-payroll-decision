@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.ruleengine
 
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model.RulesFileError
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, SectionRuleSet}
-import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, RulesLoaderInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
