@@ -61,4 +61,3 @@ object DecisionServiceInstance extends DecisionService {
     (6,  "/tables/matrix_of_matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }
-
