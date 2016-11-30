@@ -70,14 +70,3 @@ Requests use the HTTP `POST` method
 | code              | true               | Extension to the HTTP Status Code. Use this code to reference internationalised text for errors. Refer to this [document](errors.md) for a full list or error codes. |
 | message           | true               | English readable message as to the reason for the error.                                                    |
 
-## Runing the application locally
-To run the application execute
-
-```
-sbt ~run 9000 -Drule_sheets.location=[Path to Excel File]” (e.g. /Users/miloszmuszynski/hmrc/decision-service/sheets/kb-rules-01.xls)
-```
-
-
-## License
-
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
