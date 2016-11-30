@@ -13,29 +13,30 @@ Requests use the HTTP `POST` method
 
 #### Functionality
 
-* Evaluates a __QuestionSet__
-* Provides a Decision based on a versioned set of "Decision Tables" _Note:_ This service supports multiple versions of Decision Tables, this version is 'addressed' in the version number in the request and response JSON. 
+* Evaluates an __Interview__
+* Provides a __Decision__ based on a versioned set of "Decision Tables" _Note:_ This service supports multiple versions of Decision Tables, this version is 'addressed' in the version number in the request and response JSON. 
 
 
 ## Request
 
-* Body contains __QuestionSet__ JSON
-- A [JSON Schema](off-payroll-question-set-schema.json) defines this __QuestionSet__.
-- [Example](off-payroll-question-set-sample.json) JSON with all fields populated.
+* Body contains an __Interview__ JSON
+- A [JSON Schema](off-payroll-interview-schema.json) defines this __Interview__.
+- [Example](off-payroll-interview-sample.json) JSON with all fields populated.
 
 
 | Attribute        | Required           | Description                                                          |
 | :---------------- |:------------------:| :--------------------------------------------------------------------|
-| version          | true               | The version of the QuestionSet being used and therefore the endpoint |
-| correlationID   | true               | A value unique to the consumer, to identify this QuestionSet and correlate it to its decision, we have used a UUID however any String of length min 1 max 36 is acceptable |
-| personalService | true               | 1st section  of the Question Set |
-| control           | false              | 2nd section  of the Question Set |
-| financialRisk   | false              | 3rd section  of the Question Set |
-| businesStructure| false              | 4th section  of the Question Set |
-| partOfOrganisation| false              | 5th section  of the Question Set |
-| miscellaneous| false              | 6th section  of the Question Set |
+| version          | true               | The version of the Interview being used and therefore the endpoint |
+| correlationID    | true               | A value unique to the consumer, to identify this Interview and correlate to its Decision|
+| interview       | true               | A set of questions and answers grouped in clusters used to conduct the Interview |
+| personalService | false               | cluster |
+| control           | false             | cluster |
+| financialRisk   | false               | cluster |
+| businesStructure| false               | cluster |
+| partOfOrganisation| false             | cluster |
+| miscellaneous| false                  | cluster |
 
- _Note:_ The __QuestionSet__ does not need to contain all the sections apsection  from the first mandatory 'personalService' section. The QuestionSet __Sections__ from two onwards are optional but they must be supplied in order. For example section three should not be supplied without two and so on. Within each section there are a number of __Scenarios__, for a complete list refer to the [JSON Schema](off-payroll-question-set-schema.json) Once all the sections are present in this QuestionSet then a __Decision__ response will be present. Though depending on the QuestionSet a __Decision__ may be arrived at before all sections are present, this is known as a 'hard-exit'
+ _Note:_ The __Interview__ does not need to contain all the clusters. Within each cluster there are a number of __ClusterElements__ a ClusterElement represents a Question with an answer. For a complete list of  __ClusterElements__ refer to the [JSON Schema](off-payroll-interview-schema.json) Once all the __Clusters__ are present in this __Interview__ then a __Decision__ response will be present. Depending on how the __Interview__ has been formed a __Decision__ may be arrived at before all __Clusters__ and __ClusterElements__ are present, this is known as a __Hard Exit__
 
 
 ## Response
@@ -48,10 +49,10 @@ Requests use the HTTP `POST` method
 
 | Attribute            | Required           | Description                                                                                                    |
 | :------------------- |:------------------:| :--------------------------------------------------------------------------------------------------------------|
-| version              | true               | The version of the QuestionSet sent in the request and therefore applied to this Response                      |
-| correlationID        | true               | Unique number to identify this QuestionSet and correlate it to its  decision |
+| version              | true               | The version of the Interview sent in the request and therefore applied to this Response                      |
+| correlationID        | true               | Unique number to identify this Interview and correlate it to its  decision |
 | result               | true               | An enumeration of "Outside IR35" &#124; "Inside IR35" &#124; "Unknown"|
-| carryOnWithQuestions | true               | true if the input QuestionSet that created this Decision is incomplete <br /> or false if a QuestionSet has been completed and the Decision is therefore final|
+| carryOnWithQuestions | true               | true if the input Interview that created this Decision is incomplete <br /> or false if a Interview has been completed and the Decision is therefore final|
 | score                | true               | A map of scores fully populated only when attribute "carryOnWithQuestions" is false and therefore a Decision is final |
 
 
