@@ -21,7 +21,8 @@ import play.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
-import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, Score}
+import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
@@ -33,7 +34,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 
 trait DecisionController extends BaseController {
-
   val decisionService:DecisionService
 
   def decide() = Action.async(parse.json) { implicit request =>
@@ -45,26 +45,23 @@ trait DecisionController extends BaseController {
         }
       case JsError(jsonErrors) =>
         Logger.debug(s"incorrect request: ${jsonErrors} ")
-        Future.successful(BadRequest(Json.obj("message" -> JsError.toFlatJson(jsonErrors))))
-    }}
-
-
-  def doDecide(decisionRequest:DecisionRequest):Future[Xor[DecisionServiceError,RuleEngineDecision]] = {
-    val facts: Facts = requestToFacts(decisionRequest)
-    Future{
-      facts ==>: decisionService
+        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT_ERROR_CODE, JsError.toFlatJson(jsonErrors).toString()))))
     }
+  }
+
+  def doDecide(decisionRequest:DecisionRequest):Future[Xor[DecisionServiceError,RuleEngineDecision]] = Future {
+      requestToFacts(decisionRequest) ==>: decisionService
   }
 
   def requestToFacts(decisionRequest: DecisionRequest): Facts = {
     val listsOfStringPairs = decisionRequest.interview.toList.collect { case (a, b) => b.toList }.flatten
-    val facts = Facts(listsOfStringPairs.collect { case (a, b) => (a, >>>(b)) }.toMap)
-    facts
+    Facts(listsOfStringPairs.collect { case (a, b) => (a, >>>(b)) }.toMap)
   }
 
-  def decisionToResponse(decisionRequest:DecisionRequest, ruleEngineDecision: RuleEngineDecision):DecisionResponse =
-    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score(Map("todo" -> "aa")), ruleEngineDecision.value)
-
+  def decisionToResponse(decisionRequest:DecisionRequest, ruleEngineDecision: RuleEngineDecision):DecisionResponse = {
+    val score = ruleEngineDecision.facts.toList.collect { case (a,co) => (a,co.value)}.toMap
+    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score(score), ruleEngineDecision.value)
+  }
 }
 
 object DecisionController extends DecisionController {

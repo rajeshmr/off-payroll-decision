@@ -18,7 +18,7 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import org.specs2.matcher.{MustExpectations, NumericMatchers}
 import play.api.http.Status
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsString, JsValue, Json}
 import play.api.libs.json.Json._
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
@@ -27,6 +27,11 @@ import uk.gov.hmrc.decisionservice.services.DecisionService
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DecisionControllerSpec extends UnitSpec with WithFakeApplication with MustExpectations with NumericMatchers {
+
+  private val VERSION: String = "0.0.1-alpha"
+  private val CORRELATION_ID: String = "12345"
+  val BAD_REQUEST_JSON: String = """{}"""
+
 
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
@@ -48,15 +53,40 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication with Must
   val decisionController:DecisionController = DecisionTestController
 
   val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
-  val decisionRequest = DecisionRequest("0.0.1-alpha", "12345", interview)
+  val decisionRequest = DecisionRequest(VERSION, CORRELATION_ID, interview)
 
   "POST /decide" should {
     "return 200 and correct response when request is correct" in {
       val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
       val result = decisionController.decide()(fakeRequest)
       status(result) shouldBe Status.OK
-      println(jsonBodyOf(await(result)))
-//      jsonBodyOf(await(result)) shouldBe toJson(RESPONSE_OK)
+      val response = jsonBodyOf(await(result))
+      verifyResponse(response)
     }
+    "return 400 and error response when request does not conform to schema" in {
+      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(Json.parse(BAD_REQUEST_JSON))
+      val result = decisionController.decide()(fakeRequest)
+      status(result) shouldBe Status.BAD_REQUEST
+      val errorResponse = jsonBodyOf(await(result))
+      verifyErrorResponse(errorResponse)
+    }
+  }
+
+  def verifyResponse(response: JsValue): Unit = {
+    val version = response \\ "version"
+    version should have size 1
+    version should contain theSameElementsAs Seq(JsString(VERSION))
+    val correlationID = response \\ "correlationID"
+    correlationID should have size 1
+    correlationID should contain theSameElementsAs Seq(JsString(CORRELATION_ID))
+    val carryOnWithQuestions = response \\ "carryOnWithQuestions"
+    carryOnWithQuestions should have size 1
+  }
+
+  def verifyErrorResponse(response: JsValue): Unit = {
+    val code = response \\ "code"
+    code should have size 1
+    val message = response \\ "message"
+    message should have size 1
   }
 }

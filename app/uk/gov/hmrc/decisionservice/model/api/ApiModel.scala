@@ -36,3 +36,9 @@ case class DecisionResponse(version:String, correlationID:String, carryOnWithQue
 object DecisionResponse {
   implicit val decisionResponseFormat: Format[DecisionResponse] = Json.format[DecisionResponse]
 }
+
+case class ErrorResponse(code:Int, message:String)
+
+object ErrorResponse {
+  implicit val errorResponseFormat: Format[ErrorResponse] = Json.format[ErrorResponse]
+}
