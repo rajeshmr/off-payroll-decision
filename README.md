@@ -13,3 +13,9 @@ To run the application execute
 
 ```
 sbt ~run 9000
+
+```
+
+## License
+
+This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
