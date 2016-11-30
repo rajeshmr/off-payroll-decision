@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.model.rules
 
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, EmptyCarryOver, NotValidUseCase}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class CarryOverSpec extends UnitSpec {

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.ruleengine
 
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.ruleengine._
-import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileLineValidatorInstance._
+import uk.gov.hmrc.play.test.UnitSpec
 
 
 class RulesFileValidatorSpec extends UnitSpec {
