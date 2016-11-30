@@ -31,18 +31,18 @@ class DecisionRequestSpec extends UnitSpec {
       |  "correlationID": "12345",
       |  "interview":{
       |    "personalService":
-      |    {
-      |      "contractualRightForSubstitute" : "Yes",
-      |      "contractrualObligationForSubstitute" : "No",
-      |      "possibleSubstituteRejection" : "Yes",
-      |      "engagerArrangeWorker" : "Yes",
-      |      "contractTermsWorkerPaysSubstitute" : "Yes",
-      |      "workerSentActualSubstitiute" : "Yes",
-      |      "possibleHelper" : "Yes",
-      |      "workerSentActualHelper" : "Yes",
-      |      "workerPayActualHelper" : "Yes"
+      |      {
+      |        "contractualRightForSubstitute" : "Yes",
+      |        "contractrualObligationForSubstitute" : "No",
+      |        "possibleSubstituteRejection" : "Yes",
+      |        "engagerArrangeWorker" : "Yes",
+      |        "contractTermsWorkerPaysSubstitute" : "Yes",
+      |        "workerSentActualSubstitiute" : "Yes",
+      |        "possibleHelper" : "Yes",
+      |        "workerSentActualHelper" : "Yes",
+      |        "workerPayActualHelper" : "Yes"
+      |      }
       |    }
-      |  }
       |}
       |
     """.stripMargin

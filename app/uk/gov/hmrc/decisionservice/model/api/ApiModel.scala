@@ -25,7 +25,7 @@ object DecisionRequest {
   implicit val questionSetFormat: Format[DecisionRequest] = Json.format[DecisionRequest]
 }
 
-case class Score( score:Map[String,String] )
+case class Score( score:Map[String,String])
 
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
