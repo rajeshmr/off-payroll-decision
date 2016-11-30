@@ -19,6 +19,9 @@ package uk.gov.hmrc.decisionservice.model.api
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
+import scala.io.Source
+import scala.reflect.io.File
+
 class DecisionRequestSpec extends UnitSpec {
 
   val json =
@@ -26,17 +29,19 @@ class DecisionRequestSpec extends UnitSpec {
       |{
       |  "version" : "1.0",
       |  "correlationID": "12345",
-      |  "personalService":
-      |  {
-      |    "contractualRightForSubstitute" : "Yes",
-      |    "contractrualObligationForSubstitute" : "No",
-      |    "possibleSubstituteRejection" : "Yes",
-      |    "engagerArrangeWorker" : "Yes",
-      |    "contractTermsWorkerPaysSubstitute" : "Yes",
-      |    "workerSentActualSubstitiute" : "Yes",
-      |    "possibleHelper" : "Yes",
-      |    "workerSentActualHelper" : "Yes",
-      |    "workerPayActualHelper" : "Yes"
+      |  "interview":{
+      |    "personalService":
+      |    {
+      |      "contractualRightForSubstitute" : "Yes",
+      |      "contractrualObligationForSubstitute" : "No",
+      |      "possibleSubstituteRejection" : "Yes",
+      |      "engagerArrangeWorker" : "Yes",
+      |      "contractTermsWorkerPaysSubstitute" : "Yes",
+      |      "workerSentActualSubstitiute" : "Yes",
+      |      "possibleHelper" : "Yes",
+      |      "workerSentActualHelper" : "Yes",
+      |      "workerPayActualHelper" : "Yes"
+      |    }
       |  }
       |}
       |
@@ -45,20 +50,23 @@ class DecisionRequestSpec extends UnitSpec {
   "decision request json" should {
     "be correctly converted to Scala object" in {
       val parsed = Json.parse(json)
-      val jsResult = Json.fromJson[QuestionSet](parsed)
+      val jsResult = Json.fromJson[DecisionRequest](parsed)
       jsResult.isSuccess shouldBe true
       val obj = jsResult.get
-      val m = obj.personalService
-      m should have size 9
-      val res = List("contractualRightForSubstitute", "contractrualObligationForSubstitute", "possibleSubstituteRejection").flatMap(m.get(_))
-      res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
+      val maybePersonalServiceMap = obj.interview.get("personalService")
+      maybePersonalServiceMap.isDefined shouldBe true
+      maybePersonalServiceMap.map { cluster =>
+        cluster should have size 9
+        val res = List("contractualRightForSubstitute", "contractrualObligationForSubstitute", "possibleSubstituteRejection").flatMap(cluster.get(_))
+        res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
+      }
     }
   }
 
   "decision request Scala object" should {
     "be correctly converted to json object" in {
-      val personalServiceQuestions = Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes")
-      val decisionRequest = QuestionSet("0.0.1-alpha", "12345", personalServiceQuestions)
+      val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
+      val decisionRequest = DecisionRequest("0.0.1-alpha", "12345", interview)
       val jsValue:JsValue = Json.toJson(decisionRequest)
       val personalService = jsValue \\ "personalService"
       val factsWithContractualRight = jsValue \\ "contractualRightForSubstitute"
