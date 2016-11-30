@@ -41,11 +41,11 @@ trait DecisionController extends BaseController {
       case JsSuccess(req, _) =>
         doDecide(req).map {
           case Xor.Right(decision) => Ok(Json.toJson(decisionToResponse(req, decision)))
-          case Xor.Left(error) => BadRequest(error.message)
+          case Xor.Left(error) => BadRequest(Json.toJson(ErrorResponse(error.code, error.message)))
         }
       case JsError(jsonErrors) =>
         Logger.debug(s"incorrect request: ${jsonErrors} ")
-        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT_ERROR_CODE, JsError.toFlatJson(jsonErrors).toString()))))
+        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toFlatJson(jsonErrors).toString()))))
     }
   }
 
