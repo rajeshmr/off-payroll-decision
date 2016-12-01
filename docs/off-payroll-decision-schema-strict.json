@@ -34,7 +34,7 @@
             "LOW"
           ]
         },
-        "controll": {
+        "control": {
           "type": "string",
           "enum": [
             "HIGH",
@@ -62,7 +62,7 @@
             "LOW"
           ]
         },
-        "miscalaneous": {
+        "miscellaneous": {
           "type": "string",
           "enum": [
             "HIGH",

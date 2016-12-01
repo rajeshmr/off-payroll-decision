@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1-alpha",
+  "version": "0.0.2-alpha",
   "correlationID": "12345",
   "interview": {
     "partOfOrganisation": {
@@ -19,7 +19,7 @@
       "workerProvideEquipment": false,
       "engagerPayForConsumablesMaterials": false
     },
-    "miscalaneous": {
+    "miscellaneous": {
       "similarWork": true
     },
     "businessStructure": {
