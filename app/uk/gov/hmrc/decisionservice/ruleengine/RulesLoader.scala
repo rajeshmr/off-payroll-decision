@@ -24,12 +24,6 @@ import scala.util.{Failure, Success, Try}
 import RulesFileReaderTokenizer._
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 
-case class RulesFileMetaData(valueCols:Int, path:String, name:String){
-  val ResultColumns = 3
-  def numCols = valueCols + ResultColumns
-}
-
-
 trait RulesLoader {
 
   val rulesFileLineValidator:RulesFileLineValidator
