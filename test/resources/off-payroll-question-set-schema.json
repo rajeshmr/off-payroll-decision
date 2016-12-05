@@ -1,5 +1,5 @@
 {
-  "id":"https://github.com/hmrc/off-payroll-decision-service",
+  "id":"https://github.com/hmrc/off-payroll-decision",
   "$schema":"http://json-schema.org/draft-04/schema#",
   "description":"This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
   "type":"object",
