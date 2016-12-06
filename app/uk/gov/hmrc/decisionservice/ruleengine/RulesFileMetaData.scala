@@ -16,9 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import play.api.Play
-
-import scala.collection.JavaConversions
+import play.api.libs.json.{Format, Json}
 
 
 case class RulesFileMetaData(valueCols:Int, path:String, name:String) {
@@ -27,18 +25,5 @@ case class RulesFileMetaData(valueCols:Int, path:String, name:String) {
 }
 
 object RulesFileMetaData {
-  def fromConfig:List[RulesFileMetaData] = {
-    val cc = Play.current.configuration.getConfigList("clusters")
-    cc.map { clusterConfig => {
-      for {
-        clusterConfiguration <- JavaConversions.asScalaBuffer(clusterConfig).toList
-        valueCols <- clusterConfiguration.getInt("dataCols")
-        path <- clusterConfiguration.getString("path")
-        name <- clusterConfiguration.getString("name")
-      }
-      yield {
-        RulesFileMetaData(valueCols, path, name)
-      }}
-    }.getOrElse(List())
-  }
+  implicit val rulesFileMetaDataFormat: Format[RulesFileMetaData] = Json.format[RulesFileMetaData]
 }
