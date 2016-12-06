@@ -19,9 +19,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 
 import cats.data.Xor
 import play.api.Logger
-import play.api.i18n.Messages
 import uk.gov.hmrc.decisionservice.model._
-import uk.gov.hmrc.decisionservice.model.api.ErrorCodes
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes.{FACT_WITH_TOO_MANY_EMPTY_VALUES, INCORRECT_FACT}
 import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, _}
 
@@ -36,7 +34,7 @@ sealed trait FactMatcher {
     @tailrec
     def go(factValues: List[CarryOver], rules:List[SectionRule]):Xor[DecisionServiceError,CarryOver] = rules match {
       case Nil => noMatchResult(facts, ruleSet.rules)
-      case rule :: xs if !factsValid(factValues, rule) => Xor.left(FactError(INCORRECT_FACT, Messages("facts.incorrect.fact.error")))
+      case rule :: xs if !factsValid(factValues, rule) => Xor.left(FactError(INCORRECT_FACT, "incorrect fact"))
       case rule :: xs =>
         factMatches(factValues, rule) match {
           case Some(result) => Xor.right(result)
@@ -60,7 +58,7 @@ sealed trait FactMatcher {
   def noMatchResult(facts: Map[String,CarryOver], rules: List[SectionRule]): Xor[DecisionServiceError,CarryOver] = {
     val factSet = factsEmptySet(facts)
     val rulesSet = rulesMaxEmptySet(rules)
-    if (factSet.subsetOf(rulesSet)) Xor.Right(NotValidUseCase) else Xor.Left(FactError(FACT_WITH_TOO_MANY_EMPTY_VALUES, ("facts.empty.values.error")))
+    if (factSet.subsetOf(rulesSet)) Xor.Right(NotValidUseCase) else Xor.Left(FactError(FACT_WITH_TOO_MANY_EMPTY_VALUES, ("facts have too many empty values")))
   }
 
 }

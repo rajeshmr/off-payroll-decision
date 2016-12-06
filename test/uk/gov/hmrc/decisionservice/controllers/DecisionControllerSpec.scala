@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import cats.data.Xor
-import org.specs2.matcher.{MustExpectations, NumericMatchers}
 import play.api.http.Status
 import play.api.libs.json.Json._
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
@@ -29,7 +30,9 @@ import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineDecision, RulesFileMeta
 import uk.gov.hmrc.decisionservice.services.DecisionService
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DecisionControllerSpec extends UnitSpec with WithFakeApplication with MustExpectations with NumericMatchers {
+class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
   private val VERSION: String = "0.0.1-alpha"
   private val CORRELATION_ID: String = "12345"
