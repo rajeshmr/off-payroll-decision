@@ -18,6 +18,7 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import java.io.InputStream
 
+import cats.data.Xor
 import com.fasterxml.jackson.databind.JsonNode
 import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.core.report.ProcessingReport
@@ -34,18 +35,33 @@ import scala.io.Source
   */
 object JsonValidator{
 
-  def validate(json : String) : Boolean = {
+  val schemaPath: String = "/off-payroll-question-set-schema.json"
+
+  object SuccessfulReport {
+    def unapply(processingReport:ProcessingReport) = processingReport.isSuccess
+  }
+
+  object ProblemReport {
+    def unapply(processingReport:ProcessingReport):Option[String] = Some(reportAsString(processingReport))
+  }
+
+  def validate(json : String) : Xor[String,Unit] = {
     val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
+    val stream = getClass.getResourceAsStream(schemaPath)
+    val content = Source.fromInputStream(stream).mkString
+    val jsonSchemaNode = JsonLoader.fromString(content)
+    val schema = jsonSchemaFactory.getJsonSchema(jsonSchemaNode)
+    val jsonNode = JsonLoader.fromString(json)
 
-    val stream: InputStream = getClass.getResourceAsStream("/off-payroll-question-set-schema.json")
-    val lines: String = Source.fromInputStream(stream).mkString
-    val jsonSchemaNode: JsonNode = JsonLoader.fromString(lines)
-    val schema: JsonSchema = jsonSchemaFactory.getJsonSchema(jsonSchemaNode)
-    val jsonNode: JsonNode = JsonLoader.fromString(json)
+    schema.validate(jsonNode) match {
+      case SuccessfulReport() => Xor.right(())
+      case ProblemReport(s) => Xor.left(s)
+    }
+  }
 
-    val report: ProcessingReport = schema.validate(jsonNode)
-
-    return report.isSuccess
+  def reportAsString(report:ProcessingReport) = {
+    import scala.collection.JavaConversions._
+    report.iterator().map(_.getMessage).mkString("\n")
   }
 
 }
