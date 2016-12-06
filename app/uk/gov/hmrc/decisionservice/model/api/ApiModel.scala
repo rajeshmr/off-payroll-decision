@@ -29,6 +29,7 @@ case class Score( score:Map[String,String])
 
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
+  val elements = List("control", "financial_risk", "part_of_organisation", "miscellaneous", "business_structure", "personal_service", "matrix")
 }
 
 case class DecisionResponse(version:String, correlationID:String, carryOnWithQuestions: Boolean, score:Score, result:String)
