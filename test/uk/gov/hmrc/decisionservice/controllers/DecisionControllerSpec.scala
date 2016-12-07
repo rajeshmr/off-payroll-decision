@@ -16,11 +16,12 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import cats.data.Xor
-import org.specs2.matcher.{MustExpectations, NumericMatchers}
 import play.api.http.Status
 import play.api.libs.json.Json._
-import play.api.libs.json.{JsString, JsValue, Json}
+import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 import uk.gov.hmrc.decisionservice.model.rules.Facts
@@ -29,7 +30,9 @@ import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineDecision, RulesFileMeta
 import uk.gov.hmrc.decisionservice.services.DecisionService
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DecisionControllerSpec extends UnitSpec with WithFakeApplication with MustExpectations with NumericMatchers {
+class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
   private val VERSION: String = "0.0.1-alpha"
   private val CORRELATION_ID: String = "12345"
@@ -44,6 +47,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication with Must
     (13, "/tables/personal_service.csv", "personal_service"),
     (6,  "/tables/matrix_of_matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
+  private val SCORE_ELEMENTS = Set("control", "financial_risk", "part_of_organisation", "miscellaneous", "business_structure", "personal_service", "matrix")
 
 
   object DecisionServiceTestInstance extends DecisionService {
@@ -61,10 +65,12 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication with Must
 
   object DecisionTestController extends DecisionController {
     lazy val decisionService = DecisionServiceTestInstance
+    lazy val scoreElements = SCORE_ELEMENTS
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
     lazy val decisionService = ErrorGeneratingDecisionService
+    lazy val scoreElements = SCORE_ELEMENTS
   }
 
   val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
@@ -78,6 +84,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication with Must
       status(result) shouldBe Status.OK
       val response = jsonBodyOf(await(result))
       verifyResponse(response)
+      verifyScore(response)
     }
     "return 400 and error response when request does not conform to schema" in {
       val decisionController = DecisionTestController
@@ -107,6 +114,15 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication with Must
     correlationID should contain theSameElementsAs Seq(JsString(CORRELATION_ID))
     val carryOnWithQuestions = response \\ "carryOnWithQuestions"
     carryOnWithQuestions should have size 1
+  }
+
+  def verifyScore(response: JsValue): Unit = {
+    val score = response \ "score" \\ "score"
+    score should have size 1
+    for (scoreElement <- SCORE_ELEMENTS) {
+      (score(0) \\ scoreElement) should have size 1
+    }
+    score(0).as[JsObject].fields should have size SCORE_ELEMENTS.size
   }
 
   def verifyErrorResponse(response: JsValue): Unit = {

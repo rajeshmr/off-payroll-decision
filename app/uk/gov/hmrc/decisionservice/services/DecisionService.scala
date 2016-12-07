@@ -51,7 +51,7 @@ trait DecisionService {
 
 object DecisionServiceInstance extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
-  val csvSectionMetadata = List(
+  lazy val csvSectionMetadata = List(
     (13, "/tables/control.csv", "control"),
     (24, "/tables/financial_risk.csv", "financial_risk"),
     (5,  "/tables/part_of_organisation.csv", "part_of_organisation"),

@@ -21,15 +21,15 @@ import play.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
-import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
+import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 
@@ -45,7 +45,7 @@ trait DecisionController extends BaseController {
         }
       case JsError(jsonErrors) =>
         Logger.debug(s"incorrect request: ${jsonErrors} ")
-        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toFlatJson(jsonErrors).toString()))))
+        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))))
     }
   }
 
@@ -59,8 +59,7 @@ trait DecisionController extends BaseController {
   }
 
   def decisionToResponse(decisionRequest:DecisionRequest, ruleEngineDecision: RuleEngineDecision):DecisionResponse = {
-    val score = ruleEngineDecision.facts.toList.collect { case (a,co) => (a,co.value)}.toMap
-    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score(score), ruleEngineDecision.value)
+    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score.create(ruleEngineDecision.facts), ruleEngineDecision.value)
   }
 }
 

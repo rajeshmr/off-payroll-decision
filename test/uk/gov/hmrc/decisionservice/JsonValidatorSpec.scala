@@ -16,12 +16,14 @@
 
 package uk.gov.hmrc.decisionservice
 
-import uk.gov.hmrc.decisionservice.controllers.JsonValidator
+import cats.data.Xor
+import uk.gov.hmrc.decisionservice.controllers.JsonValidator.validate
 import uk.gov.hmrc.play.test.UnitSpec
+
 
 class JsonValidatorSpec extends UnitSpec {
 
-  var valid_withTwoSections = """{
+  val valid_withTwoSections = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
@@ -40,13 +42,13 @@ class JsonValidatorSpec extends UnitSpec {
                                   }
                                 }"""
 
-  var valid_noAnswers = """{
-                                  "version": "89.90.73C",
-                                  "correlationID": "adipisicing ullamco",
-                                  "personalService": {}
-                                }"""
+  val valid_noAnswers = """{
+                              "version": "89.90.73C",
+                              "correlationID": "adipisicing ullamco",
+                              "personalService": {}
+                            }"""
 
-  var invalid_missingCorrelationID = """{
+  val invalid_missingCorrelationID = """{
                                   "version": "89.90.73C",
                                   "personalService": {
                                     "workerSentActualSubstitiute": false,
@@ -66,7 +68,7 @@ class JsonValidatorSpec extends UnitSpec {
                                   "businessStructure": {}
                                 }"""
 
-  var invalid_missingVersion = """{
+  val invalid_missingVersion = """{
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
                                     "workerSentActualSubstitiute": false,
@@ -86,7 +88,7 @@ class JsonValidatorSpec extends UnitSpec {
                                   "businessStructure": {}
                                 }"""
 
-  var invalid_withQuotesAroundBoolean = """{
+  val invalid_withQuotesAroundBoolean = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
@@ -108,7 +110,7 @@ class JsonValidatorSpec extends UnitSpec {
                                 }"""
 
 
-  var invalid_withInvalidBooleanValue = """{
+  val invalid_withInvalidBooleanValue = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
@@ -129,7 +131,7 @@ class JsonValidatorSpec extends UnitSpec {
                                   "businessStructure": {}
                                 }"""
 
-  var invalid_withInvalidSection = """{
+  val invalid_withInvalidSection = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
@@ -150,7 +152,7 @@ class JsonValidatorSpec extends UnitSpec {
                                   "businessStructure": {}
                                 }"""
 
-  var invalid_withoutRequiredSection = """{
+  val invalid_withoutRequiredSection = """{
                                            "version": "15.16.1-S",
                                            "correlationID": "ut",
                                            "businessStructure": {
@@ -167,7 +169,7 @@ class JsonValidatorSpec extends UnitSpec {
                                          }"""
 
 
-  var invalid_withVersionIdAsNumber = """{
+  val invalid_withVersionIdAsNumber = """{
                                   "version": 234231,
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
@@ -188,7 +190,7 @@ class JsonValidatorSpec extends UnitSpec {
                                   "businessStructure": {}
                                 }"""
 
-  var invalid_withInvalidFormatVersionId = """{
+  val invalid_withInvalidFormatVersionId = """{
                                   "version": "001-SNAPSHOT",
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
@@ -209,34 +211,34 @@ class JsonValidatorSpec extends UnitSpec {
                                   "businessStructure": {}
                                 }"""
 
-  var invalid_withInvalidEnum = """{
-                                               "version": "78.8.18Q",
-                                               "correlationID": "dolor quis cillum velit in",
-                                               "personalService": {
-                                                 "contractrualObligationForSubstitute": false,
-                                                 "workerSentActualSubstitiute": false,
-                                                 "workerSentActualHelper": true,
-                                                 "engagerArrangeWorker": true,
-                                                 "possibleHelper": true
-                                               },
-                                               "partOfOrganisation": {
-                                                 "contactWithEngagerCustomer": true,
-                                                 "workerReceivesBenefits": false,
-                                                 "workerAsLineManager": false
-                                               },
-                                               "businessStructure": {
-                                                 "businessWebsite": true,
-                                                 "businesAccount": false,
-                                                 "workerPayForTraining": false
-                                               },
-                                               "control": {
-                                                 "workerDecideWhere": "workerDecideWhere",
-                                                 "workerLevelOfExpertise": "imWellGood"
-                                               },
-                                               "miscalaneous": {}
-                                             }"""
+  val invalid_withInvalidEnum = """{
+                                   "version": "78.8.18Q",
+                                   "correlationID": "dolor quis cillum velit in",
+                                   "personalService": {
+                                     "contractrualObligationForSubstitute": false,
+                                     "workerSentActualSubstitiute": false,
+                                     "workerSentActualHelper": true,
+                                     "engagerArrangeWorker": true,
+                                     "possibleHelper": true
+                                   },
+                                   "partOfOrganisation": {
+                                     "contactWithEngagerCustomer": true,
+                                     "workerReceivesBenefits": false,
+                                     "workerAsLineManager": false
+                                   },
+                                   "businessStructure": {
+                                     "businessWebsite": true,
+                                     "businesAccount": false,
+                                     "workerPayForTraining": false
+                                   },
+                                   "control": {
+                                     "workerDecideWhere": "workerDecideWhere",
+                                     "workerLevelOfExpertise": "imWellGood"
+                                   },
+                                   "miscalaneous": {}
+                                 }"""
 
-  var invalid_withInvalidEnum2 = """{
+  val invalid_withInvalidEnum2 = """{
                                      "version": "5.4.2-b",
                                      "correlationID": "dolor dolor",
                                      "personalService": {
@@ -254,53 +256,64 @@ class JsonValidatorSpec extends UnitSpec {
   "json validator" should {
 
     "return true for valid json" in {
-      JsonValidator.validate(valid_withTwoSections) shouldBe true
+      validate(valid_withTwoSections).isRight shouldBe true
     }
 
     "return true for valid json - no answers" in {
-      JsonValidator.validate(valid_noAnswers) shouldBe true
+      validate(valid_noAnswers).isRight shouldBe true
     }
 
     "return false for invalid json - InvalidBooleanValue" in {
-      JsonValidator.validate(invalid_withInvalidBooleanValue) shouldBe false
+      verify(invalid_withInvalidBooleanValue, "string")
     }
 
     "return false for invalid json - QuotesAroundBoolean" in {
-      JsonValidator.validate(invalid_withQuotesAroundBoolean) shouldBe false
+      verify(invalid_withQuotesAroundBoolean, "string")
     }
 
-    "return false for invalid json - missingVersion" in {
-      JsonValidator.validate(invalid_missingVersion) shouldBe false
+    "return false for invalid json - missing Version" in {
+      verify(invalid_missingVersion, "object has missing required properties")
     }
 
-    "return false for invalid json - missingCorrelationID" in {
-      JsonValidator.validate(invalid_missingCorrelationID) shouldBe false
+    "return false for invalid json - missing CorrelationID" in {
+      verify(invalid_missingCorrelationID, "object has missing required properties")
     }
 
     "return false for invalid json - invalidSection" in {
-      JsonValidator.validate(invalid_withInvalidSection) shouldBe false
+      verify(invalid_withInvalidSection, "object instance has properties which are not allowed by the schema")
     }
 
     "return false for invalid json - withoutPersonalService" in {
-      JsonValidator.validate(invalid_withoutRequiredSection) shouldBe false
+      verify(invalid_withoutRequiredSection, "personalService")
     }
 
     "return false for invalid json - invalidFormatVersionId - should be string" in {
-      JsonValidator.validate(invalid_withVersionIdAsNumber) shouldBe false
+      verify(invalid_withVersionIdAsNumber, "integer")
     }
 
     "return false for invalid json - invalidFormatVersionId" in {
-      JsonValidator.validate(invalid_withInvalidFormatVersionId) shouldBe false
+      verify(invalid_withInvalidFormatVersionId, "001-SNAPSHOT")
     }
 
     "return false for invalid json - enum value is not valid" in {
-      JsonValidator.validate(invalid_withInvalidEnum) shouldBe false
+      verify(invalid_withInvalidEnum, "imWellGood")
     }
 
     "return false for invalid json - enum value is not valid2" in {
-      JsonValidator.validate(invalid_withInvalidEnum2) shouldBe false
+      verify(invalid_withInvalidEnum2, "allDayEveryDay")
     }
 
+  }
+
+  val verify = verifyError(validate) _
+
+  def verifyError(f:String => Xor[String,Unit])(s:String, expectedText:String):Unit = {
+    val result = validate(s)
+    result.isRight shouldBe false
+    result.leftMap { report =>
+      println(report)
+      report.contains(expectedText) shouldBe true
+    }
   }
 
 }

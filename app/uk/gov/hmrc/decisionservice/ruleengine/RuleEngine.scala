@@ -62,10 +62,10 @@ trait RuleEngine {
     val maybeFacts = go(rules.rules, facts)
     maybeFacts.map {
       case f@FinalFact(ff) =>
-        Logger.info(s"decision found: '${ff.value}'\n")
+        Logger.debug(s"decision found: '${ff.value}'\n")
         RuleEngineDecisionImpl(ff.value, f.facts)
       case f =>
-        Logger.info(s"decision not found - undecided\n")
+        Logger.debug(s"decision not found - undecided\n")
         RuleEngineDecisionUndecided(f.facts)
     }
   }

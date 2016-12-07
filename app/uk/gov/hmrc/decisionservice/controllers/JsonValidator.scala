@@ -16,36 +16,44 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
-import java.io.InputStream
-
-import com.fasterxml.jackson.databind.JsonNode
+import cats.data.Xor
 import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.core.report.ProcessingReport
-import com.github.fge.jsonschema.main.{JsonSchema, JsonSchemaFactory}
+import com.github.fge.jsonschema.main.JsonSchemaFactory
 
 import scala.io.Source
 
-/**
-  * Created by habeeb on 11/11/2016.
-  *
-  * FIXME: this class is to be refactored!!
-  *
-  *
-  */
-object JsonValidator{
+trait JsonValidator{
+  val schemaPath:String
 
-  def validate(json : String) : Boolean = {
-    val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
-
-    val stream: InputStream = getClass.getResourceAsStream("/off-payroll-question-set-schema.json")
-    val lines: String = Source.fromInputStream(stream).mkString
-    val jsonSchemaNode: JsonNode = JsonLoader.fromString(lines)
-    val schema: JsonSchema = jsonSchemaFactory.getJsonSchema(jsonSchemaNode)
-    val jsonNode: JsonNode = JsonLoader.fromString(json)
-
-    val report: ProcessingReport = schema.validate(jsonNode)
-
-    return report.isSuccess
+  object SuccessfulReport {
+    def unapply(processingReport:ProcessingReport) = processingReport.isSuccess
   }
 
+  object ProblemReport {
+    def unapply(processingReport:ProcessingReport):Option[String] = Some(reportAsString(processingReport))
+  }
+
+  def validate(json : String) : Xor[String,Unit] = {
+    val jsonSchemaFactory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
+    val stream = getClass.getResourceAsStream(schemaPath)
+    val content = Source.fromInputStream(stream).mkString
+    val jsonSchemaNode = JsonLoader.fromString(content)
+    val schema = jsonSchemaFactory.getJsonSchema(jsonSchemaNode)
+    val jsonNode = JsonLoader.fromString(json)
+
+    schema.validate(jsonNode) match {
+      case SuccessfulReport() => Xor.right(())
+      case ProblemReport(s) => Xor.left(s)
+    }
+  }
+
+  def reportAsString(report:ProcessingReport) = {
+    import scala.collection.JavaConversions._
+    report.iterator().map(_.getMessage).mkString("\n")
+  }
+}
+
+object JsonValidator extends JsonValidator {
+  val schemaPath = "/off-payroll-question-set-schema.json"
 }
