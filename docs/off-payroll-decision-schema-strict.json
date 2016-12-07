@@ -70,7 +70,7 @@
           ]
         }
       },
-      "minProperties": 0,
+      "minProperties": 6,
       "addtionalProperties": false
     }
   },
@@ -80,6 +80,6 @@
     "carryOnWithQuestions",
     "score"
   ],
-  "minProperties": 0,
+  "minProperties": 4,
   "addtionalProperties": false
 }
