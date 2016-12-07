@@ -16,26 +16,15 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
-import java.io.InputStream
-
 import cats.data.Xor
-import com.fasterxml.jackson.databind.JsonNode
 import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.core.report.ProcessingReport
-import com.github.fge.jsonschema.main.{JsonSchema, JsonSchemaFactory}
+import com.github.fge.jsonschema.main.JsonSchemaFactory
 
 import scala.io.Source
 
-/**
-  * Created by habeeb on 11/11/2016.
-  *
-  * FIXME: this class is to be refactored!!
-  *
-  *
-  */
-object JsonValidator{
-
-  val schemaPath: String = "/off-payroll-question-set-schema.json"
+trait JsonValidator{
+  val schemaPath:String
 
   object SuccessfulReport {
     def unapply(processingReport:ProcessingReport) = processingReport.isSuccess
@@ -63,5 +52,8 @@ object JsonValidator{
     import scala.collection.JavaConversions._
     report.iterator().map(_.getMessage).mkString("\n")
   }
+}
 
+object JsonValidator extends JsonValidator {
+  val schemaPath = "/off-payroll-question-set-schema.json"
 }
