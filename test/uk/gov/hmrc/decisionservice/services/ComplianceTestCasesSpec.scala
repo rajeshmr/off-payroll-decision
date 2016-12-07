@@ -17,7 +17,7 @@
 package uk.gov.hmrc.decisionservice.services
 
 import uk.gov.hmrc.decisionservice.model.api.Score
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
+import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, NotValidUseCase}
 import uk.gov.hmrc.play.test.UnitSpec
 
 
@@ -46,11 +46,14 @@ class ComplianceTestCasesSpec extends UnitSpec {
       maybeFacts.isDefined shouldBe true
       maybeFacts.map { facts =>
         val maybeDecision = facts ==>: DecisionServiceInstance
-        println(maybeDecision)
         maybeDecision.isRight shouldBe true
         maybeDecision.map { decision =>
           decision.value shouldBe "Undecided"  // should be inIR35
-          println(Score.create(decision.facts))
+          val maybeBusinessStructureScore = Score.create(decision.facts).score.get("business_structure")
+          maybeBusinessStructureScore.isDefined shouldBe true
+          maybeBusinessStructureScore.map{businessStructureScore =>
+            businessStructureScore shouldBe NotValidUseCase.value
+          }
         }
       }
     }
