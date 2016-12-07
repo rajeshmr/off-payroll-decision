@@ -59,8 +59,7 @@ trait DecisionController extends BaseController {
   }
 
   def decisionToResponse(decisionRequest:DecisionRequest, ruleEngineDecision: RuleEngineDecision):DecisionResponse = {
-    val score = ruleEngineDecision.facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,co.value)}.toMap
-    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score(score), ruleEngineDecision.value)
+    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score.create(ruleEngineDecision.facts), ruleEngineDecision.value)
   }
 }
 

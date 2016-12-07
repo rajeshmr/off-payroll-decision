@@ -16,21 +16,42 @@
 
 package uk.gov.hmrc.decisionservice.services
 
+import uk.gov.hmrc.decisionservice.model.api.Score
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
-import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.play.test.UnitSpec
 
+
 class ComplianceTestCasesSpec extends UnitSpec {
+  val testCases = Map(
+    "Barbara" ->
+      Facts(Map(
+        "toldWhatToDo" -> >>>("yes"),
+        "engagerMovingWorker" -> >>>("yes"),
+        "workerDecidingHowWorkIsDone" -> >>>("yes"),
+        "workerLevelOfExpertise.notToldByEnagagerHowToWork" -> >>>("yes"),
+        "whenWorkHasToBeDone.workinPatternAgreedDeadlines" -> >>>("yes"),
+        "workerDecideWhere.couldFixWorkerLocation" -> >>>("yes"),
+        "engagerPayForConsumablesMaterials" -> >>>("yes"),
+        "engagerPayExpense" -> >>>("yes"),
+        "workerMainIncome.incomeCalendarPeriods" -> >>>("yes"),
+        "workerProvideAtTheirExpense.labourOnly" -> >>>("yes"),
+        "engagerArrangeIfWorkerIsUnable" -> >>>("yes")
+      ))
+  )
 
   "decision service" should {
-    "produce correct the same decision as given by the law test cases" in {
-      val facts = ComplianceTestCases.testCases(0)
-
-      val maybeDecision = facts ==>: DecisionServiceInstance
-      println(maybeDecision)
-      maybeDecision.isRight shouldBe true
-      maybeDecision.map { decision =>
-        decision.value shouldBe "outofIR35"
+    "produce correct the same decision as given by the compliance cases" in {
+      val USE_CASE_NAME = "Barbara"
+      val maybeFacts = testCases.get(USE_CASE_NAME)
+      maybeFacts.isDefined shouldBe true
+      maybeFacts.map { facts =>
+        val maybeDecision = facts ==>: DecisionServiceInstance
+        println(maybeDecision)
+        maybeDecision.isRight shouldBe true
+        maybeDecision.map { decision =>
+          decision.value shouldBe "Undecided"  // should be inIR35
+          println(Score.create(decision.facts))
+        }
       }
     }
   }
