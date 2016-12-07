@@ -17,6 +17,7 @@
 package uk.gov.hmrc.decisionservice.model.api
 
 import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.decisionservice.model.rules.CarryOver
 
 
 case class DecisionRequest(version:String, correlationID:String, interview:Map[String,Map[String,String]])
@@ -29,6 +30,9 @@ case class Score( score:Map[String,String])
 
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
+  val elements = List("control", "financial_risk", "part_of_organisation", "miscellaneous", "business_structure", "personal_service", "matrix")
+  def create(facts:Map[String,CarryOver]):Score =
+    Score(facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,co.value)}.toMap)
 }
 
 case class DecisionResponse(version:String, correlationID:String, carryOnWithQuestions: Boolean, score:Score, result:String)
