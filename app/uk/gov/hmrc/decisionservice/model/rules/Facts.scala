@@ -16,14 +16,13 @@
 
 package uk.gov.hmrc.decisionservice.model.rules
 
-import cats.data.Xor
-import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.ruleengine.FactMatcherInstance
 import play.api.Logger
+import uk.gov.hmrc.decisionservice.Validation
 
 case class Facts(facts:Map[String,CarryOver]){
 
-  def ==+>:(rules:SectionRuleSet):Xor[DecisionServiceError,Facts] = {
+  def ==+>:(rules:SectionRuleSet):Validation[Facts] = {
     val defaultFactName = rules.section
     Logger.debug(s"matching for section:\t'$defaultFactName'")
     Logger.debug(s"headings:\t${rules.headings.mkString("\t,")}")
