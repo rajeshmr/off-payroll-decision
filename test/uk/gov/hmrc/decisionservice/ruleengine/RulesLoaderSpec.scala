@@ -52,13 +52,15 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
         errorList should have size 1
       }
     }
-//    "return error if the csv file contains invalid data" in {
-//      val maybeRules = RulesLoaderInstance.load(csvMetadataError)
-//      maybeRules.isLeft shouldBe true
-//      maybeRules.leftMap { error =>
-//        error shouldBe a [RulesFileError]
-//      }
-//    }
+    "return error if the csv file contains invalid data" in {
+      val maybeRules = RulesLoaderInstance.load(csvMetadataError)
+      maybeRules.isValid shouldBe false
+      maybeRules.leftMap { error =>
+        error should have size 2
+        error(0).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
+        error(1).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
+      }
+    }
 //    "return error if the csv file is empty" in {
 //      val maybeRules = RulesLoaderInstance.load(csvMetadataEmpty)
 //      maybeRules.isLeft shouldBe true

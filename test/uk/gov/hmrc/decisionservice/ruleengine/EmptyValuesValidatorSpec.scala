@@ -38,9 +38,9 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
       )
 
       val error = FactMatcherInstance.noMatchResult(facts.facts,rules)
-      error.isLeft should be (true)
+      error.isInvalid should be (true)
       error.leftMap { e =>
-        e shouldBe a [FactError]
+        e(0) shouldBe a [FactError]
       }
     }
     "produce 'not valid use case' result if FactsEmptySet is a superset of MaximumRulesEmptySet" in {
@@ -51,7 +51,7 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
       )
 
       val result = FactMatcherInstance.noMatchResult(facts.facts,rules)
-      result.isRight should be (true)
+      result.isValid should be (true)
       result.map { r =>
         r shouldBe NotValidUseCase
       }

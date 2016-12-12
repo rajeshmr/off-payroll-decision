@@ -15,10 +15,10 @@
  */
 
 package uk.gov.hmrc.decisionservice
-import cats.data.Xor
+import cats.data.{Validated, Xor}
 import org.scalacheck.{Gen, Prop, Properties}
-import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, >>>, SectionRuleSet}
-import uk.gov.hmrc.decisionservice.ruleengine.{RulesFileMetaData, FactMatcherInstance, RulesLoaderInstance}
+import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, SectionRuleSet}
+import uk.gov.hmrc.decisionservice.ruleengine.{FactMatcherInstance, RulesFileMetaData, RulesLoaderInstance}
 import uk.gov.hmrc.play.test.UnitSpec
 
 
@@ -38,10 +38,10 @@ trait CsvCheck {
     prettyPrint(m)
     val response = FactMatcherInstance.matchFacts(m, ruleSet)
     response match {
-      case Xor.Right(sectionResult) =>
+      case Validated.Valid(sectionResult) =>
         print(s"\t${sectionResult.value}")
-      case Xor.Left(e) =>
-        print(s"\t$e")
+      case Validated.Invalid(e) =>
+        print(s"\t${e(0)}")
     }
     true
   }
