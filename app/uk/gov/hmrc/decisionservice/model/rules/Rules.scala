@@ -16,8 +16,12 @@
 
 package uk.gov.hmrc.decisionservice.model.rules
 
+import cats.Semigroup
+
 case class SectionRule(values:List[CarryOver], result:CarryOver)
 
-case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule])
+case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule]) extends Semigroup[SectionRuleSet] {
+  override def combine(x: SectionRuleSet, y: SectionRuleSet): SectionRuleSet = x
+}
 
 case class Rules(rules:List[SectionRuleSet])
