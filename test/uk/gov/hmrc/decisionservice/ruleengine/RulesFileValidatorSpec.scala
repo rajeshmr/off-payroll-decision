@@ -38,15 +38,18 @@ class RulesFileValidatorSpec extends UnitSpec {
         errorList(0).code shouldBe ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE
       }
     }
-//    "return error for rule row size mismatch" in {
-//      val (v,r) = (List("Low", "Medium", "", "High"), List("In IR35"))
-//      val mayBeValid = validateLine(v ::: r, RulesFileMetaData(41, "path", ""), 3)
-//      mayBeValid.isInvalid shouldBe true
-//      mayBeValid.leftMap { error =>
-//        error shouldBe a[RulesFileError]
-//        error.message shouldBe "row size is 5, expected greater than 41 in row 3 in file path"
-//      }
-//    }
+    "return error for rule row size mismatch" in {
+      val (v,r) = (List("Low", "Medium", "", "High"), List("In IR35"))
+      val mayBeValid = validateLine(v ::: r, RulesFileMetaData(41, "path", ""), 3)
+      mayBeValid.isValid shouldBe false
+      mayBeValid.leftMap { errors =>
+        errors should have size 3
+        errors.map(_.message) contains theSameElementsAs(List(
+          "row size is 5, expected greater than 41 in row 3 in file path",
+          "invalid value in row 3 in file path",
+          "missing carry over in row 3 in file path"))
+      }
+    }
 //    "correctly validate valid rule row" in {
 //      val (v,r) = (List("Yes", "No", "Yes", ""), List("Low", "false"))
 //      val mayBeValid = validateLine(v ::: r, RulesFileMetaData(v.size, "", ""), 3)

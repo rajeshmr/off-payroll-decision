@@ -16,17 +16,18 @@
 
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import cats.data.{OneAnd, Validated}
-import uk.gov.hmrc.decisionservice.Validation
-import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
-import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
+import cats.data.Validated
 import cats.implicits._
+import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
+import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 
 sealed trait RulesFileLineValidator {
 
   val allowedCarryOverValues: List[String]
   val allowedValues: List[String]
   val allowedDecisionValues: List[String]
+  val allowedExitValues: List[String]
 
   def validateValue(value: String, errorMessage: String): Validation[String] = {
     val option = allowedValues.find(_ == value.trim.toLowerCase).map(_ => "")
@@ -42,10 +43,10 @@ sealed trait RulesFileLineValidator {
       case x::xs if !allowedCarryOverValues.contains(x.trim.toLowerCase) && !x.isEmpty =>
         Validated.invalid(List(RulesFileError(INVALID_CARRY_OVER_VALUE_IN_RULES_FILE,
           s"invalid carry over value $x in row $row in file ${rulesFileMetaData.path}")))
-      case x::Nil => Validated.valid("")
-      case x::exit::xs if !exit.isEmpty && exit.trim.toLowerCase() != "true" && exit.trim.toLowerCase() != "false" =>
+      case l@x::Nil => Validated.valid("")
+      case x::exit::xs if !allowedExitValues.contains(exit.trim.toLowerCase()) =>
         Validated.invalid(List(RulesFileError(INVALID_EXIT_VALUE_IN_RULES_FILE, s"invalid exit value in row $row in file ${rulesFileMetaData.path}")))
-      case _ => Validated.valid("")
+      case l => Validated.valid("")
     }
 
   def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Validation[String] =
@@ -57,26 +58,11 @@ sealed trait RulesFileLineValidator {
     else Validated.invalid(List(RulesFileError(INVALID_HEADER_SIZE_IN_RULES_FILE, s"column header size is ${row.size}, should be ${rulesFileMetaData.valueCols} in file ${rulesFileMetaData.path}")))
 
   def validateLine(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Validation[String] = {
-//    for {
-//      _ <- validateRowSize(row, rulesFileMetaData, rowNumber)
-//      (valueCells, resultCells) = row.splitAt(rulesFileMetaData.valueCols)
-//      validationErrors = valueCells.map(cell => validateValue(cell.trim, s"invalid value in row $rowNumber in file ${rulesFileMetaData.path}"))
-//      _ <- Xor.fromOption(validationErrors.headOption, ()).swap
-//      _ <- validateResultCells(resultCells, rulesFileMetaData, rowNumber)
-//    }
-//    yield {
-//      ()
-//    }
-
     val rowSizeValidation = validateRowSize(row, rulesFileMetaData, rowNumber)
     val (valueCells, resultCells) = row.splitAt(rulesFileMetaData.valueCols)
     val valueCellsValidations = valueCells.map(cell => validateValue(cell.trim, s"invalid value in row $rowNumber in file ${rulesFileMetaData.path}"))
     val resultCellsValidation = validateResultCells(resultCells, rulesFileMetaData, rowNumber)
-
-    val valueCellCombinedValidation = valueCellsValidations.reduceLeft((a,b) => a.combine(b))
-
-    rowSizeValidation.combine(valueCellCombinedValidation).combine(resultCellsValidation)
-
+    valueCellsValidations.foldLeft(rowSizeValidation)((a,b) => a.combine(b)).combine(resultCellsValidation)
   }
 
 }
@@ -85,4 +71,5 @@ object RulesFileLineValidatorInstance extends RulesFileLineValidator {
   val allowedDecisionValues = List("inir35", "outofir35", "unknown")
   val allowedCarryOverValues = List("low", "medium", "high") ::: allowedDecisionValues
   val allowedValues = List("yes", "no", "") ::: allowedCarryOverValues
+  val allowedExitValues = List("true", "false", "")
 }

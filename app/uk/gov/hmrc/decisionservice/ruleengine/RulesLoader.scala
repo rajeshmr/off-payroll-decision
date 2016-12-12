@@ -45,7 +45,7 @@ trait RulesLoader {
       val errorsInRules = rest.zipWithIndex.map(validateLine _)
       val combinedValidation = errorsInRules.foldLeft(errorsInHeadings)((a,b)=>a.combine(b))
       combinedValidation match {
-        case Validated.Valid(a) => createRuleSet(rulesFileMetaData, rest, headings)
+        case Validated.Valid(_) => createRuleSet(rulesFileMetaData, rest, headings)
         case Validated.Invalid(a) => Validated.invalid(a)
       }
   }
