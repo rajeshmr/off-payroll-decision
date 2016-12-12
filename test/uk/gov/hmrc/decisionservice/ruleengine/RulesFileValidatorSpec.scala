@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import uk.gov.hmrc.decisionservice.model._
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileLineValidatorInstance._
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -31,10 +31,11 @@ class RulesFileValidatorSpec extends UnitSpec {
     }
     "return error for invalid column header size" in {
       val (v,r) = (List("Q1", "Q2", "Q3", "Q4"), List("CarryOver", "Exit"))
-      val mayBeValid = validateColumnHeaders(v, RulesFileMetaData(v.size+1, "", ""))
-      mayBeValid.isInvalid shouldBe true
-      mayBeValid.leftMap { error =>
-        error shouldBe a[RulesFileError]
+      val mayBeValid = validateColumnHeaders(v, RulesFileMetaData(v.size + 1, "", ""))
+      mayBeValid.isValid shouldBe false
+      mayBeValid.leftMap { errorList =>
+        errorList should have size 1
+        errorList(0).code shouldBe ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE
       }
     }
 //    "return error for rule row size mismatch" in {

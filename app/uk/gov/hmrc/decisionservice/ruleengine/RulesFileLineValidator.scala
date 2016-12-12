@@ -54,7 +54,7 @@ sealed trait RulesFileLineValidator {
 
   def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Validation[String] =
     if (row.size >= rulesFileMetaData.valueCols) Validated.valid("")
-    else Validated.invalid(List(RulesFileError(INVALID_ROW_SIZE_IN_RULES_FILE, s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}")))
+    else Validated.invalid(List(RulesFileError(INVALID_HEADER_SIZE_IN_RULES_FILE, s"column header size is ${row.size}, should be ${rulesFileMetaData.valueCols} in file ${rulesFileMetaData.path}")))
 
   def validateLine(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Validation[String] = {
 //    for {

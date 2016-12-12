@@ -19,6 +19,7 @@ package uk.gov.hmrc.decisionservice.ruleengine
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.{BeforeAndAfterEach, Inspectors, LoneElement}
 import uk.gov.hmrc.decisionservice.model._
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes
 import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -39,8 +40,9 @@ class EmptyValuesValidatorSpec extends UnitSpec with BeforeAndAfterEach with Sca
 
       val error = FactMatcherInstance.noMatchResult(facts.facts,rules)
       error.isInvalid should be (true)
-      error.leftMap { e =>
-        e(0) shouldBe a [FactError]
+      error.leftMap { errorList =>
+        errorList should have size 1
+        errorList(0).code shouldBe ErrorCodes.FACT_WITH_TOO_MANY_EMPTY_VALUES
       }
     }
     "produce 'not valid use case' result if FactsEmptySet is a superset of MaximumRulesEmptySet" in {
