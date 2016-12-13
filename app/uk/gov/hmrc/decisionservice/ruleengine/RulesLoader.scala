@@ -43,14 +43,14 @@ trait RulesLoader {
     case (headings :: rest) =>
       val errorsInHeadings = rulesFileLineValidator.validateColumnHeaders(headings, rulesFileMetaData)
       val errorsInRules = rest.zipWithIndex.map(validateLine _)
-      val combinedValidation = errorsInRules.foldLeft(errorsInHeadings)((a,b)=>a.combine(b))
+      val combinedValidation = errorsInRules.foldLeft(errorsInHeadings)(_ combine _)
       combinedValidation match {
         case Validated.Valid(_) => createRuleSet(rulesFileMetaData, rest, headings)
         case Validated.Invalid(a) => Validated.invalid(a)
       }
   }
 
-  private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Validation[String] = {
+  private def validateLine(tokensWithIndex:(List[String],Int))(implicit rulesFileMetaData: RulesFileMetaData):Validation[Unit] = {
     tokensWithIndex match {
       case (t, l) if t.slice(rulesFileMetaData.valueCols, rulesFileMetaData.numCols).isEmpty =>
         Validated.invalid(List(RulesFileError(RESULT_MISSING_IN_RULES_FILE,
@@ -61,7 +61,7 @@ trait RulesLoader {
       case (t, l) =>
         rulesFileLineValidator.validateLine(t, rulesFileMetaData, l + 2)
       case _ =>
-        Validated.valid("")
+        Validated.valid(())
     }
   }
 

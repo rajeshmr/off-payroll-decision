@@ -17,8 +17,9 @@
 package uk.gov.hmrc.decisionservice.services
 
 import cats.Semigroup
-import cats.data.{Validated, Xor}
+import cats.data.Validated
 import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 import uk.gov.hmrc.decisionservice.ruleengine._
@@ -42,7 +43,10 @@ trait DecisionService {
 
   def loadSectionRules():Validation[List[SectionRuleSet]] = {
     val maybeRules = csvSectionMetadata.map(RulesLoaderInstance.load(_))
-    val combined = maybeRules.reduceLeft((a,b) => a.combine(b))
+    val combined = if (maybeRules.isEmpty)
+      Validated.invalid(List(RulesFileError(MISSING_RULE_FILES, "missing rule files")))
+    else
+      maybeRules.reduceLeft(_ combine _)
     combined match {
       case Validated.Valid(_) => Validated.valid(maybeRules.collect {case Validated.Valid(a) => a})
       case Validated.Invalid(e) => Validated.invalid(e)
