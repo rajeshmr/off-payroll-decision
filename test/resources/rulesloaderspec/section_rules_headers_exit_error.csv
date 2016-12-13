@@ -2,4 +2,4 @@ Q1 , Q2
 yes, yes , yes , high   , true
 yes, no  , no  , medium , true
 yes, no  , yes , low    , true
-no ,     , yes , low    , false
+no ,     , yes , low    , falsex

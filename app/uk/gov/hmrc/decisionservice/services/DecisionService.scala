@@ -16,38 +16,48 @@
 
 package uk.gov.hmrc.decisionservice.services
 
-import cats.data.Xor
+import cats.Semigroup
+import cats.data.Validated
+import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 import uk.gov.hmrc.decisionservice.ruleengine._
 
+object ErrorListSemigroup extends Semigroup[List[DecisionServiceError]] {
+  override def combine(x: List[DecisionServiceError], y: List[DecisionServiceError]): List[DecisionServiceError] = x ::: y
+}
 
 trait DecisionService {
+  implicit val errorListSemigroup = Semigroup(ErrorListSemigroup)
+  implicit val sectionRuleSetSemigroup = Semigroup(SectionRuleSet("", List(), List()))
+
   val ruleEngine:RuleEngine = RuleEngineInstance
 
-  val maybeSectionRules:Xor[DecisionServiceError,List[SectionRuleSet]]
+  val maybeSectionRules:Validation[List[SectionRuleSet]]
 
   val csvSectionMetadata:List[RulesFileMetaData]
 
-  def loadSectionRules():Xor[DecisionServiceError,List[SectionRuleSet]] = {
+  def loadSectionRules():Validation[List[SectionRuleSet]] = {
     val maybeRules = csvSectionMetadata.map(RulesLoaderInstance.load(_))
-    val rulesErrors = maybeRules.collect {case Xor.Left(x) => x}
-    val rules = maybeRules.collect{case Xor.Right(x) => x}
-    rulesErrors match {
-      case Nil => Xor.right(rules)
-      case _ => Xor.left(rulesErrors.foldLeft(RulesFileError(0,""))(_ ++ _))
+    val combined = if (maybeRules.isEmpty)
+      Validated.invalid(List(RulesFileError(MISSING_RULE_FILES, "missing rule files")))
+    else
+      maybeRules.reduceLeft(_ combine _)
+    combined match {
+      case Validated.Valid(_) => Validated.valid(maybeRules.collect {case Validated.Valid(a) => a})
+      case Validated.Invalid(e) => Validated.invalid(e)
     }
   }
 
-  def ==>:(facts:Facts):Xor[DecisionServiceError,RuleEngineDecision] = {
+  def ==>:(facts:Facts):Validation[RuleEngineDecision] = {
     maybeSectionRules match {
-      case Xor.Right(sectionRules) =>
+      case Validated.Valid(sectionRules) =>
         ruleEngine.processRules(Rules(sectionRules),facts)
-      case e@Xor.Left(_) => e
+      case Validated.Invalid(e) => Validated.invalid(e)
     }
   }
 }
-
 
 object DecisionServiceInstance extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()

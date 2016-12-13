@@ -16,10 +16,11 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
-import cats.data.Xor
+import cats.data.{Validated, Xor}
 import play.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
+import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
@@ -40,8 +41,8 @@ trait DecisionController extends BaseController {
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
         doDecide(req).map {
-          case Xor.Right(decision) => Ok(Json.toJson(decisionToResponse(req, decision)))
-          case Xor.Left(error) => BadRequest(Json.toJson(ErrorResponse(error.code, error.message)))
+          case Validated.Valid(decision) => Ok(Json.toJson(decisionToResponse(req, decision)))
+          case Validated.Invalid(error) => BadRequest(Json.toJson(ErrorResponse(error(0).code, error(0).message)))
         }
       case JsError(jsonErrors) =>
         Logger.debug(s"incorrect request: ${jsonErrors} ")
@@ -49,7 +50,7 @@ trait DecisionController extends BaseController {
     }
   }
 
-  def doDecide(decisionRequest:DecisionRequest):Future[Xor[DecisionServiceError,RuleEngineDecision]] = Future {
+  def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
       requestToFacts(decisionRequest) ==>: decisionService
   }
 

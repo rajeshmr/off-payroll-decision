@@ -16,47 +16,57 @@
 
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import cats.data.Xor
-import uk.gov.hmrc.decisionservice.model.RulesFileError
+import cats.data.Validated
+import cats.implicits._
+import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
+import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 
 sealed trait RulesFileLineValidator {
 
-  val allowedCarryOverValues:List[String]
-  val allowedValues:List[String]
-  val allowedDecisionValues:List[String]
+  val allowedCarryOverValues: List[String]
+  val allowedValues: List[String]
+  val allowedDecisionValues: List[String]
+  val allowedExitValues: List[String]
 
-  def validateValue(value: String, errorMessage:String): Xor[RulesFileError, Unit] =
-    Xor.fromOption(allowedValues.find(_ == value.trim.toLowerCase).map(_ => ()),RulesFileError(INVALID_VALUE_IN_RULES_FILE, errorMessage))
+  def validateValue(value: String, errorMessage: String): Validation[Unit] = {
+    val option = allowedValues.find(_ == value.trim.toLowerCase).map(_ => ())
+    val error:DecisionServiceError = RulesFileError(INVALID_VALUE_IN_RULES_FILE, errorMessage)
+    Validated.fromOption[List[DecisionServiceError], Unit](option, List(error))
+  }
 
-  def validateResultCells(resultCells: List[String], rulesFileMetaData: RulesFileMetaData, row:Int): Xor[RulesFileError, Unit] =
+  def validateResultCells(resultCells: List[String], rulesFileMetaData: RulesFileMetaData, row:Int): Validation[Unit] =
     resultCells match {
-      case Nil => Xor.left(RulesFileError(MISSING_CARRY_OVER_IN_RULES_FILE, s"missing carry over in row $row in file ${rulesFileMetaData.path}"))
-      case x::xs if !allowedCarryOverValues.contains(x.trim.toLowerCase) && !x.isEmpty => Xor.left(RulesFileError(INVALID_CARRY_OVER_VALUE_IN_RULES_FILE, s"invalid carry over value $x in row $row in file ${rulesFileMetaData.path}"))
-      case x::Nil => Xor.right(())
-      case x::exit::xs if !exit.isEmpty && exit.trim.toLowerCase() != "true" && exit.trim.toLowerCase() != "false" => Xor.left(RulesFileError(INVALID_EXIT_VALUE_IN_RULES_FILE, s"invalid exit value in row $row in file ${rulesFileMetaData.path}"))
-      case _ => Xor.right(())
+      case Nil =>
+        Validated.invalid(List(RulesFileError(MISSING_CARRY_OVER_IN_RULES_FILE,
+          s"missing carry over in row $row in file ${rulesFileMetaData.path}")))
+      case x::xs if !allowedCarryOverValues.contains(x.trim.toLowerCase) && !x.isEmpty =>
+        Validated.invalid(List(RulesFileError(INVALID_CARRY_OVER_VALUE_IN_RULES_FILE,
+          s"invalid carry over value $x in row $row in file ${rulesFileMetaData.path}")))
+      case x::Nil => Validated.valid(())
+      case x::exit::xs if !allowedExitValues.contains(exit.trim.toLowerCase()) =>
+        Validated.invalid(List(RulesFileError(INVALID_EXIT_VALUE_IN_RULES_FILE,
+          s"invalid exit value in row $row in file ${rulesFileMetaData.path}")))
+      case _ => Validated.valid(())
     }
 
-  def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Xor[RulesFileError, Unit] =
-    if (row.size > rulesFileMetaData.valueCols) Xor.right(())
-    else Xor.left(RulesFileError(INVALID_ROW_SIZE_IN_RULES_FILE, s"row size is ${row.size}, expected greater than ${rulesFileMetaData.valueCols} in row $rowNumber in file ${rulesFileMetaData.path}"))
+  def validateRowSize(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int) : Validation[Unit] =
+    if (row.size > rulesFileMetaData.valueCols) Validated.valid(())
+    else Validated.invalid(List(RulesFileError(INVALID_ROW_SIZE_IN_RULES_FILE,
+      s"row size is ${row.size}, expected greater than ${rulesFileMetaData.valueCols} in row $rowNumber in file ${rulesFileMetaData.path}")))
 
-  def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Xor[RulesFileError, Unit] =
-    if (row.size >= rulesFileMetaData.valueCols) Xor.right(())
-    else Xor.left(RulesFileError(INVALID_ROW_SIZE_IN_RULES_FILE, s"column header size is ${row.size}, should be ${rulesFileMetaData.numCols} in file ${rulesFileMetaData.path}"))
+  def validateColumnHeaders(row: List[String], rulesFileMetaData: RulesFileMetaData): Validation[Unit] =
+    if (row.size >= rulesFileMetaData.valueCols) Validated.valid(())
+    else Validated.invalid(List(RulesFileError(INVALID_HEADER_SIZE_IN_RULES_FILE,
+      s"column header size is ${row.size}, should be ${rulesFileMetaData.valueCols} in file ${rulesFileMetaData.path}")))
 
-  def validateLine(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Xor[RulesFileError, Unit] = {
-    for {
-      _ <- validateRowSize(row, rulesFileMetaData, rowNumber)
-      (valueCells, resultCells) = row.splitAt(rulesFileMetaData.valueCols)
-      validationErrors = valueCells.map(cell => validateValue(cell.trim, s"invalid value in row $rowNumber in file ${rulesFileMetaData.path}")).collect { case Xor.Left(e) => e }
-      _ <- Xor.fromOption(validationErrors.headOption, ()).swap
-      _ <- validateResultCells(resultCells, rulesFileMetaData, rowNumber)
-    }
-    yield {
-      ()
-    }
+  def validateLine(row:List[String], rulesFileMetaData: RulesFileMetaData, rowNumber:Int): Validation[Unit] = {
+    val rowSizeValidation = validateRowSize(row, rulesFileMetaData, rowNumber)
+    val (valueCells, resultCells) = row.splitAt(rulesFileMetaData.valueCols)
+    val valueCellsValidations = valueCells.map(cell => validateValue(cell.trim,
+      s"invalid value in row $rowNumber in file ${rulesFileMetaData.path}"))
+    val resultCellsValidation = validateResultCells(resultCells, rulesFileMetaData, rowNumber)
+    valueCellsValidations.foldLeft(rowSizeValidation)(_ combine _).combine(resultCellsValidation)
   }
 
 }
@@ -65,4 +75,5 @@ object RulesFileLineValidatorInstance extends RulesFileLineValidator {
   val allowedDecisionValues = List("inir35", "outofir35", "unknown")
   val allowedCarryOverValues = List("low", "medium", "high") ::: allowedDecisionValues
   val allowedValues = List("yes", "no", "") ::: allowedCarryOverValues
+  val allowedExitValues = List("true", "false", "")
 }

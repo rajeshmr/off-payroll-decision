@@ -37,7 +37,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
-      response.isRight shouldBe true
+      response.isValid shouldBe true
       response.map { sectionResult =>
         sectionResult.value shouldBe "low"
         sectionResult.exit shouldBe true
@@ -55,7 +55,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
-      response.isRight shouldBe true
+      response.isValid shouldBe true
       response.map { sectionResult =>
         sectionResult shouldBe NotValidUseCase
       }
@@ -72,7 +72,7 @@ class SectionFactMatcherSpec extends UnitSpec with BeforeAndAfterEach with Scala
       )
       val ruleSet = SectionRuleSet("sectionName", List("question1", "question2", "question3"), rules)
       val response = FactMatcherInstance.matchFacts(facts.facts, ruleSet)
-      response.isRight shouldBe true
+      response.isValid shouldBe true
       response.map { r =>
         r shouldBe NotValidUseCase
       }
