@@ -38,17 +38,10 @@ trait CsvCheck {
     prettyPrint(m)
     val response = FactMatcherInstance.matchFacts(m, ruleSet)
     response match {
-<<<<<<< HEAD
-      case Xor.Right(sectionResult) =>
-        show(s"\t${sectionResult.value}")
-      case Xor.Left(e) =>
-        show(s"\t$e")
-=======
       case Validated.Valid(sectionResult) =>
         show(s"\t${sectionResult.value}")
       case Validated.Invalid(e) =>
         show(s"\t${e(0)}")
->>>>>>> dcbe56855a35ace07ddaf013e7539bd4f5781abe
     }
     true
   }

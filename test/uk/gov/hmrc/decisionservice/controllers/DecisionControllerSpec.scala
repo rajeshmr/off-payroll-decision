@@ -25,7 +25,7 @@ import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.FactError
-import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
+import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineDecision, RulesFileMetaData}
 import uk.gov.hmrc.decisionservice.services.DecisionService
