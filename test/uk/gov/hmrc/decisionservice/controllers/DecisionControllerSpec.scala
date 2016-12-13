@@ -74,7 +74,12 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     lazy val scoreElements = SCORE_ELEMENTS
   }
 
-  val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
+  val interview = Map(
+    "personalService" -> Map(
+        "contractualRightForSubstitute" -> "Yes",
+        "contractrualObligationForSubstitute" -> "No",
+        "possibleSubstituteRejection" -> "Yes"
+    ))
   val decisionRequest = DecisionRequest(VERSION, CORRELATION_ID, interview)
 
   "POST /decide" should {
