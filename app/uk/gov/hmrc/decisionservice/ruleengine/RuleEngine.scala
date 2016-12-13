@@ -16,8 +16,9 @@
 
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import cats.data.Xor
+import cats.data.{Validated, Xor}
 import play.api.Logger
+import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.rules._
 
@@ -43,18 +44,18 @@ object FinalFact {
 }
 
 trait RuleEngine {
-  def processRules(rules: Rules, facts: Facts): Xor[DecisionServiceError, RuleEngineDecision] = {
+  def processRules(rules: Rules, facts: Facts): Validation[RuleEngineDecision] = {
     @tailrec
-    def go(rules: List[SectionRuleSet], facts: Facts): Xor[DecisionServiceError, Facts] = {
+    def go(rules: List[SectionRuleSet], facts: Facts): Validation[Facts] = {
       facts match {
-        case FinalFact(_) => Xor.right(facts)
+        case FinalFact(_) => Validated.valid(facts)
         case _ =>
           rules match {
-            case Nil => Xor.right(facts)
+            case Nil => Validated.valid(facts)
             case ruleSet :: ruleSets =>
               ruleSet ==+>: facts match {
-                case Xor.Right(newFacts) => go(ruleSets, newFacts)
-                case e@Xor.Left(_) => e
+                case Validated.Valid(newFacts) => go(ruleSets, newFacts)
+                case e@Validated.Invalid(_) => e
               }
           }
       }

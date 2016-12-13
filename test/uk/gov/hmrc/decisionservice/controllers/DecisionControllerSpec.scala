@@ -18,14 +18,15 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import cats.data.Xor
+import cats.data.Validated
 import play.api.http.Status
 import play.api.libs.json.Json._
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
+import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.model.FactError
+import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 import uk.gov.hmrc.decisionservice.model.rules.Facts
-import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, FactError}
 import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineDecision, RulesFileMetaData}
 import uk.gov.hmrc.decisionservice.services.DecisionService
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -57,8 +58,8 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   object ErrorGeneratingDecisionService extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     lazy val csvSectionMetadata = testCsvSectionMetadata
-    override def ==>:(facts: Facts): Xor[DecisionServiceError, RuleEngineDecision] = {
-      Xor.left(FactError(TEST_ERROR_CODE, "fact error"))
+    override def ==>:(facts: Facts): Validation[RuleEngineDecision] = {
+      Validated.invalid(List(FactError(TEST_ERROR_CODE, "fact error")))
     }
   }
 

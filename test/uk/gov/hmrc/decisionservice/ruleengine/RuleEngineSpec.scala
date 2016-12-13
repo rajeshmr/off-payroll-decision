@@ -46,7 +46,7 @@ class RuleEngineSpec extends UnitSpec {
         "question4" -> >>>("no" ),
         "question6" -> >>>("yes")))
       val maybeDecision = ruleEngine.processRules(rules, facts)
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "medium2"
       }
@@ -69,7 +69,7 @@ class RuleEngineSpec extends UnitSpec {
         "question4" -> >>>("no" ),
         "question6" -> >>>("yes")))
       val maybeDecision = ruleEngine.processRules(rules, facts)
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "low2"
       }
@@ -82,7 +82,7 @@ class RuleEngineSpec extends UnitSpec {
         "question4" -> >>>("no" ),
         "question6" -> >>>("yes")))
       val maybeDecision = ruleEngine.processRules(rules, facts)
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "high"
       }
@@ -95,9 +95,9 @@ class RuleEngineSpec extends UnitSpec {
         "question4" -> >>>("yes"),
         "question6" -> >>>("yes")))
       val maybeDecision = ruleEngine.processRules(rules, facts)
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
-        decision shouldBe a [RuleEngineDecisionUndecided]
+        decision.value shouldBe "Undecided"
         val maybeCarryOver = decision.facts.get("sectionName2")
         maybeCarryOver.isDefined shouldBe true
         maybeCarryOver.map{ carryOver =>

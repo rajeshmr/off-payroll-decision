@@ -54,7 +54,7 @@ class DecisionServiceSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "outofIR35"
       }
@@ -81,7 +81,11 @@ class DecisionServiceSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
+<<<<<<< HEAD
       maybeDecision.isRight shouldBe true
+=======
+      maybeDecision.isValid shouldBe true
+>>>>>>> dcbe56855a35ace07ddaf013e7539bd4f5781abe
       maybeDecision.map { decision =>
         decision.value shouldBe "outofIR35"
       }
