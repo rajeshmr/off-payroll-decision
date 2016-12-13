@@ -117,7 +117,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   }
 
   def verifyScore(response: JsValue): Unit = {
-    val score = response \ "score" \\ "score"
+    val score = response \\ "score"
     score should have size 1
     for (scoreElement <- SCORE_ELEMENTS) {
       (score(0) \\ scoreElement) should have size 1
