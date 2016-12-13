@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.model.rules
+package uk.gov.hmrc
 
-import cats.Semigroup
+import cats.data.Validated
+import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 
-case class SectionRule(values:List[CarryOver], result:CarryOver)
+package object decisionservice {
 
-case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule]) extends Semigroup[SectionRuleSet] {
-  override def combine(x: SectionRuleSet, y: SectionRuleSet): SectionRuleSet = x
+  type Validation[T] = Validated[List[DecisionServiceError],T]
+
 }
-
-case class Rules(rules:List[SectionRuleSet])
