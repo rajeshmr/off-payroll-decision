@@ -72,6 +72,14 @@ class DecisionRequestSpec extends UnitSpec {
       val factsWithContractualRight = jsValue \\ "contractualRightForSubstitute"
       personalService should have size 1
       factsWithContractualRight should have size 1
+    }
+  }
+
+  "decision response Scala object" should {
+    "be correctly converted to json object" in {
+      val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
+      val decisionResponse = DecisionResponse("0.0.1-alpha", "12345", true, Score.createRaw(Map("aa" -> "bb")), "result")
+      val jsValue:JsValue = Json.toJson(decisionResponse)
       println(jsValue)
     }
   }

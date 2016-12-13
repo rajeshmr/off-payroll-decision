@@ -31,11 +31,12 @@ case class Score( score:Map[String,String])
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
   val elements = List("control", "financial_risk", "part_of_organisation", "miscellaneous", "business_structure", "personal_service", "matrix")
-  def create(facts:Map[String,CarryOver]):Score =
-    Score(facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,co.value)}.toMap)
+  def create(facts:Map[String,CarryOver]):Map[String,String] =
+    facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,co.value)}.toMap
+  def createRaw(m:Map[String,String]) = m
 }
 
-case class DecisionResponse(version:String, correlationID:String, carryOnWithQuestions: Boolean, score:Score, result:String)
+case class DecisionResponse(version:String, correlationID:String, carryOnWithQuestions: Boolean, score:Map[String,String], result:String)
 
 object DecisionResponse {
   implicit val decisionResponseFormat: Format[DecisionResponse] = Json.format[DecisionResponse]
