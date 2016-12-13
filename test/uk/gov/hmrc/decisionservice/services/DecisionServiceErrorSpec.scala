@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.services
 
-import uk.gov.hmrc.decisionservice.model.DecisionServiceError
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.play.test.UnitSpec
@@ -28,7 +28,7 @@ class DecisionServiceErrorSpec extends UnitSpec {
     val csvSectionMetadata = List(
       (7, "business_structure_not_existing.csv", "BusinessStructure"),
       (9, "personal_service_not_existing.csv", "PersonalService"),
-      (2, "/decisionservicespec/matrix.csv", "matrix")
+      (3, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
@@ -37,7 +37,7 @@ class DecisionServiceErrorSpec extends UnitSpec {
     val csvSectionMetadata = List(
       (7, "/decisionservicespec/business_structure_errors.csv", "BusinessStructure"),
       (9, "/decisionservicespec/personal_service_errors.csv", "PersonalService"),
-      (2, "/decisionservicespec/matrix.csv", "matrix")
+      (3, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
@@ -50,31 +50,47 @@ class DecisionServiceErrorSpec extends UnitSpec {
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
+  object DecisionServiceNoCsvsInstance extends DecisionService {
+    lazy val maybeSectionRules = loadSectionRules()
+    val csvSectionMetadata = List()
+  }
+
   val facts = Facts(Map("8a" -> >>>("yes"), "8g" -> >>>("no"), "2" -> >>>("yes"), "10" -> >>>("yes")))
 
   "decision service with initialization error" should {
     "correctly report multiple aggregated error information" in {
       val maybeDecision = facts ==>: DecisionServiceNotExistingCsvTestInstance
-      maybeDecision.isLeft shouldBe true
-      maybeDecision.leftMap { error =>
-        error.message.contains("business_structure_not_existing.csv") shouldBe true
-        error.message.contains("personal_service_not_existing.csv") shouldBe true
+      maybeDecision.isValid shouldBe false
+      maybeDecision.leftMap { errors =>
+        errors should have size 2
+        errors.filter(_.message.contains("resource not found")) should have size 2
       }
     }
     "correctly report errors in csv files" in {
       val maybeDecision = facts ==>: DecisionServiceCsvWithErrorsTestInstance
-      maybeDecision.isLeft shouldBe true
-      maybeDecision.leftMap { error =>
-        error shouldBe a [DecisionServiceError]
-        error.message.contains("line") shouldBe true
+      maybeDecision.isValid shouldBe false
+      maybeDecision.leftMap { errors =>
+        errors should have size 6
+        errors.filter(_.message.contains("all result tokens are empty in file /decisionservicespec/business_structure_errors.csv")) should have size 2
+        errors.filter(_.message.contains("invalid carry over value exit - out of IR35 in row")) should have size 3
+        errors.filter(_.message.contains("value Medium / High in row 8 in file /decisionservicespec/personal_service_errors.csv")) should have size 1
       }
     }
     "correctly report errors in metadata files" in {
       val maybeDecision = facts ==>: DecisionServiceCsvWithBadMetadataTestInstance
-      maybeDecision.isLeft shouldBe true
-      maybeDecision.leftMap { error =>
-        error shouldBe a [DecisionServiceError]
-        error.message.contains("line") shouldBe true
+      maybeDecision.isValid shouldBe false
+      maybeDecision.leftMap { errors =>
+        errors should have size 31
+        errors.filter(_.code == ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE) should have size 3
+        errors.filter(_.code == ErrorCodes.RESULT_MISSING_IN_RULES_FILE) should have size 28
+      }
+    }
+    "correctly report error when csv list is empty" in {
+      val maybeSectionRules = DecisionServiceNoCsvsInstance.maybeSectionRules
+      maybeSectionRules.isValid shouldBe false
+      maybeSectionRules.leftMap { errors =>
+        errors should have size 1
+        errors(0).code shouldBe ErrorCodes.MISSING_RULE_FILES
       }
     }
   }

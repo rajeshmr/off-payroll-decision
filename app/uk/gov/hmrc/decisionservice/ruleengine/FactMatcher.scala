@@ -17,8 +17,9 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
 
-import cats.data.Xor
+import cats.data.{Validated, Xor}
 import play.api.Logger
+import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes.{FACT_WITH_TOO_MANY_EMPTY_VALUES, INCORRECT_FACT}
 import uk.gov.hmrc.decisionservice.model.rules.{CarryOver, _}
@@ -29,15 +30,15 @@ import scala.annotation.tailrec
 sealed trait FactMatcher {
   import FactMatcherHelper._
 
-  def matchFacts(facts: Map[String,CarryOver], ruleSet: SectionRuleSet): Xor[DecisionServiceError,CarryOver] =
+  def matchFacts(facts: Map[String,CarryOver], ruleSet: SectionRuleSet): Validation[CarryOver] =
   {
     @tailrec
-    def go(factValues: List[CarryOver], rules:List[SectionRule]):Xor[DecisionServiceError,CarryOver] = rules match {
+    def go(factValues: List[CarryOver], rules:List[SectionRule]):Validation[CarryOver] = rules match {
       case Nil => noMatchResult(facts, ruleSet.rules)
-      case rule :: xs if !factsValid(factValues, rule) => Xor.left(FactError(INCORRECT_FACT, "incorrect fact"))
+      case rule :: xs if !factsValid(factValues, rule) => Validated.invalid(List(FactError(INCORRECT_FACT, "incorrect fact")))
       case rule :: xs =>
         factMatches(factValues, rule) match {
-          case Some(result) => Xor.right(result)
+          case Some(result) => Validated.valid(result)
           case None => go(factValues, xs)
         }
     }
@@ -55,10 +56,11 @@ sealed trait FactMatcher {
     }
   }
 
-  def noMatchResult(facts: Map[String,CarryOver], rules: List[SectionRule]): Xor[DecisionServiceError,CarryOver] = {
+  def noMatchResult(facts: Map[String,CarryOver], rules: List[SectionRule]): Validation[CarryOver] = {
     val factSet = factsEmptySet(facts)
     val rulesSet = rulesMaxEmptySet(rules)
-    if (factSet.subsetOf(rulesSet)) Xor.Right(NotValidUseCase) else Xor.Left(FactError(FACT_WITH_TOO_MANY_EMPTY_VALUES, ("facts have too many empty values")))
+    if (factSet.subsetOf(rulesSet)) Validated.valid(NotValidUseCase)
+    else Validated.invalid(List(FactError(FACT_WITH_TOO_MANY_EMPTY_VALUES, ("facts have too many empty values"))))
   }
 
 }

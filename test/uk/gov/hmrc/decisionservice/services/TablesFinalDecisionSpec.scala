@@ -77,7 +77,7 @@ class TablesFinalDecisionSpec extends UnitSpec {
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
       Logger.debug(s"decision=$maybeDecision")
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "OutOfIR35"
       }

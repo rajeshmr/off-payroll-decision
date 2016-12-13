@@ -49,7 +49,7 @@ class TablesNonFinalDecisionSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
-      maybeDecision.isRight shouldBe true
+      maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         val maybeCarryOver = decision.facts.get("FinancialRisk")
         maybeCarryOver.isDefined shouldBe true

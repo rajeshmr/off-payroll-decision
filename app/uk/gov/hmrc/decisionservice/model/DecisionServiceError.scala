@@ -21,8 +21,6 @@ sealed trait DecisionServiceError {
   def message: String
 }
 
-case class RulesFileError(code:Int, message:String) extends DecisionServiceError {
-  def ++(e:RulesFileError):RulesFileError = new RulesFileError(e.code, s"${this.message}\n${e.message}")
-}
+case class RulesFileError(code:Int, message:String) extends DecisionServiceError
 
 case class FactError(code:Int, message:String) extends DecisionServiceError
