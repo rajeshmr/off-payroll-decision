@@ -311,7 +311,6 @@ class JsonValidatorSpec extends UnitSpec {
     val result = validate(s)
     result.isRight shouldBe false
     result.leftMap { report =>
-      println(report)
       report.contains(expectedText) shouldBe true
     }
   }
