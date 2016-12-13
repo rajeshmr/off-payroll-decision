@@ -48,7 +48,7 @@ class ComplianceTestCasesSpec extends UnitSpec {
         val maybeDecision = facts ==>: DecisionServiceInstance
         maybeDecision.isRight shouldBe true
         maybeDecision.map { decision =>
-          decision.value shouldBe "Undecided"  // should be inIR35
+          decision.value shouldBe "Unknown"  // should be inIR35
           val maybeBusinessStructureScore = Score.create(decision.facts).get("business_structure")
           maybeBusinessStructureScore.isDefined shouldBe true
           maybeBusinessStructureScore.map{businessStructureScore =>

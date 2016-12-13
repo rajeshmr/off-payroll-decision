@@ -30,7 +30,7 @@ sealed trait RuleEngineDecision {
 }
 
 case class RuleEngineDecisionUndecided(facts: Map[String,CarryOver]) extends RuleEngineDecision {
-  override def value = "Undecided"
+  override def value = "Unknown"
   override def isFinal = false
 }
 
