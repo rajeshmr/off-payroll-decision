@@ -59,7 +59,17 @@ trait DecisionController extends BaseController {
   }
 
   def decisionToResponse(decisionRequest:DecisionRequest, ruleEngineDecision: RuleEngineDecision):DecisionResponse = {
-    DecisionResponse(decisionRequest.version, decisionRequest.correlationID, ruleEngineDecision.isFinal, Score.create(ruleEngineDecision.facts), ruleEngineDecision.value)
+    DecisionResponse(
+      decisionRequest.version,
+      decisionRequest.correlationID,
+      ruleEngineDecision.isFinal,
+      Score.create(ruleEngineDecision.facts), responseString(ruleEngineDecision))
+  }
+
+  def responseString(ruleEngineDecision: RuleEngineDecision):String = ruleEngineDecision.value.toLowerCase match {
+    case "inir35" => "Inside IR35"
+    case "outofir35" => "Outside IR35"
+    case _ => "Unknown"
   }
 }
 
