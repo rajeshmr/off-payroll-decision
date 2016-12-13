@@ -24,14 +24,14 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 trait CsvCheck {
 
-  def print(x:Any) = {}
-  def println() = {}
-  def println(x:Any) = {}
+  def show(x:Any) = {}
+  def showln() = {}
+  def showln(x:Any) = {}
 
-  def prettyPrint(m: Map[String, CarryOver]): Unit = print(m.keySet.toList.sorted.map(a=>s"${a} ${m(a).value}").mkString("\t"))
+  def prettyPrint(m: Map[String, CarryOver]): Unit = show(m.keySet.toList.sorted.map(a=>s"${a} ${m(a).value}").mkString("\t"))
 
   def check(l: List[String], ruleSet: SectionRuleSet):Boolean = {
-    println
+    showln
     val ll = l map (>>>(_))
     val pairs = ruleSet.headings zip ll
     val m = Map(pairs: _*)
@@ -39,9 +39,9 @@ trait CsvCheck {
     val response = FactMatcherInstance.matchFacts(m, ruleSet)
     response match {
       case Xor.Right(sectionResult) =>
-        print(s"\t${sectionResult.value}")
+        show(s"\t${sectionResult.value}")
       case Xor.Left(e) =>
-        print(s"\t$e")
+        show(s"\t$e")
     }
     true
   }

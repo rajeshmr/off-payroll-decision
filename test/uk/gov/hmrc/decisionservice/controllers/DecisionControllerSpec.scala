@@ -23,7 +23,7 @@ import play.api.http.Status
 import play.api.libs.json.Json._
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
+import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, FactError}
 import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineDecision, RulesFileMetaData}
@@ -47,7 +47,6 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     (13, "/tables/personal_service.csv", "personal_service"),
     (6,  "/tables/matrix_of_matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
-  private val SCORE_ELEMENTS = Set("control", "financial_risk", "part_of_organisation", "miscellaneous", "business_structure", "personal_service", "matrix")
 
 
   object DecisionServiceTestInstance extends DecisionService {
@@ -65,25 +64,29 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   object DecisionTestController extends DecisionController {
     lazy val decisionService = DecisionServiceTestInstance
-    lazy val scoreElements = SCORE_ELEMENTS
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
     lazy val decisionService = ErrorGeneratingDecisionService
-    lazy val scoreElements = SCORE_ELEMENTS
   }
 
-  val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
+  val interview = Map(
+    "personalService" -> Map(
+      "contractrualObligationForSubstitute" -> "Yes",
+      "contractualObligationInPractise" -> "Yes",
+      "contractTermsWorkerPaysSubstitute" -> "Yes"
+    ))
   val decisionRequest = DecisionRequest(VERSION, CORRELATION_ID, interview)
 
   "POST /decide" should {
     "return 200 and correct response when request is correct" in {
+      val EXPECTED_RESULT: String = "Outside IR35"
       val decisionController = DecisionTestController
       val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
       val result = decisionController.decide()(fakeRequest)
       status(result) shouldBe Status.OK
       val response = jsonBodyOf(await(result))
-      verifyResponse(response)
+      verifyResponse(response, EXPECTED_RESULT)
       verifyScore(response)
     }
     "return 400 and error response when request does not conform to schema" in {
@@ -99,13 +102,12 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
       val result = decisionController.decide()(fakeRequest)
       status(result) shouldBe Status.BAD_REQUEST
-      println(result)
       val errorResponse = jsonBodyOf(await(result))
       verifyErrorResponse(errorResponse)
     }
   }
 
-  def verifyResponse(response: JsValue): Unit = {
+  def verifyResponse(response: JsValue, expectedResult:String): Unit = {
     val version = response \\ "version"
     version should have size 1
     version should contain theSameElementsAs Seq(JsString(VERSION))
@@ -114,15 +116,18 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     correlationID should contain theSameElementsAs Seq(JsString(CORRELATION_ID))
     val carryOnWithQuestions = response \\ "carryOnWithQuestions"
     carryOnWithQuestions should have size 1
+    val result = response \\ "result"
+    result should have size 1
+    result(0).as[String] shouldBe expectedResult
   }
 
   def verifyScore(response: JsValue): Unit = {
     val score = response \\ "score"
     score should have size 1
-    for (scoreElement <- SCORE_ELEMENTS) {
+    for (scoreElement <- Score.elements) {
       (score(0) \\ scoreElement) should have size 1
     }
-    score(0).as[JsObject].fields should have size SCORE_ELEMENTS.size
+    score(0).as[JsObject].fields should have size Score.elements.size
   }
 
   def verifyErrorResponse(response: JsValue): Unit = {

@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.model.api
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsString, JsValue, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.io.Source
@@ -58,14 +58,19 @@ class DecisionRequestSpec extends UnitSpec {
       maybePersonalServiceMap.map { cluster =>
         cluster should have size 9
         val res = List("contractualRightForSubstitute", "contractrualObligationForSubstitute", "possibleSubstituteRejection").flatMap(cluster.get(_))
-        res should contain theSameElementsInOrderAs (List("Yes", "No", "Yes"))
+        res should contain theSameElementsInOrderAs List("Yes", "No", "Yes")
       }
     }
   }
 
   "decision request Scala object" should {
     "be correctly converted to json object" in {
-      val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
+      val interview = Map(
+        "personalService" -> Map(
+          "contractualRightForSubstitute" -> "Yes",
+          "contractrualObligationForSubstitute" -> "No",
+          "possibleSubstituteRejection" -> "Yes"
+        ))
       val decisionRequest = DecisionRequest("0.0.1-alpha", "12345", interview)
       val jsValue:JsValue = Json.toJson(decisionRequest)
       val personalService = jsValue \\ "personalService"
@@ -77,10 +82,22 @@ class DecisionRequestSpec extends UnitSpec {
 
   "decision response Scala object" should {
     "be correctly converted to json object" in {
-      val interview = Map("personalService" -> Map("contractualRightForSubstitute" -> "Yes", "contractrualObligationForSubstitute" -> "No", "possibleSubstituteRejection" -> "Yes"))
+      val interview = Map(
+        "personalService" -> Map(
+          "contractualRightForSubstitute" -> "Yes",
+          "contractrualObligationForSubstitute" -> "No",
+          "possibleSubstituteRejection" -> "Yes"
+        ))
       val decisionResponse = DecisionResponse("0.0.1-alpha", "12345", true, Score.createRaw(Map("aa" -> "bb")), "result")
-      val jsValue:JsValue = Json.toJson(decisionResponse)
-      println(jsValue)
+      val response = Json.toJson(decisionResponse)
+      val version = response \\ "version"
+      version should have size 1
+      val correlationID = response \\ "correlationID"
+      correlationID should have size 1
+      val carryOnWithQuestions = response \\ "carryOnWithQuestions"
+      carryOnWithQuestions should have size 1
+      val result = response \\ "result"
+      result should have size 1
     }
   }
 
