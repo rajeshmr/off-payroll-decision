@@ -24,15 +24,12 @@ import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 import uk.gov.hmrc.decisionservice.ruleengine._
 
-object ListSemigroup extends Semigroup[List[DecisionServiceError]] {
+object ErrorListSemigroup extends Semigroup[List[DecisionServiceError]] {
   override def combine(x: List[DecisionServiceError], y: List[DecisionServiceError]): List[DecisionServiceError] = x ::: y
 }
 
-
 trait DecisionService {
-
-  implicit val listSemi = Semigroup(ListSemigroup)
-
+  implicit val errorListSemigroup = Semigroup(ErrorListSemigroup)
   implicit val sectionRuleSetSemigroup = Semigroup(SectionRuleSet("", List(), List()))
 
   val ruleEngine:RuleEngine = RuleEngineInstance
@@ -61,7 +58,6 @@ trait DecisionService {
     }
   }
 }
-
 
 object DecisionServiceInstance extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
