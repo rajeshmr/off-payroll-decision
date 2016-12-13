@@ -49,25 +49,25 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
     "return error if a csv file is not found" in {
       val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(3, csvFilePath + "xx", ""))
       maybeRules.isInvalid shouldBe true
-      maybeRules.leftMap { errorList =>
-        errorList should have size 1
+      maybeRules.leftMap { errors =>
+        errors should have size 1
       }
     }
     "return error if the csv file contains invalid data" in {
       val maybeRules = RulesLoaderInstance.load(csvMetadataError)
       maybeRules.isValid shouldBe false
-      maybeRules.leftMap { errorList =>
-        errorList should have size 2
-        errorList(0).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
-        errorList(1).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
+      maybeRules.leftMap { errors =>
+        errors should have size 2
+        errors(0).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
+        errors(1).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
       }
     }
     "return error if the csv file is empty" in {
       val maybeRules = RulesLoaderInstance.load(csvMetadataEmpty)
       maybeRules.isValid shouldBe false
-      maybeRules.leftMap { errorList =>
-        errorList should have size 1
-        errorList(0).code shouldBe ErrorCodes.EMPTY_RULES_FILE
+      maybeRules.leftMap { errors =>
+        errors should have size 1
+        errors(0).code shouldBe ErrorCodes.EMPTY_RULES_FILE
       }
     }
     "return no error if the csv file contains only headers" in {
@@ -80,18 +80,18 @@ class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures
     "return error if the csv file contains incorrect headers" in {
       val maybeRules = RulesLoaderInstance.load(csvMetadataHeadersError)
       maybeRules.isValid shouldBe false
-      maybeRules.leftMap { errorList =>
-        errorList should have size 1
-        errorList(0).code shouldBe ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE
+      maybeRules.leftMap { errors =>
+        errors should have size 1
+        errors(0).code shouldBe ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE
       }
     }
     "return error if the csv file contains incorrect headers and exit value error" in {
       val maybeRules = RulesLoaderInstance.load(csvMetadataHeadersAndExitError)
       maybeRules.isValid shouldBe false
-      maybeRules.leftMap { errorList =>
-        errorList should have size 2
-        errorList(0).code shouldBe ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE
-        errorList(1).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
+      maybeRules.leftMap { errors =>
+        errors should have size 2
+        errors(0).code shouldBe ErrorCodes.INVALID_HEADER_SIZE_IN_RULES_FILE
+        errors(1).code shouldBe ErrorCodes.INVALID_EXIT_VALUE_IN_RULES_FILE
       }
     }
     "provide valid input rules for a matcher against a given fact" in {
