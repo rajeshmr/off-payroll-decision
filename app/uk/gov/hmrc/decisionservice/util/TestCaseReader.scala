@@ -16,69 +16,48 @@
 
 package uk.gov.hmrc.decisionservice.util
 
-import java.io.IOException
-
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, Facts}
+import uk.gov.hmrc.decisionservice.ruleengine.FileTokenizer.tokenize
 
-import scala.io.Source
-import scala.util.{Failure, Try}
+import scala.util.Try
 
 case class TestCase(expectedDecision:String, request:DecisionRequest)
-case class TestCaseFileMetaData(path:String, version:String)
 
 case class ClusterTestCase(expectedDecision:CarryOver, request:Facts)
 case class ClusterTestCaseFileMetaData(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
 
 
 object TestCaseReader {
-  private val SEPARATOR = ','
   private val NUM_OF_CLUSTER_RESULT_COLUMNS = 3
 
-  private def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
-
-  def readFlattenedTestCaseLines(implicit metaData: TestCaseFileMetaData) : Try[List[TestCase]] = {
-    val is = getClass.getResourceAsStream(metaData.path)
-    if (is == null) {
-      Failure(new IOException(s"resource not found: ${metaData.path}"))
-    }
-    else {
-      Try(using(Source.fromInputStream(is)) { source =>
-        val tokens = source.getLines.map(_.split(SEPARATOR).map(_.trim).toList).toList
+  def readFlattenedTestCaseLines(path:String):Try[List[TestCase]] = {
+    tokenize(path).map { tokens =>
         val clusterNames = tokens(0).dropRight(1)
         val tagNames = tokens(1)
         val answersAndDecision = tokens.drop(2)
         answersAndDecision.map(buildDecisionRequest(clusterNames, tagNames, _))
-      })
+      }
     }
-  }
 
-  def buildDecisionRequest(clusterNames : List[String], tagNames : List[String], answersAndDecision : List[String]) : TestCase = {
+  def buildDecisionRequest(clusterNames:List[String], tagNames:List[String], answersAndDecision:List[String]):TestCase = {
     val expectedDecision = answersAndDecision.last
     val answers = answersAndDecision.dropRight(1)
-    val interview:Map[String,Map[String,String]] = clusterNames.map{clusterName =>
+    val interview = clusterNames.map{clusterName =>
       (clusterName -> (tagNames.zip(answers).toMap))
     }.toMap
     TestCase(expectedDecision, DecisionRequest("test-version", "test-correlation-id", interview))
   }
 
-  def readClusterTestCaseLines(implicit metaData: ClusterTestCaseFileMetaData) : Try[List[ClusterTestCase]] = {
-    val is = getClass.getResourceAsStream(metaData.factsPath)
-    if (is == null) {
-      Failure(new IOException(s"resource not found: ${metaData.factsPath}"))
-    }
-    else {
-      Try(using(Source.fromInputStream(is)) { source =>
-        val tokens = source.getLines.map(_.split(SEPARATOR).map(_.trim).toList).toList
-        val tagNames = tokens(0)
-        val scenarios = tokens.drop(1)
-        scenarios.map { scenario =>
-          val (answers,rest) = scenario.splitAt(tagNames.size - NUM_OF_CLUSTER_RESULT_COLUMNS)
-          ClusterTestCase(>>>.apply(rest), Facts(tagNames.zip(answers.map(>>>(_))).toMap))
-        }
-      })
+  def readClusterTestCaseLines(implicit metaData: ClusterTestCaseFileMetaData):Try[List[ClusterTestCase]] = {
+    tokenize(metaData.factsPath).map { tokens =>
+      val tagNames = tokens(0)
+      val scenarios = tokens.drop(1)
+      scenarios.map { scenario =>
+        val (answers, rest) = scenario.splitAt(tagNames.size - NUM_OF_CLUSTER_RESULT_COLUMNS)
+        ClusterTestCase(>>>.apply(rest), Facts(tagNames.zip(answers.map(>>>(_))).toMap))
+      }
     }
   }
 
 }
-

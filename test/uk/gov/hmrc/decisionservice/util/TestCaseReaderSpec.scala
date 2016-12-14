@@ -23,7 +23,7 @@ class TestCaseReaderSpec extends UnitSpec {
 
   "test case reader " should {
     "read valid flattened test case file" in {
-      val testCasesTry = TestCaseReader.readFlattenedTestCaseLines(TestCaseFileMetaData("/test-scenarios/flattenedTestCases.csv","version1"))
+      val testCasesTry = TestCaseReader.readFlattenedTestCaseLines("/test-scenarios/flattenedTestCases.csv")
 
       testCasesTry.isSuccess shouldBe true
       val testCases = testCasesTry.get
