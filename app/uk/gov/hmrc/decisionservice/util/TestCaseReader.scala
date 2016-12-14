@@ -24,9 +24,13 @@ import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, Facts}
 import scala.io.Source
 import scala.util.{Failure, Try}
 
-/**
-  * Created by work on 06/12/2016.
-  */
+case class TestCase(expectedDecision:String, request:DecisionRequest)
+case class TestCaseFileMetaData(path:String, version:String)
+
+case class ClusterTestCase(expectedDecision:CarryOver, request:Facts)
+case class ClusterTestCaseFileMetaData(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
+
+
 object TestCaseReader {
   private val SEPARATOR = ','
   private val NUM_OF_CLUSTER_RESULT_COLUMNS = 3
@@ -40,32 +44,21 @@ object TestCaseReader {
     }
     else {
       Try(using(Source.fromInputStream(is)) { source =>
-        val tuple = source.getLines.toList.splitAt(2)
-
-        val headerAndTagNames = tuple._1
-        val clusterNames = headerAndTagNames.head.split(SEPARATOR).map(_.trim).toList.dropRight(1)
-        val tagNames = headerAndTagNames.last.split(SEPARATOR).map(_.trim).toList
-
-        val answers = tuple._2.map(_.split(SEPARATOR).map(_.trim).toList)
-
-        answers.map(buildDecisionRequest(clusterNames, tagNames, _))
+        val tokens = source.getLines.map(_.split(SEPARATOR).map(_.trim).toList).toList
+        val clusterNames = tokens(0).dropRight(1)
+        val tagNames = tokens(1)
+        val answersAndDecision = tokens.drop(2)
+        answersAndDecision.map(buildDecisionRequest(clusterNames, tagNames, _))
       })
     }
   }
 
-  def buildDecisionRequest(clusterNames : List[String], tagNames : List[String], answers : List[String]) : TestCase = {
-    val expectedDecision = answers.last
-    val answersWithoutExpectedDecision = answers.dropRight(1)
-
-    var interview:Map[String,Map[String,String]] =  Map()
-
-    for (i <- 0 until clusterNames.size){
-      var currentCluster : Map[String,String] = interview.get(clusterNames(i)).getOrElse(Map())
-      currentCluster += tagNames(i) -> answersWithoutExpectedDecision(i)
-      interview += clusterNames(i) -> currentCluster
-    }
-
-
+  def buildDecisionRequest(clusterNames : List[String], tagNames : List[String], answersAndDecision : List[String]) : TestCase = {
+    val expectedDecision = answersAndDecision.last
+    val answers = answersAndDecision.dropRight(1)
+    val interview:Map[String,Map[String,String]] = clusterNames.map{clusterName =>
+      (clusterName -> (tagNames.zip(answers).toMap))
+    }.toMap
     TestCase(expectedDecision, DecisionRequest("test-version", "test-correlation-id", interview))
   }
 
@@ -121,7 +114,3 @@ object TestCaseReader {
 
 }
 
-case class TestCaseFileMetaData(path:String, version:String)
-case class TestCase(expectedDecision:String, request:DecisionRequest)
-case class ClusterTestCase(expectedDecision:CarryOver, request:Facts)
-case class ClusterTestCaseFileMetaData(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
