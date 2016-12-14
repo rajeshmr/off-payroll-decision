@@ -18,31 +18,31 @@ package uk.gov.hmrc.decisionservice.services
 
 import play.api.Logger
 import uk.gov.hmrc.decisionservice.ruleengine.{FactMatcherInstance, RulesFileMetaData, RulesLoaderInstance}
-import uk.gov.hmrc.decisionservice.util.{ClusterTestCase, ClusterTestCaseFileMetaData, TestCaseReader}
+import uk.gov.hmrc.decisionservice.util.{Scenario, ScenarioTestCase, TestCaseReader}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ClusterTestCasesSpec extends UnitSpec {
-  private val testFiles = List(
-    ClusterTestCaseFileMetaData("/test-scenarios/part_of_organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
-    ClusterTestCaseFileMetaData("/test-scenarios/financial_risk.csv", "financial_risk","/tables/financial_risk.csv",24),
-    ClusterTestCaseFileMetaData("/test-scenarios/control-onlyPassingCases.csv", "control","/tables/control.csv",13),
-    ClusterTestCaseFileMetaData("/test-scenarios/misc.csv", "miscellaneous","/tables/misc.csv",1),
-    ClusterTestCaseFileMetaData("/test-scenarios/business_structure.csv", "business_structure","/tables/business_structure.csv",7))
+  private val scenarioTestCases = List(
+    ScenarioTestCase("/test-scenarios/part_of_organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
+    ScenarioTestCase("/test-scenarios/financial_risk.csv", "financial_risk","/tables/financial_risk.csv",24),
+    ScenarioTestCase("/test-scenarios/control-onlyPassingCases.csv", "control","/tables/control.csv",13),
+    ScenarioTestCase("/test-scenarios/misc.csv", "miscellaneous","/tables/misc.csv",1),
+    ScenarioTestCase("/test-scenarios/business_structure.csv", "business_structure","/tables/business_structure.csv",7))
 //    ClusterTestCaseFileMetaData("/test-scenarios/personal_service.csv", "personal_service","/tables/personal_service.csv",13)) - has failures
 
   "test case reader " should {
     "read valid cluster test case file" in {
-      for (metaData <- testFiles) {
-        Logger.info("================= Running tests for Cluster: " + metaData.clusterName + " ===================")
-        val testCasesTry = TestCaseReader.readClusterTestCaseLines(metaData)
+      for (scenarioTestCase <- scenarioTestCases) {
+        Logger.info("================= Running tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
+        val testCasesTry = TestCaseReader.readScenarios(scenarioTestCase.factsPath)
         testCasesTry.isSuccess shouldBe true
-        testCasesTry.map { _.foreach(runAndVerifyTestCase(_, metaData)) }
-        Logger.info("================= Finished tests for Cluster: " + metaData.clusterName + " ===================")
+        testCasesTry.map { _.foreach(runAndVerifyTestCase(_, scenarioTestCase)) }
+        Logger.info("================= Finished tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
       }
     }
   }
 
-  def runAndVerifyTestCase(testCase:ClusterTestCase, metaData:ClusterTestCaseFileMetaData) : Unit = {
+  def runAndVerifyTestCase(testCase:Scenario, metaData:ScenarioTestCase):Unit = {
     val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(metaData.numOfValueColumns, metaData.rulesPath, metaData.clusterName))
     maybeRules.isValid shouldBe true
     maybeRules.map { ruleSet =>
