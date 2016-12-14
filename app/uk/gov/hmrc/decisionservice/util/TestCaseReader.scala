@@ -22,40 +22,39 @@ import uk.gov.hmrc.decisionservice.ruleengine.FileTokenizer.tokenize
 
 import scala.util.Try
 
-case class TestCase(expectedDecision:String, request:DecisionRequest)
+case class ScenarioRequestTestCase(expectedDecision:String, request:DecisionRequest)
 
-case class ClusterTestCase(expectedDecision:CarryOver, request:Facts)
-case class ClusterTestCaseFileMetaData(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
+case class Scenario(expectedDecision:CarryOver, request:Facts)
+case class ScenarioTestCase(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
 
 
 object TestCaseReader {
   private val NUM_OF_CLUSTER_RESULT_COLUMNS = 3
 
-  def readFlattenedTestCaseLines(path:String):Try[List[TestCase]] = {
+  def readFlattenedTestCases(path:String):Try[List[ScenarioRequestTestCase]] = {
+    def create(clusterNames:List[String], tagNames:List[String], answersAndDecision:List[String]):ScenarioRequestTestCase = {
+      val expectedDecision = answersAndDecision.last
+      val answers = answersAndDecision.dropRight(1)
+      val interview = clusterNames.map{clusterName =>
+        (clusterName -> (tagNames.zip(answers).toMap))
+      }.toMap
+      ScenarioRequestTestCase(expectedDecision, DecisionRequest("test-version", "test-correlation-id", interview))
+    }
     tokenize(path).map { tokens =>
         val clusterNames = tokens(0).dropRight(1)
         val tagNames = tokens(1)
         val answersAndDecision = tokens.drop(2)
-        answersAndDecision.map(buildDecisionRequest(clusterNames, tagNames, _))
-      }
+        answersAndDecision.map(create(clusterNames, tagNames, _))
     }
-
-  def buildDecisionRequest(clusterNames:List[String], tagNames:List[String], answersAndDecision:List[String]):TestCase = {
-    val expectedDecision = answersAndDecision.last
-    val answers = answersAndDecision.dropRight(1)
-    val interview = clusterNames.map{clusterName =>
-      (clusterName -> (tagNames.zip(answers).toMap))
-    }.toMap
-    TestCase(expectedDecision, DecisionRequest("test-version", "test-correlation-id", interview))
   }
 
-  def readClusterTestCaseLines(implicit metaData: ClusterTestCaseFileMetaData):Try[List[ClusterTestCase]] = {
-    tokenize(metaData.factsPath).map { tokens =>
+  def readScenarios(path:String):Try[List[Scenario]] = {
+    tokenize(path).map { tokens =>
       val tagNames = tokens(0)
       val scenarios = tokens.drop(1)
       scenarios.map { scenario =>
         val (answers, rest) = scenario.splitAt(tagNames.size - NUM_OF_CLUSTER_RESULT_COLUMNS)
-        ClusterTestCase(>>>.apply(rest), Facts(tagNames.zip(answers.map(>>>(_))).toMap))
+        Scenario(>>>.apply(rest), Facts(tagNames.zip(answers.map(>>>(_))).toMap))
       }
     }
   }
