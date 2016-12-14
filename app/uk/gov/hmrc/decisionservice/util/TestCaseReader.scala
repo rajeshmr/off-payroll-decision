@@ -69,47 +69,15 @@ object TestCaseReader {
     }
     else {
       Try(using(Source.fromInputStream(is)) { source =>
-        val tuple = source.getLines.toList.splitAt(1)
-
-        val tagNamesLine = tuple._1.head.split(SEPARATOR)
-        val tagNamesAndResultColumns = tagNamesLine.splitAt(tagNamesLine.size - NUM_OF_CLUSTER_RESULT_COLUMNS)
-        val tagNames = tagNamesAndResultColumns._1.toList
-
-        val scenarios = tuple._2
-
-        var clusterTestCases:List[ClusterTestCase] = List()
-
-        for (i <- 0 until scenarios.size){
-          val answersAndCarryOver = scenarios(i).split(SEPARATOR).toList
-          val answersAndCarryOverTuple = answersAndCarryOver.splitAt(
-            answersAndCarryOver.size - getNumberOfResultColumn(answersAndCarryOver, tagNamesLine.toList))
-
-          val answers = answersAndCarryOverTuple._1
-          val carryOver = >>>.apply(answersAndCarryOverTuple._2)
-
-          clusterTestCases = clusterTestCases ::: List(buildClusterTestCase(tagNames, answers, carryOver))
+        val tokens = source.getLines.map(_.split(SEPARATOR).map(_.trim).toList).toList
+        val tagNames = tokens(0)
+        val scenarios = tokens.drop(1)
+        scenarios.map { scenario =>
+          val (answers,rest) = scenario.splitAt(tagNames.size - NUM_OF_CLUSTER_RESULT_COLUMNS)
+          ClusterTestCase(>>>.apply(rest), Facts(tagNames.zip(answers.map(>>>(_))).toMap))
         }
-        clusterTestCases
       })
     }
-  }
-
-  def buildClusterTestCase(tagNames : List[String], answers : List[String], expectedCarryOver : CarryOver) : ClusterTestCase = {
-    var facts:Map[String,CarryOver] = Map()
-
-    for (i <- 0 until answers.size){
-      facts += tagNames(i) -> >>>(answers(i))
-    }
-
-    ClusterTestCase(expectedCarryOver, Facts(facts))
-  }
-
-  def getNumberOfResultColumn(currentLine:List[String], headerRow:List[String]) : Int = {
-    if(currentLine.size == headerRow.size){
-      3
-    }
-    else
-     2
   }
 
 }
