@@ -21,11 +21,7 @@ import uk.gov.hmrc.decisionservice.ruleengine.{FactMatcherInstance, RulesFileMet
 import uk.gov.hmrc.decisionservice.util.{ClusterTestCase, ClusterTestCaseFileMetaData, TestCaseReader}
 import uk.gov.hmrc.play.test.UnitSpec
 
-/**
-  * Created by work on 08/12/2016.
-  */
 class ClusterTestCasesSpec extends UnitSpec {
-
   private val testFiles = List(
     ClusterTestCaseFileMetaData("/test-scenarios/part_of_organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
     ClusterTestCaseFileMetaData("/test-scenarios/financial_risk.csv", "financial_risk","/tables/financial_risk.csv",24),
@@ -36,27 +32,15 @@ class ClusterTestCasesSpec extends UnitSpec {
 
   "test case reader " should {
     "read valid cluster test case file" in {
-      for (i <- 0 until testFiles.size) {
-        val metaData = testFiles(i)
-
-        Logger.info("================= Running tests for Cluster: " + metaData.clusterName+" ===================")
-
-        val testCasesTry = TestCaseReader
-          .readClusterTestCaseLines(metaData)
+      for (metaData <- testFiles) {
+        Logger.info("================= Running tests for Cluster: " + metaData.clusterName + " ===================")
+        val testCasesTry = TestCaseReader.readClusterTestCaseLines(metaData)
         testCasesTry.isSuccess shouldBe true
-
-        val testCases = testCasesTry.get
-
-        for (i <- 0 until testCases.size) {
-          runAndVerifyTestCase(testCases(i), metaData)
-        }
-
-        Logger.info("================= Finished tests for Cluster: " + metaData.clusterName+" ===================")
-
+        testCasesTry.map { _.foreach(runAndVerifyTestCase(_, metaData)) }
+        Logger.info("================= Finished tests for Cluster: " + metaData.clusterName + " ===================")
       }
     }
   }
-
 
   def runAndVerifyTestCase(testCase:ClusterTestCase, metaData:ClusterTestCaseFileMetaData) : Unit = {
     val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(metaData.numOfValueColumns, metaData.rulesPath, metaData.clusterName))
@@ -64,13 +48,7 @@ class ClusterTestCasesSpec extends UnitSpec {
     maybeRules.map { ruleSet =>
       val response = FactMatcherInstance.matchFacts(testCase.request.facts, ruleSet)
       response.isValid shouldBe true
-      response.map { sectionResult =>
-        sectionResult.value shouldBe testCase.expectedDecision.value
-        sectionResult.exit shouldBe testCase.expectedDecision.exit
-        sectionResult.name.getOrElse("") shouldBe testCase.expectedDecision.name.getOrElse("")
-       }
-
+      response.map { _ shouldBe testCase.expectedDecision }
     }
   }
-
 }
