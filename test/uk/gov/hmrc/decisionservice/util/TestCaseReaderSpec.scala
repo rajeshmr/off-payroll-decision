@@ -23,7 +23,7 @@ class TestCaseReaderSpec extends UnitSpec {
 
   "test case reader " should {
     "read valid flattened test case file" in {
-      val testCasesTry = TestCaseReader.readFlattenedTestCases("/test-scenarios/flattenedTestCases.csv")
+      val testCasesTry = ScenarioReader.readFlattenedTestCases("/test-scenarios/flattenedTestCases.csv")
       testCasesTry.isSuccess shouldBe true
       val testCases = testCasesTry.get
       testCases.size shouldBe 5
@@ -32,7 +32,7 @@ class TestCaseReaderSpec extends UnitSpec {
       }
     }
     "read valid cluster test case file" in {
-      val testCasesTry = TestCaseReader.readScenarios("/test-scenarios/clusterTestCases.csv")
+      val testCasesTry = ScenarioReader.readScenarios("/test-scenarios/clusterTestCases.csv")
       testCasesTry.isSuccess shouldBe true
       val testCases = testCasesTry.get
       testCases.size shouldBe 5

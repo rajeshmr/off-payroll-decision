@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.controllers
+package uk.gov.hmrc.decisionservice.util
 
 import cats.data.Xor
 import com.github.fge.jackson.JsonLoader
@@ -23,7 +23,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory
 
 import scala.io.Source
 
-trait JsonValidator{
+trait JsonValidator {
   val schemaPath:String
 
   object SuccessfulReport {
@@ -44,9 +44,7 @@ trait JsonValidator{
 
     schema.validate(jsonNode) match {
       case SuccessfulReport() => Xor.right(())
-      case ProblemReport(s) =>
-        println(s)
-        Xor.left(s)
+      case ProblemReport(s) => Xor.left(s)
     }
   }
 
