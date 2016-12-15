@@ -21,7 +21,7 @@ import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules._
 
 import scala.util.{Failure, Success, Try}
-import RulesFileReaderTokenizer._
+import FileTokenizer._
 import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import cats.implicits._
@@ -31,7 +31,7 @@ trait RulesLoader {
   val rulesFileLineValidator:RulesFileLineValidator
 
   def load(implicit rulesFileMetaData: RulesFileMetaData):Validation[SectionRuleSet] =
-    tokenize match {
+    tokenize(rulesFileMetaData.path) match {
       case Success(tokens) =>
         parseRules(tokens)
       case Failure(e) =>
