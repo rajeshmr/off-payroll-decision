@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.ruleengine
+package uk.gov.hmrc.decisionservice.util
 
 import java.io.IOException
 

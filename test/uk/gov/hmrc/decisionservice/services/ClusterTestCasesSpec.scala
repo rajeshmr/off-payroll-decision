@@ -18,7 +18,7 @@ package uk.gov.hmrc.decisionservice.services
 
 import play.api.Logger
 import uk.gov.hmrc.decisionservice.ruleengine.{FactMatcherInstance, RulesFileMetaData, RulesLoaderInstance}
-import uk.gov.hmrc.decisionservice.util.{Scenario, ScenarioTestCase, TestCaseReader}
+import uk.gov.hmrc.decisionservice.util.{Scenario, ScenarioTestCase, ScenarioReader}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ClusterTestCasesSpec extends UnitSpec {
@@ -34,7 +34,7 @@ class ClusterTestCasesSpec extends UnitSpec {
     "read valid cluster test case file" in {
       for (scenarioTestCase <- scenarioTestCases) {
         Logger.info("================= Running tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
-        val testCasesTry = TestCaseReader.readScenarios(scenarioTestCase.factsPath)
+        val testCasesTry = ScenarioReader.readScenarios(scenarioTestCase.factsPath)
         testCasesTry.isSuccess shouldBe true
         testCasesTry.map { _.foreach(runAndVerifyTestCase(_, scenarioTestCase)) }
         Logger.info("================= Finished tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
