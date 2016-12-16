@@ -6,7 +6,7 @@
   "properties": {
     "version": {
       "type": "string",
-      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]$"
+      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]*$"
     },
     "correlationID": {
       "type": "string"
@@ -18,31 +18,31 @@
           "type": "object",
           "properties": {
             "contractualRightForSubstitute": {
-              "type": "boolean"
+              "type": "string"
             },
             "contractrualObligationForSubstitute": {
-              "type": "boolean"
+              "type": "string"
             },
             "possibleSubstituteRejection": {
-              "type": "boolean"
+              "type": "string"
             },
             "engagerArrangeWorker": {
-              "type": "boolean"
+              "type": "string"
             },
             "contractTermsWorkerPaysSubstitute": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerSentActualSubstitiute": {
-              "type": "boolean"
+              "type": "string"
             },
             "possibleHelper": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerSentActualHelper": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerPayActualHelper": {
-              "type": "boolean"
+              "type": "string"
             }
           }, "minProperties": 0, "additionalProperties": false
         },
@@ -50,13 +50,13 @@
           "type": "object",
           "properties": {
             "toldWhatToDo": {
-              "type": "boolean"
+              "type": "string"
             },
             "engagerMovingWorker": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerDecidingHowWorkIsDone": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerLevelOfExpertise": {
               "type": "string",
@@ -90,28 +90,28 @@
           "type": "object",
           "properties": {
             "provideVehicle": {
-              "type": "boolean"
+              "type": "string"
             },
             "engagerPayForVehicle": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerNeedEquipment": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerProvideEquipment": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerProvideConsumablesMaterials": {
-              "type": "boolean"
+              "type": "string"
             },
             "engagerPayForConsumablesMaterials": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerIncurExpense": {
-              "type": "boolean"
+              "type": "string"
             },
             "engagerPayExpense": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerMainIncome": {
               "type": "string",
@@ -132,25 +132,25 @@
           "type": "object",
           "properties": {
             "workerVAT": {
-              "type": "boolean"
+              "type": "string"
             },
             "businesAccount": {
-              "type": "boolean"
+              "type": "string"
             },
             "advertiseForWork": {
-              "type": "boolean"
+              "type": "string"
             },
             "businessWebsite": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerPayForTraining": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerExpenseRunningBusinessPremises": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerPaysForInsurance": {
-              "type": "boolean"
+              "type": "string"
             }
           }, "minProperties": 0, "additionalProperties": false
         },
@@ -158,16 +158,16 @@
           "type": "object",
           "properties": {
             "workerReceivesBenefits": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerAsLineManager": {
-              "type": "boolean"
+              "type": "string"
             },
             "contactWithEngagerCustomer": {
-              "type": "boolean"
+              "type": "string"
             },
             "workerRepresentsEngagerBusiness": {
-              "type": "boolean"
+              "type": "string"
             }
           }, "minProperties": 0, "additionalProperties": false
         },
@@ -175,7 +175,7 @@
           "type": "object",
           "properties": {
             "similarWork": {
-              "type": "boolean"
+              "type": "string"
             }
           }, "minProperties": 0, "additionalProperties": false
         }
