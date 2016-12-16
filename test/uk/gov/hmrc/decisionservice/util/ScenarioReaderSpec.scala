@@ -19,23 +19,29 @@ package uk.gov.hmrc.decisionservice.util
 import uk.gov.hmrc.play.test.UnitSpec
 
 
-class TestCaseReaderSpec extends UnitSpec {
+class ScenarioReaderSpec extends UnitSpec {
 
   "test case reader " should {
     "read valid flattened test case file" in {
-      val testCasesTry = ScenarioReader.readFlattenedTestCases("/test-scenarios/flattenedTestCases.csv")
+      val testCasesTry = ScenarioReader.readFlattenedTestCases("/test-scenarios/flattened_test_cases.csv")
       testCasesTry.isSuccess shouldBe true
       val testCases = testCasesTry.get
-      testCases.size shouldBe 5
+      testCases should have size 5
       testCases.foreach{
         _.request.interview.size shouldBe 3
       }
     }
-    "read valid cluster test case file" in {
-      val testCasesTry = ScenarioReader.readScenarios("/test-scenarios/clusterTestCases.csv")
+    "read valid flattened transposed test case file" in {
+      val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed("/test-scenarios/flattened_test_case_transposed.csv")
       testCasesTry.isSuccess shouldBe true
       val testCases = testCasesTry.get
-      testCases.size shouldBe 5
+      testCases.request.interview should have size 3
+    }
+    "read valid cluster test case file" in {
+      val testCasesTry = ScenarioReader.readScenarios("/test-scenarios/cluster_test_cases.csv")
+      testCasesTry.isSuccess shouldBe true
+      val testCases = testCasesTry.get
+      testCases should have size 5
     }
   }
 

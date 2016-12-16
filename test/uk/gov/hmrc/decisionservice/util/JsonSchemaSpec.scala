@@ -20,10 +20,9 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonSchemaSpec extends UnitSpec {
-
-  val FULL_EXAMPLE_REQUST_JSON_PATH: String = "/test-scenarios/full-example-request.json"
-  val TEST_CASE_PATH: String = "/test-scenarios/flattenedTestCase.csv"
-  val tryJson = FileReader.read(FULL_EXAMPLE_REQUST_JSON_PATH)
+  val TEST_CASE_PATH = "/schema/schema_checking_testcase.csv"
+  val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/full-example-request.json"
+  val tryJson = FileReader.read(FULL_EXAMPLE_REQUEST_JSON_PATH)
 
   "json schema" should {
     "validate correctly full example request json" in {
@@ -32,20 +31,15 @@ class JsonSchemaSpec extends UnitSpec {
         val validationResult = JsonValidator.validate(requestJsonString)
         validationResult.isRight shouldBe true
     }
-    "validate request created from a flattened use case" in {
-      val testCasesTry = ScenarioReader.readFlattenedTestCases(TEST_CASE_PATH)
+    "validate request created from a flattened test case" in {
+      val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(TEST_CASE_PATH)
       testCasesTry.isSuccess shouldBe true
-      val testCases = testCasesTry.get
-      testCases.size shouldBe 1
-      testCases.map{ testCase =>
+      val testCase = testCasesTry.get
         val request = testCase.request
-        val requestJson = Json.toJson(request)
-        val requestJsonString = Json.prettyPrint(requestJson)
-        println(requestJsonString)
-        val validationResult = JsonValidator.validate(requestJsonString)
-        println(validationResult)
-        validationResult.isRight shouldBe true
-      }
+      val requestJson = Json.toJson(request)
+      val requestJsonString = Json.prettyPrint(requestJson)
+      val validationResult = JsonValidator.validate(requestJsonString)
+      validationResult.isRight shouldBe true
     }
   }
 

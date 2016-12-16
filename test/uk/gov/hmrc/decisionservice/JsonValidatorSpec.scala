@@ -17,7 +17,7 @@
 package uk.gov.hmrc.decisionservice
 
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.controllers.JsonValidator.validate
+import uk.gov.hmrc.decisionservice.util.JsonValidator.validate
 import uk.gov.hmrc.play.test.UnitSpec
 
 
