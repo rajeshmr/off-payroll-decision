@@ -22,7 +22,8 @@ import scala.io.Source
 import scala.util.{Failure, Try}
 
 object FileTokenizer {
-  private val Separator = ','
+  private val SEPARATOR = ','
+  val COMMENT_CHAR: Char = '#'
 
   private def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
 
@@ -33,7 +34,9 @@ object FileTokenizer {
     }
     else {
       Try(using(Source.fromInputStream(is)) { source =>
-        source.getLines.map(_.split(Separator).map(_.trim).toList).toList
+        source.getLines.filter(l => {
+          !l.trim.isEmpty && l.charAt(0) != COMMENT_CHAR
+        }).map(_.split(SEPARATOR).map(_.trim).toList).toList
       })
     }
   }

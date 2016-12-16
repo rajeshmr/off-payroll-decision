@@ -34,8 +34,9 @@ class ScenarioReaderSpec extends UnitSpec {
     "read valid flattened transposed test case file" in {
       val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed("/test-scenarios/flattened_test_case_transposed.csv")
       testCasesTry.isSuccess shouldBe true
-      val testCases = testCasesTry.get
-      testCases.request.interview should have size 3
+      val testCase = testCasesTry.get
+      testCase.request.interview should have size 3
+      testCase.expectedDecision shouldBe "expected_decision"
     }
     "read valid cluster test case file" in {
       val testCasesTry = ScenarioReader.readScenarios("/test-scenarios/cluster_test_cases.csv")
