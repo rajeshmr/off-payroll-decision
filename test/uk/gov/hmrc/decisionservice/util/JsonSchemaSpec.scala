@@ -35,7 +35,7 @@ class JsonSchemaSpec extends UnitSpec {
       val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(TEST_CASE_PATH)
       testCasesTry.isSuccess shouldBe true
       val testCase = testCasesTry.get
-        val request = testCase.request
+      val request = testCase.request
       val requestJson = Json.toJson(request)
       val requestJsonString = Json.prettyPrint(requestJson)
       val validationResult = JsonValidator.validate(requestJsonString)
