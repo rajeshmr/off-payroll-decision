@@ -49,6 +49,21 @@ object ScenarioReader {
     }
   }
 
+  def readFlattenedTestCaseTransposed(path:String):Try[ScenarioRequestTestCase] = {
+    def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):ScenarioRequestTestCase = {
+      val interviewRaw = clusterNames.zip(tagNames.zip(answers))
+      val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
+      ScenarioRequestTestCase(expectedDecision, DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview))
+    }
+    tokenize(path).map { tokens =>
+      val clusterNames = tokens.map(_.head)
+      val tagNames = tokens.collect { case a if a.size > 1 => a(1) }
+      val answers = tokens.collect { case a if a.size > 2 => a(2) }
+      val expectedDecision = tokens.last.last
+      create(clusterNames, tagNames, answers, expectedDecision)
+    }
+  }
+
   def readScenarios(path:String):Try[List[Scenario]] = {
     tokenize(path).map { tokens =>
       val tagNames = tokens(0)
