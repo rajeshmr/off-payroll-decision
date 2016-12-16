@@ -264,7 +264,6 @@ class JsonValidatorSpec extends UnitSpec {
 
   def verifyError(f:String => Xor[String,Unit])(s:String, expectedText:String):Unit = {
     val result = validate(s)
-    println(result)
     result.isRight shouldBe false
     result.leftMap { report =>
       report.contains(expectedText) shouldBe true

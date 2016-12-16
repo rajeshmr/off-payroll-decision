@@ -70,8 +70,8 @@ class DecisionServiceErrorSpec extends UnitSpec {
       val maybeDecision = facts ==>: DecisionServiceCsvWithErrorsTestInstance
       maybeDecision.isValid shouldBe false
       maybeDecision.leftMap { errors =>
-        errors should have size 6
-        errors.filter(_.message.contains("all result tokens are empty in file /decisionservicespec/business_structure_errors.csv")) should have size 2
+        errors should have size 5
+        errors.filter(_.message.contains("all result tokens are empty in file /decisionservicespec/business_structure_errors.csv")) should have size 1
         errors.filter(_.message.contains("invalid carry over value exit - out of IR35 in row")) should have size 3
         errors.filter(_.message.contains("value Medium / High in row 8 in file /decisionservicespec/personal_service_errors.csv")) should have size 1
       }
