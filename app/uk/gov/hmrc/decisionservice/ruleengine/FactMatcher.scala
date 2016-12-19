@@ -37,7 +37,7 @@ sealed trait FactMatcher {
       case Nil => noMatchResult(facts, ruleSet.rules)
       case rule :: xs if !factsValid(factValues, rule) => Validated.invalid(List(FactError(INCORRECT_FACT, "incorrect fact")))
       case rule :: xs =>
-        factMatches(factValues, rule) match {
+        rule.matchingFunction(rule,factValues) match {
           case Some(result) => Validated.valid(result)
           case None => go(factValues, xs)
         }
@@ -45,15 +45,6 @@ sealed trait FactMatcher {
 
     val factValues = ruleSet.headings.map(a => facts.getOrElse(a,EmptyCarryOver))
     go(factValues, ruleSet.rules)
-  }
-
-  def factMatches(factValues: List[CarryOver], rule:SectionRule):Option[CarryOver] = {
-    factValues.zip(rule.values).filterNot(>>>.equivalent(_)) match {
-      case Nil =>
-        Logger.debug(s"matched:\t${rule.values.map(_.value).mkString("\t,")}")
-        Some(rule.result)
-      case _ => None
-    }
   }
 
   def noMatchResult(facts: Map[String,CarryOver], rules: List[SectionRule]): Validation[CarryOver] = {
