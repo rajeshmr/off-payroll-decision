@@ -1,5 +1,4 @@
 {
-  "id": "https://github.com/hmrc/off-payroll-decision#0.0.2-alpha",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "This schema defines the output message for the off-payroll-decision its root object is a Decision",
   "type": "object",

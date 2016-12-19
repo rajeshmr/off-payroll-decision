@@ -3,52 +3,52 @@
   "correlationID": "12345",
   "interview": {
     "partOfOrganisation": {
-      "workerRepresentsEngagerBusiness": false,
-      "contactWithEngagerCustomer": true,
-      "workerReceivesBenefits": false,
-      "workerAsLineManager": false
+      "workerRepresentsEngagerBusiness": "No",
+      "contactWithEngagerCustomer": "Yes",
+      "workerReceivesBenefits": "No",
+      "workerAsLineManager": "No"
     },
     "financialRisk": {
       "workerMainIncome": "shareProfitLoss",
-      "engagerPayExpense": false,
-      "provideVehicle": false,
-      "workerProvideConsumablesMaterials": true,
-      "workerIncurExpense": true,
-      "workerNeedEquipment": false,
-      "engagerPayForVehicle": false,
-      "workerProvideEquipment": false,
-      "engagerPayForConsumablesMaterials": false
+      "engagerPayExpense": "No",
+      "provideVehicle": "No",
+      "workerProvideConsumablesMaterials": "Yes",
+      "workerIncurExpense": "Yes",
+      "workerNeedEquipment": "No",
+      "engagerPayForVehicle": "No",
+      "workerProvideEquipment": "No",
+      "engagerPayForConsumablesMaterials": "No"
     },
     "miscellaneous": {
-      "similarWork": true
+      "similarWork": "Yes"
     },
     "businessStructure": {
-      "workerVAT": false,
-      "advertiseForWork": false,
-      "workerPaysForInsurance": true,
-      "businessWebsite": true,
-      "businesAccount": false,
-      "workerExpenseRunningBusinessPremises": false,
-      "workerPayForTraining": true
+      "workerVAT": "No",
+      "advertiseForWork": "No",
+      "workerPaysForInsurance": "Yes",
+      "businessWebsite": "Yes",
+      "businesAccount": "No",
+      "workerExpenseRunningBusinessPremises": "No",
+      "workerPayForTraining": "Yes"
     },
     "personalService": {
-      "workerSentActualSubstitiute": false,
-      "contractrualObligationForSubstitute": false,
-      "possibleSubstituteRejection": true,
-      "contractualRightForSubstitute": true,
-      "workerPayActualHelper": true,
-      "engagerArrangeWorker": true,
-      "contractTermsWorkerPaysSubstitute": false,
-      "workerSentActualHelper": false,
-      "possibleHelper": true
+      "workerSentActualSubstitiute": "No",
+      "contractrualObligationForSubstitute": "No",
+      "possibleSubstituteRejection": "Yes",
+      "contractualRightForSubstitute": "Yes",
+      "workerPayActualHelper": "Yes",
+      "engagerArrangeWorker": "Yes",
+      "contractTermsWorkerPaysSubstitute": "No",
+      "workerSentActualHelper": "No",
+      "possibleHelper": "Yes"
     },
     "control": {
       "workerLevelOfExpertise": "lowExperience",
       "whenWorkHasToBeDone": "free",
-      "engagerMovingWorker": false,
-      "toldWhatToDo": false,
+      "engagerMovingWorker": "No",
+      "toldWhatToDo": "No",
       "workerDecideWhere": "toldWhere",
-      "workerDecidingHowWorkIsDone": true
+      "workerDecidingHowWorkIsDone": "Yes"
     }
   }
 }
