@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.controllers
+package uk.gov.hmrc.decisionservice.util
 
 import cats.data.Xor
 import com.github.fge.jackson.JsonLoader
@@ -23,7 +23,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory
 
 import scala.io.Source
 
-trait JsonValidator{
+trait JsonValidator {
   val schemaPath:String
 
   object SuccessfulReport {
@@ -55,5 +55,5 @@ trait JsonValidator{
 }
 
 object JsonValidator extends JsonValidator {
-  val schemaPath = "/off-payroll-question-set-schema.json"
+  val schemaPath = "/schema/off-payroll-question-set-schema.json"
 }

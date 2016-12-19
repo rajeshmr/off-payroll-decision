@@ -16,15 +16,15 @@
 
 package uk.gov.hmrc.decisionservice.ruleengine
 
-import cats.data.{Validated}
+import cats.data.Validated
 import uk.gov.hmrc.decisionservice.model._
 import uk.gov.hmrc.decisionservice.model.rules._
 
 import scala.util.{Failure, Success, Try}
-import FileTokenizer._
-import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import cats.implicits._
+import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.util.FileTokenizer.tokenize
 
 trait RulesLoader {
 

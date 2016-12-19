@@ -17,238 +17,169 @@
 package uk.gov.hmrc.decisionservice
 
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.controllers.JsonValidator.validate
+import uk.gov.hmrc.decisionservice.util.JsonValidator.validate
 import uk.gov.hmrc.play.test.UnitSpec
 
 
 class JsonValidatorSpec extends UnitSpec {
 
-  val valid_withTwoSections = """{
+  val valid_twoSections = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
+                                  "interview" : {
                                   "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
+                                    "workerSentActualSubstitiute": "false",
+                                    "engagerArrangeWorker": "false",
+                                    "contractualRightForSubstitute": "false",
+                                    "workerPayActualHelper": "false",
+                                    "workerSentActualHelper": "true",
+                                    "contractrualObligationForSubstitute": "false",
+                                    "contractTermsWorkerPaysSubstitute": "false"
                                   },
                                   "partOfOrganisation": {
-                                    "workerAsLineManager": false,
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
-                                  }
+                                    "workerAsLineManager": "false",
+                                    "workerRepresentsEngagerBusiness": "false",
+                                    "contactWithEngagerCustomer": "false"
+                                  }}
                                 }"""
 
   val valid_noAnswers = """{
                               "version": "89.90.73C",
                               "correlationID": "adipisicing ullamco",
+                              "interview": {
                               "personalService": {}
+                              }
                             }"""
 
   val invalid_missingCorrelationID = """{
                                   "version": "89.90.73C",
                                   "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
+                                    "workerSentActualSubstitiute": "false",
+                                    "engagerArrangeWorker": "false",
+                                    "contractualRightForSubstitute": "false",
+                                    "workerPayActualHelper": "false",
+                                    "workerSentActualHelper": "true",
+                                    "contractrualObligationForSubstitute": "false",
+                                    "contractTermsWorkerPaysSubstitute": "false"
                                   },
                                   "partOfOrganisation": {
-                                    "workerAsLineManager": false,
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
+                                    "workerAsLineManager": "false",
+                                    "workerRepresentsEngagerBusiness": "false",
+                                    "contactWithEngagerCustomer": "false"
                                   },
-                                  "miscalaneous": {},
+                                  "miscellaneous": {},
                                   "businessStructure": {}
                                 }"""
 
   val invalid_missingVersion = """{
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
-                                  },
-                                  "partOfOrganisation": {
-                                    "workerAsLineManager": false,
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
-                                  },
-                                  "miscalaneous": {},
-                                  "businessStructure": {}
-                                }"""
-
-  val invalid_withQuotesAroundBoolean = """{
-                                  "version": "89.90.73C",
-                                  "correlationID": "adipisicing ullamco",
-                                  "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
+                                    "workerSentActualSubstitiute": "false",
+                                    "engagerArrangeWorker": "false",
+                                    "contractualRightForSubstitute": "false",
+                                    "workerPayActualHelper": "false",
                                     "workerSentActualHelper": "true",
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
+                                    "contractrualObligationForSubstitute": "false",
+                                    "contractTermsWorkerPaysSubstitute": "false"
                                   },
                                   "partOfOrganisation": {
-                                    "workerAsLineManager": false,
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
+                                    "workerAsLineManager": "false",
+                                    "workerRepresentsEngagerBusiness": "false",
+                                    "contactWithEngagerCustomer": "false"
                                   },
-                                  "miscalaneous": {},
+                                  "miscellaneous": {},
                                   "businessStructure": {}
                                 }"""
 
-
-  val invalid_withInvalidBooleanValue = """{
+  val invalid_invalidAnswerValue = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
-                                  "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
-                                  },
-                                  "partOfOrganisation": {
-                                    "workerAsLineManager": "123ABC",
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
-                                  },
-                                  "miscalaneous": {},
-                                  "businessStructure": {}
+                                  "interview" : {
+                                    "personalService": {
+                                      "workerSentActualSubstitiute": "false",
+                                      "engagerArrangeWorker": "false",
+                                      "contractualRightForSubstitute": "false",
+                                      "workerPayActualHelper": "false",
+                                      "workerSentActualHelper": "true",
+                                      "contractrualObligationForSubstitute": "false",
+                                      "contractTermsWorkerPaysSubstitute": "false"
+                                    },
+                                    "partOfOrganisation": {
+                                      "workerAsLineManager": true,
+                                      "workerRepresentsEngagerBusiness": "false",
+                                      "contactWithEngagerCustomer": "false"
+                                    },
+                                    "miscellaneous": {},
+                                    "businessStructure": {}
+                                  }
                                 }"""
 
-  val invalid_withInvalidSection = """{
+  val invalid_invalidSection = """{
                                   "version": "89.90.73C",
                                   "correlationID": "adipisicing ullamco",
-                                  "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
-                                  },
-                                  "invalidSection": {
-                                    "invalidQuestion1": false,
-                                    "invalidQuestion2": false,
-                                    "invalidQuestion3": true
-                                  },
-                                  "miscalaneous": {},
-                                  "businessStructure": {}
+                                  "interview": {
+                                    "personalService": {
+                                      "workerSentActualSubstitiute": "false",
+                                      "engagerArrangeWorker": "false",
+                                      "contractualRightForSubstitute": "false",
+                                      "workerPayActualHelper": "false",
+                                      "workerSentActualHelper": "true",
+                                      "contractrualObligationForSubstitute": "false",
+                                      "contractTermsWorkerPaysSubstitute": "false"
+                                    },
+                                    "invalidSection": {
+                                      "invalidQuestion1": "false",
+                                      "invalidQuestion2": "false",
+                                      "invalidQuestion3": "true"
+                                    },
+                                    "miscellaneous": {},
+                                    "businessStructure": {}
+                                  }
                                 }"""
 
-  val invalid_withoutRequiredSection = """{
-                                           "version": "15.16.1-S",
-                                           "correlationID": "ut",
-                                           "businessStructure": {
-                                             "workerVAT": true
-                                           },
-                                           "financialRisk": {
-                                             "engagerPayForConsumablesMaterials": false
-                                           },
-                                           "control": {
-                                             "engagerMovingWorker": false,
-                                             "workerDecidingHowWorkIsDone": true,
-                                             "whenWorkHasToBeDone": "free"
-                                           }
-                                         }"""
 
-
-  val invalid_withVersionIdAsNumber = """{
-                                  "version": 234231,
-                                  "correlationID": "adipisicing ullamco",
-                                  "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
-                                  },
-                                  "partOfOrganisation": {
-                                    "workerAsLineManager": false,
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
-                                  },
-                                  "miscalaneous": {},
-                                  "businessStructure": {}
-                                }"""
-
-  val invalid_withInvalidFormatVersionId = """{
-                                  "version": "001-SNAPSHOT",
-                                  "correlationID": "adipisicing ullamco",
-                                  "personalService": {
-                                    "workerSentActualSubstitiute": false,
-                                    "engagerArrangeWorker": false,
-                                    "contractualRightForSubstitute": false,
-                                    "workerPayActualHelper": false,
-                                    "workerSentActualHelper": true,
-                                    "contractrualObligationForSubstitute": false,
-                                    "contractTermsWorkerPaysSubstitute": false
-                                  },
-                                  "partOfOrganisation": {
-                                    "workerAsLineManager": false,
-                                    "workerRepresentsEngagerBusiness": false,
-                                    "contactWithEngagerCustomer": false
-                                  },
-                                  "miscalaneous": {},
-                                  "businessStructure": {}
-                                }"""
-
-  val invalid_withInvalidEnum = """{
+  val invalid_invalidEnum = """{
                                    "version": "78.8.18Q",
                                    "correlationID": "dolor quis cillum velit in",
-                                   "personalService": {
-                                     "contractrualObligationForSubstitute": false,
-                                     "workerSentActualSubstitiute": false,
-                                     "workerSentActualHelper": true,
-                                     "engagerArrangeWorker": true,
-                                     "possibleHelper": true
-                                   },
-                                   "partOfOrganisation": {
-                                     "contactWithEngagerCustomer": true,
-                                     "workerReceivesBenefits": false,
-                                     "workerAsLineManager": false
-                                   },
-                                   "businessStructure": {
-                                     "businessWebsite": true,
-                                     "businesAccount": false,
-                                     "workerPayForTraining": false
-                                   },
-                                   "control": {
-                                     "workerDecideWhere": "workerDecideWhere",
-                                     "workerLevelOfExpertise": "imWellGood"
-                                   },
-                                   "miscalaneous": {}
+                                   "interview": {
+                                     "personalService": {
+                                       "contractrualObligationForSubstitute": "false",
+                                       "workerSentActualSubstitiute": "false",
+                                       "workerSentActualHelper": "true",
+                                       "engagerArrangeWorker": "true",
+                                       "possibleHelper": "true"
+                                     },
+                                     "partOfOrganisation": {
+                                       "contactWithEngagerCustomer": "true",
+                                       "workerReceivesBenefits": "false",
+                                       "workerAsLineManager": "false"
+                                     },
+                                     "businessStructure": {
+                                       "businessWebsite": "true",
+                                       "businesAccount": "false",
+                                       "workerPayForTraining": "false"
+                                     },
+                                     "control": {
+                                       "workerDecideWhere": "workerDecideWhere",
+                                       "workerLevelOfExpertise": "imWellGood"
+                                     },
+                                     "miscellaneous": {}
+                                   }
                                  }"""
 
-  val invalid_withInvalidEnum2 = """{
+  val invalid_invalidEnum2 = """{
                                      "version": "5.4.2-b",
                                      "correlationID": "dolor dolor",
-                                     "personalService": {
-                                       "workerSentActualHelper": false,
-                                       "workerSentActualSubstitiute": false
-                                     },
-                                     "financialRisk": {
-                                       "workerProvideConsumablesMaterials": true,
-                                       "engagerPayExpense": false,
-                                       "workerMainIncome": "allDayEveryDay"
+                                     "interview": {
+                                       "personalService": {
+                                         "workerSentActualHelper": "false",
+                                         "workerSentActualSubstitiute": "false"
+                                       },
+                                       "financialRisk": {
+                                         "workerProvideConsumablesMaterials": "true",
+                                         "engagerPayExpense": "false",
+                                         "workerMainIncome": "allDayEveryDay"
+                                       }
                                      }
                                    }"""
 
@@ -256,19 +187,15 @@ class JsonValidatorSpec extends UnitSpec {
   "json validator" should {
 
     "return true for valid json" in {
-      validate(valid_withTwoSections).isRight shouldBe true
+      validate(valid_twoSections).isRight shouldBe true
     }
 
     "return true for valid json - no answers" in {
       validate(valid_noAnswers).isRight shouldBe true
     }
 
-    "return false for invalid json - InvalidBooleanValue" in {
-      verify(invalid_withInvalidBooleanValue, "string")
-    }
-
-    "return false for invalid json - QuotesAroundBoolean" in {
-      verify(invalid_withQuotesAroundBoolean, "string")
+    "return false for invalid json - InvalidAnswerValue" in {
+      verify(invalid_invalidAnswerValue, "string")
     }
 
     "return false for invalid json - missing Version" in {
@@ -280,27 +207,55 @@ class JsonValidatorSpec extends UnitSpec {
     }
 
     "return false for invalid json - invalidSection" in {
-      verify(invalid_withInvalidSection, "object instance has properties which are not allowed by the schema")
+      verify(invalid_invalidSection, "[\"invalidSection\"]")
     }
 
-    "return false for invalid json - withoutPersonalService" in {
-      verify(invalid_withoutRequiredSection, "personalService")
+    "return true for valid json - empty interview" in {
+      val valid_emptyInterview =
+        """{
+             "version": "15.16.1-S",
+             "correlationID": "ut",
+             "interview" : {}
+        }"""
+      validate(valid_emptyInterview).isRight shouldBe true
     }
 
     "return false for invalid json - invalidFormatVersionId - should be string" in {
-      verify(invalid_withVersionIdAsNumber, "integer")
+      val invalid_versionIdType =
+        """{
+        "version": 342571,
+        "correlationID": "ut",
+        "interview" : {}
+      }"""
+      verify(invalid_versionIdType, "integer")
     }
 
     "return false for invalid json - invalidFormatVersionId" in {
-      verify(invalid_withInvalidFormatVersionId, "001-SNAPSHOT")
+      val invalid_versionId =
+        """{
+        "version": "001-SNAPSHOT",
+        "correlationID": "ut",
+        "interview" : {}
+      }"""
+      verify(invalid_versionId, "001-SNAPSHOT")
+    }
+
+    "return true for valid json - valid version id" in {
+      val valid_versionId =
+        """{
+        "version": "0.0.1-alpha",
+        "correlationID": "ut",
+        "interview" : {}
+      }"""
+      validate(valid_versionId).isRight shouldBe true
     }
 
     "return false for invalid json - enum value is not valid" in {
-      verify(invalid_withInvalidEnum, "imWellGood")
+      verify(invalid_invalidEnum, "instance value (\"imWellGood\") not found in enum")
     }
 
     "return false for invalid json - enum value is not valid2" in {
-      verify(invalid_withInvalidEnum2, "allDayEveryDay")
+      verify(invalid_invalidEnum2, "instance value (\"allDayEveryDay\") not found in enum")
     }
 
   }
