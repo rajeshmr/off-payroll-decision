@@ -20,7 +20,7 @@ import cats.Semigroup
 import cats.data.Validated
 import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
-import uk.gov.hmrc.decisionservice.model.rules._
+import uk.gov.hmrc.decisionservice.model.rules.{>>>, _}
 import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, RulesFileError}
 import uk.gov.hmrc.decisionservice.ruleengine._
 
@@ -34,12 +34,14 @@ trait DecisionService {
 
   val ruleEngine:RuleEngine = RuleEngineInstance
 
+  lazy val maybeExtraRule:Option[SectionRuleSet] = None
+
   val maybeSectionRules:Validation[List[SectionRuleSet]]
 
   val csvSectionMetadata:List[RulesFileMetaData]
 
   def loadSectionRules():Validation[List[SectionRuleSet]] = {
-    val maybeRules = csvSectionMetadata.map(RulesLoaderInstance.load(_))
+    val maybeRules = maybeExtraRule.map(Validated.valid(_)).toList ::: csvSectionMetadata.map(RulesLoaderInstance.load(_))
     val combined = if (maybeRules.isEmpty)
       Validated.invalid(List(RulesFileError(MISSING_RULE_FILES, "missing rule files")))
     else
@@ -60,13 +62,23 @@ trait DecisionService {
 }
 
 object DecisionServiceInstance extends DecisionService {
+  lazy override val maybeExtraRule = Some(SectionRuleSet("business_structure",
+    List(
+      "workerVAT",
+      "businesAccount",
+      "advertiseForWork",
+      "businessWebsite",
+      "workerPayForTraining",
+      "workerExpenseRunningBusinessPremises",
+      "workerPaysForInsurance"),
+    List(SectionRule(List(>>>("0"),>>>("1"),>>>("2"),>>>("3"),>>>("4"),>>>("5"),>>>("6")), EmptyCarryOver, SectionRule.countOnes))))
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
     (13, "/tables/control.csv", "control"),
     (24, "/tables/financial_risk.csv", "financial_risk"),
     (5,  "/tables/part_of_organisation.csv", "part_of_organisation"),
     (1,  "/tables/misc.csv", "miscellaneous"),
-    (7,  "/tables/business_structure.csv", "business_structure"),
+//    (8,  "/tables/business_structure.csv", "business_structure"),
     (13, "/tables/personal_service.csv", "personal_service"),
     (6,  "/tables/matrix_of_matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}

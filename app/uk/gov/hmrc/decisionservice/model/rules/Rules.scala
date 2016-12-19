@@ -22,8 +22,7 @@ import play.api.Logger
 case class SectionRule(values:List[CarryOver], result:CarryOver, matchingFunction:(SectionRule,List[CarryOver]) => Option[CarryOver] = SectionRule.matches )
 
 object SectionRule {
-  def apply(fun:(SectionRule,List[CarryOver]) => Option[CarryOver]):SectionRule = new SectionRule(List(), EmptyCarryOver, fun)
-  def matches(sr:SectionRule, factValues: List[CarryOver]):Option[CarryOver] = {
+  def matches(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
     factValues.zip(sr.values).filterNot(>>>.equivalent(_)) match {
       case Nil =>
         Logger.debug(s"matched:\t${sr.values.map(_.value).mkString("\t,")}")
@@ -31,11 +30,16 @@ object SectionRule {
       case _ => None
     }
   }
-  def countOnes(sr:SectionRule, factValues: List[CarryOver]):Option[CarryOver] = {
-    factValues.filter{_.value == "Yes"}.size match {
-      case n if n <= 1 => Some(>>>("low"))
-      case n if n >= 2 && n <= 3 => Some(>>>("medium"))
-      case _ => Some(>>>("high"))
+
+  def countOnes(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
+    factValues match {
+      case Nil => None
+      case xs =>
+        xs.filter(_.value.toLowerCase == "yes").size match {
+          case n if n <= 1 => Some(>>>("low"))
+          case n if n >= 2 && n <= 3 => Some(>>>("medium"))
+          case _ => Some(>>>("high"))
+        }
     }
   }
 }
