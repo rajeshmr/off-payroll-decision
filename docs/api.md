@@ -20,8 +20,8 @@ Requests use the HTTP `POST` method
 ## Request
 
 * Body contains an __Interview__ JSON
-- A [JSON Schema](off-payroll-interview-schema.json) defines this __Interview__.
-- [Example](off-payroll-interview-sample.json) JSON with all fields populated.
+- A [JSON Schema](../test/resources/schema/off-payroll-request-schema.json) defines this __Interview__.
+- [Example](../test/resources/schema/off-payroll-request-sample.json) JSON with all fields populated.
 
 
 | Attribute        | Required           | Description                                                          |
@@ -36,15 +36,15 @@ Requests use the HTTP `POST` method
 | partOfOrganisation| false             | cluster |
 | miscellaneous| false                  | cluster |
 
- _Note:_ The __Interview__ does not need to contain all the clusters. Within each cluster there are a number of __ClusterElements__ a ClusterElement represents a Question with an answer. For a complete list of  __ClusterElements__ refer to the [JSON Schema](off-payroll-interview-schema.json) Once all the __Clusters__ are present in this __Interview__ then a __Decision__ response will be present. Depending on how the __Interview__ has been formed a __Decision__ may be arrived at before all __Clusters__ and __ClusterElements__ are present, this is known as a __Hard Exit__
+ _Note:_ The __Interview__ does not need to contain all the clusters. Within each cluster there are a number of __ClusterElements__ a ClusterElement represents a Question with an answer. For a complete list of  __ClusterElements__ refer to the [JSON Schema](../test/resources/schema/off-payroll-request-schema.json) Once all the __Clusters__ are present in this __Interview__ then a __Decision__ response will be present. Depending on how the __Interview__ has been formed a __Decision__ may be arrived at before all __Clusters__ and __ClusterElements__ are present, this is known as a __Hard Exit__
 
 
 ## Response
 
 * HTTP 200 OK
 * Body contains __Decision__ JSON
-- A [JSON Schema](off-payroll-decision-schema.json) defines this __Decision__.
-- [Example](off-payroll-decision-sample.json) JSON with all fields populated.
+- A [JSON Schema](../test/resources/schema/off-payroll-response-schema.json) defines this __Decision__.
+- [Example](../test/resources/schema/off-payroll-response-sample.json) JSON with all fields populated.
 
 
 | Attribute            | Required           | Description                                                                                                    |
