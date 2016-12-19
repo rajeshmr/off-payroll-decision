@@ -18,31 +18,32 @@
           "type": "object",
           "properties": {
             "contractualRightForSubstitute": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
+
             },
             "contractrualObligationForSubstitute": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "possibleSubstituteRejection": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "engagerArrangeWorker": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "contractTermsWorkerPaysSubstitute": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "workerSentActualSubstitiute": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "possibleHelper": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "workerSentActualHelper": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             },
             "workerPayActualHelper": {
-              "type": "string"
+              "$ref": "definitions.json#/binaryAnswer"
             }
           }, "minProperties": 0, "additionalProperties": false
         },
