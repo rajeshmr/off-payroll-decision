@@ -28,18 +28,18 @@ class JsonValidatorSpec extends UnitSpec {
                                   "correlationID": "adipisicing ullamco",
                                   "interview" : {
                                   "personalService": {
-                                    "workerSentActualSubstitiute": "false",
-                                    "engagerArrangeWorker": "false",
-                                    "contractualRightForSubstitute": "false",
-                                    "workerPayActualHelper": "false",
-                                    "workerSentActualHelper": "true",
-                                    "contractrualObligationForSubstitute": "false",
-                                    "contractTermsWorkerPaysSubstitute": "false"
+                                    "workerSentActualSubstitiute": "No",
+                                    "engagerArrangeWorker": "No",
+                                    "contractualRightForSubstitute": "No",
+                                    "workerPayActualHelper": "No",
+                                    "workerSentActualHelper": "Yes",
+                                    "contractrualObligationForSubstitute": "No",
+                                    "contractTermsWorkerPaysSubstitute": "No"
                                   },
                                   "partOfOrganisation": {
-                                    "workerAsLineManager": "false",
-                                    "workerRepresentsEngagerBusiness": "false",
-                                    "contactWithEngagerCustomer": "false"
+                                    "workerAsLineManager": "No",
+                                    "workerRepresentsEngagerBusiness": "No",
+                                    "contactWithEngagerCustomer": "No"
                                   }}
                                 }"""
 
@@ -54,18 +54,18 @@ class JsonValidatorSpec extends UnitSpec {
   val invalid_missingCorrelationID = """{
                                   "version": "89.90.73C",
                                   "personalService": {
-                                    "workerSentActualSubstitiute": "false",
-                                    "engagerArrangeWorker": "false",
-                                    "contractualRightForSubstitute": "false",
-                                    "workerPayActualHelper": "false",
-                                    "workerSentActualHelper": "true",
-                                    "contractrualObligationForSubstitute": "false",
-                                    "contractTermsWorkerPaysSubstitute": "false"
+                                    "workerSentActualSubstitiute": "No",
+                                    "engagerArrangeWorker": "No",
+                                    "contractualRightForSubstitute": "No",
+                                    "workerPayActualHelper": "No",
+                                    "workerSentActualHelper": "Yes",
+                                    "contractrualObligationForSubstitute": "No",
+                                    "contractTermsWorkerPaysSubstitute": "No"
                                   },
                                   "partOfOrganisation": {
-                                    "workerAsLineManager": "false",
-                                    "workerRepresentsEngagerBusiness": "false",
-                                    "contactWithEngagerCustomer": "false"
+                                    "workerAsLineManager": "No",
+                                    "workerRepresentsEngagerBusiness": "No",
+                                    "contactWithEngagerCustomer": "No"
                                   },
                                   "miscellaneous": {},
                                   "businessStructure": {}
@@ -74,18 +74,18 @@ class JsonValidatorSpec extends UnitSpec {
   val invalid_missingVersion = """{
                                   "correlationID": "adipisicing ullamco",
                                   "personalService": {
-                                    "workerSentActualSubstitiute": "false",
-                                    "engagerArrangeWorker": "false",
-                                    "contractualRightForSubstitute": "false",
-                                    "workerPayActualHelper": "false",
-                                    "workerSentActualHelper": "true",
-                                    "contractrualObligationForSubstitute": "false",
-                                    "contractTermsWorkerPaysSubstitute": "false"
+                                    "workerSentActualSubstitiute": "No",
+                                    "engagerArrangeWorker": "No",
+                                    "contractualRightForSubstitute": "No",
+                                    "workerPayActualHelper": "No",
+                                    "workerSentActualHelper": "Yes",
+                                    "contractrualObligationForSubstitute": "No",
+                                    "contractTermsWorkerPaysSubstitute": "No"
                                   },
                                   "partOfOrganisation": {
-                                    "workerAsLineManager": "false",
-                                    "workerRepresentsEngagerBusiness": "false",
-                                    "contactWithEngagerCustomer": "false"
+                                    "workerAsLineManager": "No",
+                                    "workerRepresentsEngagerBusiness": "No",
+                                    "contactWithEngagerCustomer": "No"
                                   },
                                   "miscellaneous": {},
                                   "businessStructure": {}
@@ -96,18 +96,18 @@ class JsonValidatorSpec extends UnitSpec {
                                   "correlationID": "adipisicing ullamco",
                                   "interview" : {
                                     "personalService": {
-                                      "workerSentActualSubstitiute": "false",
-                                      "engagerArrangeWorker": "false",
-                                      "contractualRightForSubstitute": "false",
-                                      "workerPayActualHelper": "false",
-                                      "workerSentActualHelper": "true",
-                                      "contractrualObligationForSubstitute": "false",
-                                      "contractTermsWorkerPaysSubstitute": "false"
+                                      "workerSentActualSubstitiute": "No",
+                                      "engagerArrangeWorker": "No",
+                                      "contractualRightForSubstitute": "No",
+                                      "workerPayActualHelper": "No",
+                                      "workerSentActualHelper": "Yes",
+                                      "contractrualObligationForSubstitute": "No",
+                                      "contractTermsWorkerPaysSubstitute": "No"
                                     },
                                     "partOfOrganisation": {
                                       "workerAsLineManager": true,
-                                      "workerRepresentsEngagerBusiness": "false",
-                                      "contactWithEngagerCustomer": "false"
+                                      "workerRepresentsEngagerBusiness": "No",
+                                      "contactWithEngagerCustomer": "No"
                                     },
                                     "miscellaneous": {},
                                     "businessStructure": {}
@@ -119,18 +119,18 @@ class JsonValidatorSpec extends UnitSpec {
                                   "correlationID": "adipisicing ullamco",
                                   "interview": {
                                     "personalService": {
-                                      "workerSentActualSubstitiute": "false",
-                                      "engagerArrangeWorker": "false",
-                                      "contractualRightForSubstitute": "false",
-                                      "workerPayActualHelper": "false",
-                                      "workerSentActualHelper": "true",
-                                      "contractrualObligationForSubstitute": "false",
-                                      "contractTermsWorkerPaysSubstitute": "false"
+                                      "workerSentActualSubstitiute": "No",
+                                      "engagerArrangeWorker": "No",
+                                      "contractualRightForSubstitute": "No",
+                                      "workerPayActualHelper": "No",
+                                      "workerSentActualHelper": "Yes",
+                                      "contractrualObligationForSubstitute": "No",
+                                      "contractTermsWorkerPaysSubstitute": "No"
                                     },
                                     "invalidSection": {
-                                      "invalidQuestion1": "false",
-                                      "invalidQuestion2": "false",
-                                      "invalidQuestion3": "true"
+                                      "invalidQuestion1": "No",
+                                      "invalidQuestion2": "No",
+                                      "invalidQuestion3": "Yes"
                                     },
                                     "miscellaneous": {},
                                     "businessStructure": {}
@@ -143,21 +143,21 @@ class JsonValidatorSpec extends UnitSpec {
                                    "correlationID": "dolor quis cillum velit in",
                                    "interview": {
                                      "personalService": {
-                                       "contractrualObligationForSubstitute": "false",
-                                       "workerSentActualSubstitiute": "false",
-                                       "workerSentActualHelper": "true",
-                                       "engagerArrangeWorker": "true",
-                                       "possibleHelper": "true"
+                                       "contractrualObligationForSubstitute": "No",
+                                       "workerSentActualSubstitiute": "No",
+                                       "workerSentActualHelper": "Yes",
+                                       "engagerArrangeWorker": "Yes",
+                                       "possibleHelper": "Yes"
                                      },
                                      "partOfOrganisation": {
-                                       "contactWithEngagerCustomer": "true",
-                                       "workerReceivesBenefits": "false",
-                                       "workerAsLineManager": "false"
+                                       "contactWithEngagerCustomer": "Yes",
+                                       "workerReceivesBenefits": "No",
+                                       "workerAsLineManager": "No"
                                      },
                                      "businessStructure": {
-                                       "businessWebsite": "true",
-                                       "businesAccount": "false",
-                                       "workerPayForTraining": "false"
+                                       "businessWebsite": "Yes",
+                                       "businesAccount": "No",
+                                       "workerPayForTraining": "No"
                                      },
                                      "control": {
                                        "workerDecideWhere": "workerDecideWhere",
@@ -172,12 +172,12 @@ class JsonValidatorSpec extends UnitSpec {
                                      "correlationID": "dolor dolor",
                                      "interview": {
                                        "personalService": {
-                                         "workerSentActualHelper": "false",
-                                         "workerSentActualSubstitiute": "false"
+                                         "workerSentActualHelper": "No",
+                                         "workerSentActualSubstitiute": "No"
                                        },
                                        "financialRisk": {
-                                         "workerProvideConsumablesMaterials": "true",
-                                         "engagerPayExpense": "false",
+                                         "workerProvideConsumablesMaterials": "Yes",
+                                         "engagerPayExpense": "No",
                                          "workerMainIncome": "allDayEveryDay"
                                        }
                                      }
