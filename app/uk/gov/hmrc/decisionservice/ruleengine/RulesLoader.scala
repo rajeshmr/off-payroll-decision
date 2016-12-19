@@ -66,14 +66,9 @@ trait RulesLoader {
   }
 
   def createRule(tokens:List[String], rulesFileMetaData: RulesFileMetaData):SectionRule = {
-    if (tokens.head == "countOnes"){
-      SectionRule(SectionRule.countOnes)
-    }
-    else {
-      val result = >>>(tokens.drop(rulesFileMetaData.valueCols))
-      val values = tokens.take(rulesFileMetaData.valueCols)
-      SectionRule(values.map(>>>(_)), result)
-    }
+    val result = >>>(tokens.drop(rulesFileMetaData.valueCols))
+    val values = tokens.take(rulesFileMetaData.valueCols)
+    SectionRule(values.map(>>>(_)), result)
   }
 
   def createRuleSet(rulesFileMetaData:RulesFileMetaData, ruleTokens:List[List[String]], headings:List[String]):Validation[SectionRuleSet] = {
