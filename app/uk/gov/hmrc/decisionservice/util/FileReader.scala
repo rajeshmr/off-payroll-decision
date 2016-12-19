@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.ruleengine
+package uk.gov.hmrc.decisionservice.util
 
 import java.io.IOException
 
 import scala.io.Source
 import scala.util.{Failure, Try}
 
-object FileTokenizer {
-  private val Separator = ','
-
+object FileReader {
   private def using[R <: { def close(): Unit }, B](resource: R)(f: R => B): B = try { f(resource) } finally { resource.close() }
 
-  def tokenize(path:String): Try[List[List[String]]] = {
+  def read(path:String): Try[String] = {
     val is = getClass.getResourceAsStream(path)
     if (is == null) {
       Failure(new IOException(s"resource not found: ${path}"))
     }
     else {
       Try(using(Source.fromInputStream(is)) { source =>
-        source.getLines.map(_.split(Separator).map(_.trim).toList).toList
+        source.getLines.mkString
       })
     }
   }
