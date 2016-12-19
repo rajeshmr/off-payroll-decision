@@ -1,7 +1,18 @@
 {
-  "id": "https://github.com/hmrc/off-payroll-decision#0.0.2-alpha",
+  
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
+
+  "definitions": {
+    "binaryAnswer": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    }
+  },
+
   "type": "object",
   "properties": {
     "version": {
@@ -17,47 +28,46 @@
         "personalService": {
           "type": "object",
           "properties": {
-            "contractualRightForSubstitute": {
-              "$ref": "definitions.json#/binaryAnswer"
-
-            },
+            "contractualRightForSubstitute": { "$ref": "#/definitions/binaryAnswer" },
             "contractrualObligationForSubstitute": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "possibleSubstituteRejection": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "engagerArrangeWorker": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "contractTermsWorkerPaysSubstitute": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerSentActualSubstitiute": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "possibleHelper": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerSentActualHelper": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerPayActualHelper": {
-              "$ref": "definitions.json#/binaryAnswer"
+              "$ref": "#/definitions/binaryAnswer"
             }
-          }, "minProperties": 0, "additionalProperties": false
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "control": {
           "type": "object",
           "properties": {
             "toldWhatToDo": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "engagerMovingWorker": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerDecidingHowWorkIsDone": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerLevelOfExpertise": {
               "type": "string",
@@ -85,34 +95,36 @@
                 "workerDecideWhere"
               ]
             }
-          }, "minProperties": 0, "additionalProperties": false
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "financialRisk": {
           "type": "object",
           "properties": {
             "provideVehicle": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "engagerPayForVehicle": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerNeedEquipment": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerProvideEquipment": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerProvideConsumablesMaterials": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "engagerPayForConsumablesMaterials": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerIncurExpense": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "engagerPayExpense": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerMainIncome": {
               "type": "string",
@@ -127,60 +139,70 @@
                 "invoicedHourlyOrDaily"
               ]
             }
-          }, "minProperties": 0, "additionalProperties": false
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "businessStructure": {
           "type": "object",
           "properties": {
             "workerVAT": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "businesAccount": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "advertiseForWork": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "businessWebsite": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerPayForTraining": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerExpenseRunningBusinessPremises": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerPaysForInsurance": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             }
-          }, "minProperties": 0, "additionalProperties": false
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "partOfOrganisation": {
           "type": "object",
           "properties": {
             "workerReceivesBenefits": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerAsLineManager": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "contactWithEngagerCustomer": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             },
             "workerRepresentsEngagerBusiness": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             }
-          }, "minProperties": 0, "additionalProperties": false
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "miscellaneous": {
           "type": "object",
           "properties": {
             "similarWork": {
-              "type": "string"
+              "$ref": "#/definitions/binaryAnswer"
             }
-          }, "minProperties": 0, "additionalProperties": false
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         }
-      }, "minProperties": 0, "additionalProperties": false
+      },
+      "minProperties": 0,
+      "additionalProperties": false
     }
   },
   "required": [
