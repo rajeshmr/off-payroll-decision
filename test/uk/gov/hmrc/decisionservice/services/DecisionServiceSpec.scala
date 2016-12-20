@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.services
 
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
+import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.play.test.UnitSpec
 
@@ -24,10 +24,10 @@ class DecisionServiceSpec extends UnitSpec {
 
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
+    lazy override val extraRules = List(DecisionServiceInstance.businessStructureRule)
     val csvSectionMetadata = List(
-      (7, "/decisionservicespec/business_structure.csv", "BusinessStructure"),
-      (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
-      (3, "/decisionservicespec/matrix.csv", "Matrix")
+        (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
+        (3, "/decisionservicespec/matrix.csv", "Matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
@@ -35,13 +35,13 @@ class DecisionServiceSpec extends UnitSpec {
     "produce correct decision for a sample fact set leading to section exit" in {
       val facts =
       Facts(Map(
-        "8a" -> >>>("yes"),
-        "8b" -> >>>("yes"),
-        "8c" -> >>>("yes"),
-        "8d" -> >>>("yes"),
-        "8e" -> >>>("no"),
-        "8f" -> >>>("no"),
-        "8g" -> >>>("no"),
+        "workerVAT" -> >>>("yes"),
+        "businesAccount" -> >>>("yes"),
+        "advertiseForWork" -> >>>("yes"),
+        "businessWebsite" -> >>>("no"),
+        "workerPayForTraining" -> >>>("no"),
+        "workerExpenseRunningBusinessPremises" -> >>>("no"),
+        "workerPaysForInsurance" -> >>>("no"),
         "2" -> >>>("yes"),
         "3" -> >>>("yes"),
         "4" -> >>>("yes"),
@@ -62,13 +62,13 @@ class DecisionServiceSpec extends UnitSpec {
     "produce correct decision for a special custom fact" in {
       val facts =
       Facts(Map(
-        "8a" -> >>>("no"),
-        "8b" -> >>>("no"),
-        "8c" -> >>>("no"),
-        "8d" -> >>>("no"),
-        "8e" -> >>>("no"),
-        "8f" -> >>>("no"),
-        "8g" -> >>>("no"),
+        "workerVAT" -> >>>("yes"),
+        "businesAccount" -> >>>("yes"),
+        "advertiseForWork" -> >>>("yes"),
+        "businessWebsite" -> >>>("no"),
+        "workerPayForTraining" -> >>>("no"),
+        "workerExpenseRunningBusinessPremises" -> >>>("no"),
+        "workerPaysForInsurance" -> >>>("yes"),
         "2" -> >>>("yes"),
         "3" -> >>>("no" ),
         "4" -> >>>("yes"),
@@ -84,6 +84,61 @@ class DecisionServiceSpec extends UnitSpec {
       maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "outofIR35"
+      }
+    }
+    "produce correct decision for a special custom fact 2" in {
+      val facts =
+      Facts(Map(
+        "workerVAT" -> >>>("yes"),
+        "businesAccount" -> >>>("yes"),
+        "advertiseForWork" -> >>>("yes"),
+        "businessWebsite" -> >>>("no"),
+        "workerPayForTraining" -> >>>("no"),
+        "workerExpenseRunningBusinessPremises" -> >>>("no"),
+        "workerPaysForInsurance" -> >>>("yes"),
+        "2" -> >>>("yes"),
+        "3" -> >>>("yes" ),
+        "4" -> >>>("yes"),
+        "5" -> >>>("no"),
+        "6" -> >>>("no"),
+        "7" -> >>>("no" ),
+        "8" -> >>>("no"),
+        "9" -> >>>("no"),
+        "10" -> >>>("no"))
+      )
+
+      val maybeDecision = facts ==>: DecisionServiceTestInstance
+      maybeDecision.isValid shouldBe true
+      maybeDecision.map { decision =>
+        decision.value shouldBe "inIR35"
+      }
+    }
+    "produce correct decision for a special custom fact 3" in {
+      val facts =
+      Facts(Map(
+        "similarWork" -> >>>("10+"),
+        "workerVAT" -> >>>("yes"),
+        "businesAccount" -> >>>("yes"),
+        "advertiseForWork" -> >>>("yes"),
+        "businessWebsite" -> >>>("no"),
+        "workerPayForTraining" -> >>>("no"),
+        "workerExpenseRunningBusinessPremises" -> >>>("no"),
+        "workerPaysForInsurance" -> >>>("yes"),
+        "2" -> >>>("yes"),
+        "3" -> >>>("yes" ),
+        "4" -> >>>("yes"),
+        "5" -> >>>("no"),
+        "6" -> >>>("no"),
+        "7" -> >>>("no" ),
+        "8" -> >>>("no"),
+        "9" -> >>>("no"),
+        "10" -> >>>("no"))
+      )
+
+      val maybeDecision = facts ==>: DecisionServiceTestInstance
+      maybeDecision.isValid shouldBe true
+      maybeDecision.map { decision =>
+        decision.value shouldBe "inIR35"
       }
     }
   }
