@@ -28,7 +28,7 @@ object MatchingFunctions {
       case _ => None
     }
   }
-  def customCountYes(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
+  def businessStructureMatches(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
     val result = factValues match {
       case Nil => None
       case x::xs => x.value match {
