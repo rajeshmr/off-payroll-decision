@@ -1,8 +1,8 @@
-personalService     ,   contractualRightForSubstitute       , 	false
-personalService     ,   contractrualObligationForSubstitute ,   true
-control         	,   toldWhatToDo                        ,   true
-control             ,  	engagerMovingWorker                 , 	false
-financialRisk  	    ,   provideVehicle                      ,	false
-financialRisk       , 	engagerPayForVehicle                ,	false
-financialRisk       ,	workerNeedEquipment                 ,	false
+personalService     ,   contractualRightForSubstitute       , 	No
+personalService     ,   contractrualObligationForSubstitute ,   Yes
+control         	,   toldWhatToDo                        ,   Yes
+control             ,  	engagerMovingWorker                 , 	No
+financialRisk  	    ,   provideVehicle                      ,	No
+financialRisk       , 	engagerPayForVehicle                ,	No
+financialRisk       ,	workerNeedEquipment                 ,	No
 Unknown

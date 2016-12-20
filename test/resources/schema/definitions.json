@@ -1,0 +1,11 @@
+{
+  "definitions": {
+    "binaryAnswer": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    }
+  }
+}

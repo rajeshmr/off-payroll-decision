@@ -55,5 +55,5 @@ trait JsonValidator {
 }
 
 object JsonValidator extends JsonValidator {
-  val schemaPath = "/schema/off-payroll-question-set-schema.json"
+  val schemaPath = "/schema/off-payroll-request-schema.json"
 }
