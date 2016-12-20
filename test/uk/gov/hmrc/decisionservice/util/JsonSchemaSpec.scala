@@ -16,30 +16,55 @@
 
 package uk.gov.hmrc.decisionservice.util
 
+import cats.data.Xor
 import play.api.libs.json.Json
 import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonSchemaSpec extends UnitSpec {
   val TEST_CASE_PATH = "/schema/schema_checking_testcase.csv"
-  val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/full-example-request.json"
+  val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/off-payroll-request-sample.json"
+  val FULL_RESPONSE = "/schema/off-payroll-response-sample.json"
   val tryJson = FileReader.read(FULL_EXAMPLE_REQUEST_JSON_PATH)
 
-  "json schema" should {
+  " A Json Schema" should {
     "validate correctly full example request json" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = tryJson.get
-        val validationResult = JsonValidator.validate(requestJsonString)
-        validationResult.isRight shouldBe true
-    }
-    "validate request created from a flattened test case" in {
-      val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(TEST_CASE_PATH)
-      testCasesTry.isSuccess shouldBe true
-      val testCase = testCasesTry.get
-      val request = testCase.request
-      val requestJson = Json.toJson(request)
-      val requestJsonString = Json.prettyPrint(requestJson)
       val validationResult = JsonValidator.validate(requestJsonString)
+      printValidationResult(validationResult)
       validationResult.isRight shouldBe true
+    }
+  }
+    it should {
+      "validate a full response" in {
+        tryJson.isSuccess shouldBe true
+        val requestJsonString = FileReader.read(FULL_RESPONSE).get
+        val validationResult = new JsonValidator("/schema/off-payroll-response-schema.json")
+          .validate(requestJsonString)
+        printValidationResult(validationResult)
+        validationResult.isRight shouldBe true
+      }
+    }
+
+    it should {
+      "validate request created from a flattened test case" in {
+        val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(TEST_CASE_PATH)
+        testCasesTry.isSuccess shouldBe true
+        val testCase = testCasesTry.get
+        val request = testCase.request
+        val requestJson = Json.toJson(request)
+        val requestJsonString = Json.prettyPrint(requestJson)
+        val validationResult = JsonValidator.validate(requestJsonString)
+        printValidationResult(validationResult)
+        validationResult.isRight shouldBe true
+      }
+    }
+
+
+  private def printValidationResult(result: Xor[String, Unit]) = {
+    result.leftMap { report => {
+      println(report)
+    }
     }
   }
 

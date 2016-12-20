@@ -15,7 +15,7 @@
   "properties": {
     "version": {
       "type": "string",
-      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]$"
+      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]*$"
     },
     "correlationID": {
       "type": "string"
