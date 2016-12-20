@@ -1,0 +1,214 @@
+{
+  
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
+
+  "definitions": {
+    "binaryAnswer": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No"
+      ]
+    }
+  },
+
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]*$"
+    },
+    "correlationID": {
+      "type": "string"
+    },
+    "interview": {
+      "type": "object",
+      "properties": {
+        "personalService": {
+          "type": "object",
+          "properties": {
+            "contractualRightForSubstitute": { "$ref": "#/definitions/binaryAnswer" },
+            "contractrualObligationForSubstitute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "possibleSubstituteRejection": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerArrangeWorker": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "contractTermsWorkerPaysSubstitute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerSentActualSubstitiute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "possibleHelper": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerSentActualHelper": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerPayActualHelper": {
+              "$ref": "#/definitions/binaryAnswer"
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        },
+        "control": {
+          "type": "object",
+          "properties": {
+            "toldWhatToDo": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerMovingWorker": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerDecidingHowWorkIsDone": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerLevelOfExpertise": {
+              "type": "string",
+              "enum": [
+                "highExperience",
+                "mediumExperience",
+                "lowExperience"
+              ]
+            },
+            "whenWorkHasToBeDone": {
+              "type": "string",
+              "enum": [
+                "engagerStipulated",
+                "agreedWithEngager",
+                "free",
+                "agreedDeadlines"
+              ]
+            },
+            "workerDecideWhere": {
+              "type": "string",
+              "enum": [
+                "toldWhere",
+                "freeToDecide",
+                "certainPlace",
+                "workerDecideWhere"
+              ]
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        },
+        "financialRisk": {
+          "type": "object",
+          "properties": {
+            "provideVehicle": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayForVehicle": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerNeedEquipment": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerProvideEquipment": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerProvideConsumablesMaterials": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayForConsumablesMaterials": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerIncurExpense": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayExpense": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerMainIncome": {
+              "type": "string",
+              "enum": [
+                "regular",
+                "pieceRate",
+                "commisionOnly",
+                "commisionAndBasicSalary",
+                "fixedPrice",
+                "shareProfitLoss",
+                "shareProfitOnly",
+                "invoicedHourlyOrDaily"
+              ]
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        },
+        "businessStructure": {
+          "type": "object",
+          "properties": {
+            "workerVAT": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "businesAccount": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "advertiseForWork": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "businessWebsite": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerPayForTraining": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerExpenseRunningBusinessPremises": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerPaysForInsurance": {
+              "$ref": "#/definitions/binaryAnswer"
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        },
+        "partOfOrganisation": {
+          "type": "object",
+          "properties": {
+            "workerReceivesBenefits": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerAsLineManager": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "contactWithEngagerCustomer": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerRepresentsEngagerBusiness": {
+              "$ref": "#/definitions/binaryAnswer"
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        },
+        "miscellaneous": {
+          "type": "object",
+          "properties": {
+            "similarWork": {
+              "$ref": "#/definitions/binaryAnswer"
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        }
+      },
+      "minProperties": 0,
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "correlationID",
+    "interview"
+  ],
+  "additionalProperties": false
+}

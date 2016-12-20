@@ -1,0 +1,10 @@
+{
+  "version": "0.0.2-alpha",
+  "correlationID": "12345",
+  "carryOnWithQuestions": true,
+  "score": {
+    "personalService": "HIGH",
+    "miscellaneous": "LOW"
+  },
+  "result": "Unknown"
+}
