@@ -22,6 +22,6 @@ object FactValidatingFunctions {
 
   def factsValid(rule:SectionRule,factValues: List[CarryOver]):Boolean = factValues.size == rule.values.size
 
-  def countYesFactValid(rule:SectionRule,factValues: List[CarryOver]):Boolean = factValues.size > 0
+  def businessStructureFactsValid(rule:SectionRule, factValues: List[CarryOver]):Boolean = factValues.size > 0
 
 }

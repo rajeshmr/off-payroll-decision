@@ -17,29 +17,17 @@
 package uk.gov.hmrc.decisionservice.services
 
 import uk.gov.hmrc.decisionservice.model.rules._
-import uk.gov.hmrc.decisionservice.ruleengine.FactValidatingFunctions._
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.decisionservice.ruleengine.MatchingFunctions._
 
 class DecisionServiceSpec extends UnitSpec {
 
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
-    lazy override val extraRules = List(SectionRuleSet("business_structure",
-      List(
-        "similarWork",
-        "workerVAT",
-        "businesAccount",
-        "advertiseForWork",
-        "businessWebsite",
-        "workerPayForTraining",
-        "workerExpenseRunningBusinessPremises",
-        "workerPaysForInsurance"),
-      List(SectionRule(List(), EmptyCarryOver, customCountYes, countYesFactValid))))
+    lazy override val extraRules = List(DecisionServiceInstance.businessStructureRule)
     val csvSectionMetadata = List(
-      (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
-      (3, "/decisionservicespec/matrix.csv", "Matrix")
+        (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
+        (3, "/decisionservicespec/matrix.csv", "Matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
