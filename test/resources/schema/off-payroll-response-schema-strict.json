@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "This schema defines the output message for the off-payroll-decision its root object is a Decision",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]$"
+    },
+    "correlationID": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "Outside IR35",
+        "Self-Employed",
+        "Inside IR35",
+        "Employed",
+        "Unknown"
+      ]
+    },
+    "carryOnWithQuestions": {
+      "type": "boolean"
+    },
+    "score": {
+      "type": "object",
+      "properties": {
+        "personalService": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "control": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "financialRisk": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "businessStructure": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "partOfOrganisation": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        },
+        "miscellaneous": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "LOW"
+          ]
+        }
+      },
+      "minProperties": 6,
+      "addtionalProperties": false
+    }
+  },
+  "required": [
+    "version",
+    "correlationID",
+    "carryOnWithQuestions",
+    "score"
+  ],
+  "minProperties": 4,
+  "addtionalProperties": false
+}
