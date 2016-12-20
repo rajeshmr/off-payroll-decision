@@ -43,7 +43,7 @@ trait DecisionService {
   val csvSectionMetadata:List[RulesFileMetaData]
 
   def loadSectionRules():Validation[List[SectionRuleSet]] = {
-    val maybeRules = extraRules.map(Validated.valid(_)).toList ::: csvSectionMetadata.map(RulesLoaderInstance.load(_))
+    val maybeRules = extraRules.map(Validated.valid(_)) ::: csvSectionMetadata.map(RulesLoaderInstance.load(_))
     val combined = if (maybeRules.isEmpty)
       Validated.invalid(List(RulesFileError(MISSING_RULE_FILES, "missing rule files")))
     else
