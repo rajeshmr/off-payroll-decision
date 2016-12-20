@@ -1,5 +1,5 @@
 {
-  "id": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-response-schema.json",
+  "id": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/feature/offpay-233/test/resources/schema/off-payroll-response-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "Decision Response Version 1.0.0-beta",
   "definitions": {
