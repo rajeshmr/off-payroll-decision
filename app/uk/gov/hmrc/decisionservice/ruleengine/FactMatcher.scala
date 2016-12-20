@@ -59,7 +59,7 @@ sealed trait FactMatcher {
 object FactMatcherInstance extends FactMatcher
 
 object FactMatcherHelper {
-  def factsValid(factValues: List[CarryOver], rule:SectionRule):Boolean = factValues.size == rule.values.size
+  def factsValid(factValues: List[CarryOver], rule:SectionRule):Boolean = rule.validateFact(rule,factValues)
   def factsEmptySet(facts:Map[String,CarryOver]):Set[Int] = >>>.emptyPositions(facts.values)
   def rulesMaxEmptySet(rules: List[SectionRule]):Set[Int] = {
     def ruleEmptySet(rules: SectionRule):Set[Int] = >>>.emptyPositions(rules.values)

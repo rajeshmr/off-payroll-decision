@@ -17,32 +17,14 @@
 package uk.gov.hmrc.decisionservice.model.rules
 
 import cats.Semigroup
-import play.api.Logger
+import uk.gov.hmrc.decisionservice.ruleengine.FactValidatingFunctions._
+import uk.gov.hmrc.decisionservice.ruleengine.MatchingFunctions._
 
-case class SectionRule(values:List[CarryOver], result:CarryOver, matchingFunction:(SectionRule,List[CarryOver]) => Option[CarryOver] = SectionRule.matches )
-
-object SectionRule {
-  def matches(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
-    factValues.zip(sr.values).filterNot(>>>.equivalent(_)) match {
-      case Nil =>
-        Logger.debug(s"matched:\t${sr.values.map(_.value).mkString("\t,")}")
-        Some(sr.result)
-      case _ => None
-    }
-  }
-
-  def countOnes(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
-    factValues match {
-      case Nil => None
-      case xs =>
-        xs.filter(_.value.toLowerCase == "yes").size match {
-          case n if n <= 1 => Some(>>>("low"))
-          case n if n >= 2 && n <= 3 => Some(>>>("medium"))
-          case _ => Some(>>>("high"))
-        }
-    }
-  }
-}
+case class SectionRule(values:List[CarryOver],
+                       result:CarryOver,
+                       matchingFunction:(SectionRule,List[CarryOver]) => Option[CarryOver] = matches,
+                       validateFact:(SectionRule,List[CarryOver]) => Boolean = factsValid
+                      )
 
 case class SectionRuleSet(section:String, headings:List[String],rules:List[SectionRule]) extends Semigroup[SectionRuleSet] {
   override def combine(x: SectionRuleSet, y: SectionRuleSet): SectionRuleSet = x
