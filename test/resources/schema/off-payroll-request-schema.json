@@ -1,8 +1,7 @@
 {
   "id": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-request-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "This schema defines the input message for the Off Payroll Decision Service, the root object is a QuestionSet",
-
+  "description": "Decision Request Version 1.0.0-beta",
   "definitions": {
     "binaryAnswer": {
       "type": "string",
@@ -12,7 +11,6 @@
       ]
     }
   },
-
   "type": "object",
   "properties": {
     "version": {
@@ -28,23 +26,40 @@
         "personalService": {
           "type": "object",
           "properties": {
-            "contractualRightForSubstitute": { "$ref": "#/definitions/binaryAnswer" },
-            "contractrualObligationForSubstitute": {
+            "contractualObligationForSubstitute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "contractualObligationInPractise": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "contractrualRightForSubstitute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "actualRightToSendSubstitute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "contractualRightReflectInPractise": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerArrangeIfWorkerIsUnwillingOrUnable": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "possibleSubstituteRejection": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerArrangeWorker": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
             "contractTermsWorkerPaysSubstitute": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerSentActualSubstitiute": {
+            "workerSentActualSubstitute": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "actualSubstituteRejection": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "possibleHelper": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "wouldWorkerPayHelper": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerSentActualHelper": {
@@ -69,43 +84,60 @@
             "workerDecidingHowWorkIsDone": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerLevelOfExpertise": {
-              "type": "string",
-              "enum": [
-                "highExperience",
-                "mediumExperience",
-                "lowExperience"
-              ]
-            },
             "whenWorkHasToBeDone": {
               "type": "string",
               "enum": [
-                "engagerStipulated",
-                "agreedWithEngager",
-                "free",
-                "agreedDeadlines"
+                "workingPatternStipulated",
+                "workingPatternAgreed",
+                "noDefinedWorkingPattern",
+                "workinPatternAgreedDeadlines",
+                "workinPatternRegularHoursToAgreedDeadlines"
               ]
             },
             "workerDecideWhere": {
               "type": "string",
               "enum": [
-                "toldWhere",
-                "freeToDecide",
-                "certainPlace",
-                "workerDecideWhere"
+                "couldFixWorkerLocation",
+                "cannotFixWorkerLocation",
+                "workerLocationFixed"
               ]
             }
           },
           "minProperties": 0,
           "additionalProperties": false
         },
-        "financialRisk": {
+        "financialRiskA": {
           "type": "object",
           "properties": {
-            "provideVehicle": {
+            "workerPaidInclusive": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayForVehicle": {
+            "workerNeedConsumablesMaterials": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerProvideConsumablesMaterials": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayExpense": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerNeedEquipment": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerProvideEquipment": {
+              "$ref": "#/definitions/binaryAnswer"
+            }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
+        },
+        "financialRiskB": {
+          "type": "object",
+          "properties": {
+            "workerProvideConsumablesMaterials": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayExpense": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerNeedEquipment": {
@@ -114,30 +146,60 @@
             "workerProvideEquipment": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerProvideConsumablesMaterials": {
+            "workerPaidInclusive": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayForConsumablesMaterials": {
+            "provideVehicle": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerIncurExpense": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
             "workerMainIncome": {
               "type": "string",
               "enum": [
-                "regular",
-                "pieceRate",
-                "commisionOnly",
-                "commisionAndBasicSalary",
-                "fixedPrice",
-                "shareProfitLoss",
-                "shareProfitOnly",
-                "invoicedHourlyOrDaily"
+                "incomeCalendarPeriods",
+                "incomePieceRate",
+                "incomeCommission",
+                "incomeFixed",
+                "incomeProfitOrLosses",
+                "incomeRateByInvoice"
               ]
+            },
+            "WorkerSufferedLatePayment": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerProvideAtTheirExpense": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerFixAtTheirOwnTime": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerPayForMaterialsSubstandardWorker": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "paidForSubstandardWork": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "actualEngagerWithholdPayment": {
+              "$ref": "#/definitions/binaryAnswer"
+            }
+          }
+        },
+        "partAndParcel": {
+          "type": "object",
+          "properties": {
+            "workerReceivesBenefits": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerAsLineManager": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "contactWithEngagerCustomer": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "workerRepresentsEngagerBusiness": {
+              "$ref": "#/definitions/binaryAnswer"
             }
           },
           "minProperties": 0,
@@ -146,6 +208,9 @@
         "businessStructure": {
           "type": "object",
           "properties": {
+            "similarWork": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
             "workerVAT": {
               "$ref": "#/definitions/binaryAnswer"
             },
@@ -165,35 +230,6 @@
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerPaysForInsurance": {
-              "$ref": "#/definitions/binaryAnswer"
-            }
-          },
-          "minProperties": 0,
-          "additionalProperties": false
-        },
-        "partOfOrganisation": {
-          "type": "object",
-          "properties": {
-            "workerReceivesBenefits": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerAsLineManager": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "contactWithEngagerCustomer": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerRepresentsEngagerBusiness": {
-              "$ref": "#/definitions/binaryAnswer"
-            }
-          },
-          "minProperties": 0,
-          "additionalProperties": false
-        },
-        "miscellaneous": {
-          "type": "object",
-          "properties": {
-            "similarWork": {
               "$ref": "#/definitions/binaryAnswer"
             }
           },

@@ -23,7 +23,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory
 
 import scala.io.Source
 
-trait JsonValidator {
+trait JsonValidatorTrait {
   val schemaPath:String
 
   object SuccessfulReport {
@@ -54,6 +54,11 @@ trait JsonValidator {
   }
 }
 
-object JsonValidator extends JsonValidator {
-  val schemaPath = "/schema/off-payroll-request-schema.json"
+
+class JsonValidator(_schemaPath: String) extends JsonValidatorTrait {
+  val schemaPath: String = _schemaPath
+}
+
+object JsonValidator extends JsonValidatorTrait {
+  val schemaPath: String = "/schema/off-payroll-request-schema.json"
 }
