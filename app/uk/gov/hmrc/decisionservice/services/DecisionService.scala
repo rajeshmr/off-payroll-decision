@@ -66,6 +66,7 @@ trait DecisionService {
 object DecisionServiceInstance extends DecisionService {
   lazy override val extraRules = List(SectionRuleSet("business_structure",
     List(
+      "similarWork",
       "workerVAT",
       "businesAccount",
       "advertiseForWork",
@@ -73,7 +74,7 @@ object DecisionServiceInstance extends DecisionService {
       "workerPayForTraining",
       "workerExpenseRunningBusinessPremises",
       "workerPaysForInsurance"),
-    List(SectionRule(List(), EmptyCarryOver, countYes, countYesFactValid))))
+    List(SectionRule(List(), EmptyCarryOver, customCountYes, countYesFactValid))))
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
     (13, "/tables/control.csv", "control"),
