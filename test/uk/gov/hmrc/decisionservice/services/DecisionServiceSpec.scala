@@ -28,6 +28,7 @@ class DecisionServiceSpec extends UnitSpec {
     lazy val maybeSectionRules = loadSectionRules()
     lazy override val extraRules = List(SectionRuleSet("business_structure",
       List(
+        "similarWork",
         "workerVAT",
         "businesAccount",
         "advertiseForWork",
@@ -35,7 +36,7 @@ class DecisionServiceSpec extends UnitSpec {
         "workerPayForTraining",
         "workerExpenseRunningBusinessPremises",
         "workerPaysForInsurance"),
-      List(SectionRule(List(), EmptyCarryOver, countYes, countYesFactValid))))
+      List(SectionRule(List(), EmptyCarryOver, customCountYes, countYesFactValid))))
     val csvSectionMetadata = List(
       (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
       (3, "/decisionservicespec/matrix.csv", "Matrix")
@@ -123,7 +124,34 @@ class DecisionServiceSpec extends UnitSpec {
       maybeDecision.map { decision =>
         decision.value shouldBe "inIR35"
       }
-      Thread.sleep(2000)
+    }
+    "produce correct decision for a special custom fact 3" in {
+      val facts =
+      Facts(Map(
+        "similarWork" -> >>>("10+"),
+        "workerVAT" -> >>>("yes"),
+        "businesAccount" -> >>>("yes"),
+        "advertiseForWork" -> >>>("yes"),
+        "businessWebsite" -> >>>("no"),
+        "workerPayForTraining" -> >>>("no"),
+        "workerExpenseRunningBusinessPremises" -> >>>("no"),
+        "workerPaysForInsurance" -> >>>("yes"),
+        "2" -> >>>("yes"),
+        "3" -> >>>("yes" ),
+        "4" -> >>>("yes"),
+        "5" -> >>>("no"),
+        "6" -> >>>("no"),
+        "7" -> >>>("no" ),
+        "8" -> >>>("no"),
+        "9" -> >>>("no"),
+        "10" -> >>>("no"))
+      )
+
+      val maybeDecision = facts ==>: DecisionServiceTestInstance
+      maybeDecision.isValid shouldBe true
+      maybeDecision.map { decision =>
+        decision.value shouldBe "inIR35"
+      }
     }
   }
 }

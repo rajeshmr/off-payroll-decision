@@ -28,19 +28,19 @@ object MatchingFunctions {
       case _ => None
     }
   }
-
-  def countYes(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
-    factValues match {
+  def customCountYes(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
+    val result = factValues match {
       case Nil => None
-      case xs =>
-        val count = xs.filter(_.value.toLowerCase == "yes").size
-        val result = count match {
-          case n if n <= 1 => >>>("low")
-          case n if n >= 2 && n <= 3 => >>>("medium")
-          case _ => >>>("high")
-        }
-        Logger.debug(s"number of yes's is ${count}, pseudo-match result is: ${result.value}")
-        Some(result)
+      case x::xs => x.value match {
+        case "0-3" => Some(>>>("low"))
+        case "10+" => Some(>>>("high"))
+        case _ =>
+          val count = xs.count(_.value.toLowerCase == "yes")
+          Some(>>>(if (count < 2) "low" else if (count < 4) "medium" else "high"))
+      }
     }
+    Logger.debug(s"pseudo-match result is: ${result.getOrElse("none")}")
+    result
   }
 }
+
