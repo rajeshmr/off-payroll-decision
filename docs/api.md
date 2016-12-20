@@ -31,10 +31,10 @@ Requests use the HTTP `POST` method
 | interview       | true               | A set of questions and answers grouped in clusters used to conduct the Interview |
 | personalService | false               | cluster |
 | control           | false             | cluster |
-| financialRisk   | false               | cluster |
+| financialRiskA   | false               | cluster |
+| financialRiskB   | false               | cluster |
+| partAndParcel   | false               | cluster |
 | businesStructure| false               | cluster |
-| partOfOrganisation| false             | cluster |
-| miscellaneous| false                  | cluster |
 
  _Note:_ The __Interview__ does not need to contain all the clusters. Within each cluster there are a number of __ClusterElements__ a ClusterElement represents a Question with an answer. For a complete list of  __ClusterElements__ refer to the [JSON Schema](../test/resources/schema/off-payroll-request-schema.json) Once all the __Clusters__ are present in this __Interview__ then a __Decision__ response will be present. Depending on how the __Interview__ has been formed a __Decision__ may be arrived at before all __Clusters__ and __ClusterElements__ are present, this is known as a __Hard Exit__
 
@@ -52,7 +52,6 @@ Requests use the HTTP `POST` method
 | version              | true               | The version of the Interview sent in the request and therefore applied to this Response                      |
 | correlationID        | true               | Unique number to identify this Interview and correlate it to its  decision |
 | result               | true               | An enumeration of "Outside IR35" &#124; "Inside IR35" &#124; "Unknown"|
-| carryOnWithQuestions | true               | true if the input Interview that created this Decision is incomplete <br /> or false if a Interview has been completed and the Decision is therefore final|
 | score                | true               | A map of scores fully populated only when attribute "carryOnWithQuestions" is false and therefore a Decision is final |
 
 
