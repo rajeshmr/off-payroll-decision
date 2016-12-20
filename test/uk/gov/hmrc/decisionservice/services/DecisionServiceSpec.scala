@@ -17,14 +17,16 @@
 package uk.gov.hmrc.decisionservice.services
 
 import uk.gov.hmrc.decisionservice.model.rules._
+import uk.gov.hmrc.decisionservice.ruleengine.FactValidatingFunctions._
 import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.decisionservice.ruleengine.MatchingFunctions._
 
 class DecisionServiceSpec extends UnitSpec {
 
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
-    lazy override val maybeExtraRule = Some(SectionRuleSet("business_structure",
+    lazy override val extraRules = List(SectionRuleSet("business_structure",
       List(
         "workerVAT",
         "businesAccount",
@@ -33,9 +35,8 @@ class DecisionServiceSpec extends UnitSpec {
         "workerPayForTraining",
         "workerExpenseRunningBusinessPremises",
         "workerPaysForInsurance"),
-      List(SectionRule(List(>>>("0"),>>>("1"),>>>("2"),>>>("3"),>>>("4"),>>>("5"),>>>("6")), EmptyCarryOver, SectionRule.countOnes))))
+      List(SectionRule(List(), EmptyCarryOver, countYes, countYesFactValid))))
     val csvSectionMetadata = List(
-//      (8, "/tables/business_structure.csv", "BusinessStructure"),
       (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
       (3, "/decisionservicespec/matrix.csv", "Matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
@@ -64,7 +65,6 @@ class DecisionServiceSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
-      println(maybeDecision)
       maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "outofIR35"
@@ -92,7 +92,6 @@ class DecisionServiceSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
-      println(maybeDecision)
       maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "outofIR35"
@@ -120,7 +119,6 @@ class DecisionServiceSpec extends UnitSpec {
       )
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
-      println(maybeDecision)
       maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
         decision.value shouldBe "inIR35"
