@@ -32,10 +32,14 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication {
 
   val PERSONAL_SERVICE_SCENARIO_0 = "/test-scenarios/single/scenario_earlyexit_outofir35.csv"
   val PERSONAL_SERVICE_SCENARIO_1 = "/test-scenarios/single/personal-service/scenario_1.csv"
+  val PERSONAL_SERVICE_SCENARIO_2 = "/test-scenarios/single/personal-service/scenario_2.csv"
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for personal service scenario 1" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_1)
+    }
+    "return 200 and correct response with the expected decision for personal service scenario 2" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_2)
     }
   }
 
@@ -58,7 +62,14 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication {
     correlationID should have size 1
     val result = response \\ "result"
     result should have size 1
-    result(0).as[String] shouldBe expectedResult
+    val r = result(0).as[String]
+    if (r == "Undecided"){
+      val personalServiceScore = response \\ "personal_service"
+      personalServiceScore shouldBe "high"
+    }
+    else {
+      result(0).as[String] shouldBe expectedResult
+    }
   }
 
   def toJsonWithValidation(request:DecisionRequest):JsValue = {
