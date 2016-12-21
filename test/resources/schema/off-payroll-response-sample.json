@@ -1,10 +1,13 @@
 {
-  "version": "0.0.2-alpha",
+  "version": "1.0.0-beta",
   "correlationID": "12345",
-  "carryOnWithQuestions": true,
   "score": {
     "personalService": "HIGH",
-    "miscellaneous": "LOW"
+    "control": "LOW",
+    "financialRiskA": "LOW",
+    "financialRiskB": "LOW",
+    "partAndParcel": "LOW",
+    "businessStructure": "LOW"
   },
   "result": "Unknown"
 }

@@ -1,4 +1,4 @@
-.DS_Store
+**/.DS_Store
 logs
 project/project
 project/target
@@ -17,4 +17,4 @@ dist
 /RUNNING_PID
 /.settings
 *.iws
-docs/output.json
+**/output.json
