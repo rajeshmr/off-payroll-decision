@@ -1,0 +1,9 @@
+personalService,   contractualObligationForSubstitute            ,      No
+personalService,   contractualRightForSubstitute                 ,      Yes
+personalService,   contractualRightReflectInPractise             ,      Yes
+personalService,   engagerArrangeIfWorkerIsUnwillingOrUnable     ,      No
+personalService,   possibleSubstituteRejection                   ,      Yes
+personalService,   contractTermsWorkerPaysSubstitute             ,      Yes
+personalService,   workerSentActualSubstitute                    ,      Yes
+personalService,   actualSubstituteRejection                     ,      No
+Outside IR35
