@@ -78,11 +78,11 @@ object DecisionServiceInstance extends DecisionService {
   lazy override val extraRules = List(businessStructureRule)
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
-    (13, "/tables/control.csv", "control"),
-    (24, "/tables/financial_risk.csv", "financial_risk"),
-    (5,  "/tables/part_of_organisation.csv", "part_of_organisation"),
-    (1,  "/tables/misc.csv", "miscellaneous"),
+    (5, "/tables/control.csv", "control"),
+    (7,  "/tables/financial_risk_a.csv", "financial_risk_a"),
+    (13, "/tables/financial_risk_b.csv", "financial_risk_b"),
+    (4,  "/tables/part_and_parcel.csv", "part_and_parcel"),
     (14, "/tables/personal_service.csv", "personal_service"),
-    (6,  "/tables/matrix_of_matrices.csv", "matrix")
+    (5,  "/tables/matrix_of_matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }
