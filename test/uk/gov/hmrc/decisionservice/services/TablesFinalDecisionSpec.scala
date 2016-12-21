@@ -23,18 +23,6 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class TablesFinalDecisionSpec extends UnitSpec {
 
-  object DecisionServiceTestInstance extends DecisionService {
-    lazy val maybeSectionRules = loadSectionRules()
-    val csvSectionMetadata = List(
-      (13, "/tables/control.csv", "control"),
-      (24, "/tables/financial_risk.csv", "financial_risk"),
-      (5,  "/tables/part_of_organisation.csv", "part_of_organisation"),
-      (1,  "/tables/misc.csv", "miscellaneous"),
-      (13, "/tables/personal_service.csv", "personal_service"),
-      (6,  "/tables/matrix_of_matrices.csv", "matrix")
-    ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
-  }
-
   "decision service" should {
     "produce correct decision for control and financial risk" in {
       val facts =
@@ -56,7 +44,7 @@ class TablesFinalDecisionSpec extends UnitSpec {
           "workerReceivesBenefits" -> >>>("yes")
         ) ++
         Map(
-          "contractrualObligationForSubstitute" -> >>>("yes"),
+          "contractualObligationForSubstitute" -> >>>("yes"),
           "contractualObligationInPractise" -> >>>("yes"),
           "contractTermsWorkerPaysSubstitute" -> >>>("yes")
         ) ++

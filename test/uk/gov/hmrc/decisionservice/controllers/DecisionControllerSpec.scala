@@ -27,7 +27,7 @@ import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.FactError
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
-import uk.gov.hmrc.decisionservice.ruleengine.{RuleEngineDecision, RulesFileMetaData}
+import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -39,18 +39,10 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   private val CORRELATION_ID: String = "12345"
   private val BAD_REQUEST_JSON: String = """{}"""
   private val TEST_ERROR_CODE: Int = 15
-  private lazy val testCsvSectionMetadata = List(
-    (13, "/tables/control.csv", "control"),
-    (24, "/tables/financial_risk.csv", "financial_risk"),
-    (5,  "/tables/part_of_organisation.csv", "part_of_organisation"),
-    (1,  "/tables/misc.csv", "miscellaneous"),
-    (13, "/tables/personal_service.csv", "personal_service"),
-    (6,  "/tables/matrix_of_matrices.csv", "matrix")
-  ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 
   object ErrorGeneratingDecisionService extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
-    lazy val csvSectionMetadata = testCsvSectionMetadata
+    lazy val csvSectionMetadata = DecisionServiceTestInstance.csvSectionMetadata
     override def ==>:(facts: Facts): Validation[RuleEngineDecision] = {
       Validated.invalid(List(FactError(TEST_ERROR_CODE, "fact error")))
     }
@@ -66,7 +58,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   val interview = Map(
     "personalService" -> Map(
-      "contractrualObligationForSubstitute" -> "Yes",
+      "contractualObligationForSubstitute" -> "Yes",
       "contractualObligationInPractise" -> "Yes",
       "contractTermsWorkerPaysSubstitute" -> "Yes"
     ))
