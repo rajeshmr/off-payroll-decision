@@ -30,16 +30,24 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication {
   implicit val materializer = ActorMaterializer()
   val decisionController = DecisionController
 
-  val PERSONAL_SERVICE_SCENARIO_0 = "/test-scenarios/single/scenario_earlyexit_outofir35.csv"
+  val CLUSTER_NAME = "personal_service"
+  val PERSONAL_SERVICE_SCENARIO_0 = "/test-scenarios/single/personal-service/scenario_0.csv"
   val PERSONAL_SERVICE_SCENARIO_1 = "/test-scenarios/single/personal-service/scenario_1.csv"
   val PERSONAL_SERVICE_SCENARIO_2 = "/test-scenarios/single/personal-service/scenario_2.csv"
+  val PERSONAL_SERVICE_SCENARIO_3 = "/test-scenarios/single/personal-service/scenario_3.csv"
 
   "POST /decide" should {
+    "return 200 and correct response with the expected decision for personal service scenario 0" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0)
+    }
     "return 200 and correct response with the expected decision for personal service scenario 1" in {
       createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_1)
     }
     "return 200 and correct response with the expected decision for personal service scenario 2" in {
       createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_2)
+    }
+    "return 200 and correct response with the expected decision for personal service scenario 3" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_3)
     }
   }
 
@@ -52,23 +60,25 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication {
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.OK
     val response = jsonBodyOf(await(result))
-    verifyResponse(response, testCase.expectedDecision)
+    verifyResponse(response, testCase.expectedDecision, CLUSTER_NAME)
   }
 
-  def verifyResponse(response: JsValue, expectedResult:String): Unit = {
+  def verifyResponse(response: JsValue, expectedResult:String, clusterName:String): Unit = {
     val version = response \\ "version"
     version should have size 1
     val correlationID = response \\ "correlationID"
     correlationID should have size 1
     val result = response \\ "result"
     result should have size 1
-    val r = result(0).as[String]
-    if (r == "Undecided"){
-      val personalServiceScore = response \\ "personal_service"
-      personalServiceScore shouldBe "high"
+    val resultString = result(0).as[String]
+    if (resultString == "Unknown"){
+      val clusterScore = response \\ clusterName
+      clusterScore should have size 1
+      val clusterScoreString = clusterScore(0).as[String].toLowerCase
+      clusterScoreString shouldBe expectedResult.toLowerCase
     }
     else {
-      result(0).as[String] shouldBe expectedResult
+      resultString shouldBe expectedResult
     }
   }
 
