@@ -56,8 +56,8 @@ object ScenarioReader {
       ScenarioRequestTestCase(expectedDecision, DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview))
     }
     tokenize(path).map { tokens =>
-      val clusterNames = tokens.collect { case a if a.size > 1 => a(0) }
-      val tagNames = tokens.collect { case a if a.size > 1 => a(1) }
+      val clusterNames = tokens.collect { case a if a.size > 2 => a(0) }
+      val tagNames = tokens.collect { case a if a.size > 2 => a(1) }
       val answers = tokens.collect { case a if a.size > 2 => a(2) }
       val expectedDecision = tokens.last.last
       create(clusterNames, tagNames, answers, expectedDecision)
