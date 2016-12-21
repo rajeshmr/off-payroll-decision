@@ -1,18 +1,6 @@
-#personalService     ,   contractrualObligationForSubstitute  , 	yes
-#personalService     ,   contractualRightForSubstitute        , 	yes
-#personalService     ,   engagerArrangeWorker                 ,  yes
-#personalService     ,   possibleSubstituteRejection          ,  yes
-#personalService     ,   contractTermsWorkerPaysSubstitute    , 	yes
-#personalService     ,   workerSentActualSubstitiute          ,  yes
-#personalService     ,   possibleHelper                       , 	yes
-#personalService     ,   workerSentActualHelper               ,  yes
-#personalService     ,   workerPayActualHelper                , 	yes
-#OutOfIR35
-#
-#
-personalService     ,   contractrualObligationForSubstitute     , 	yes
-personalService     ,   contractualObligationInPractise         , 	yes
-personalService     ,   contractTermsWorkerPaysSubstitute       ,   yes
+personalService     ,   contractualObligationForSubstitute      , 	Yes
+personalService     ,   contractualObligationInPractise         , 	Yes
+personalService     ,   contractTermsWorkerPaysSubstitute       ,   Yes
 Outside IR35
 
 
