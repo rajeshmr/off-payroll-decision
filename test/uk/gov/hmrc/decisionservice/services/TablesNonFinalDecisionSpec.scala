@@ -25,8 +25,7 @@ class TablesNonFinalDecisionSpec extends UnitSpec {
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (13, "/tables/control.csv", "Control"),
-      (24, "/tables/financial_risk.csv", "FinancialRisk")
+      (5, "/tables/control.csv", "Control")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
@@ -35,26 +34,20 @@ class TablesNonFinalDecisionSpec extends UnitSpec {
       val facts =
       Facts(
         Map(
-          "whenWorkHasToBeDone.workingPatternAgreed" -> >>>("yes"),
-          "whenWorkHasToBeDone.noDefinedWorkingPattern" -> >>>("no"),
-          "workerLevelOfExpertise.notToldByEnagagerHowToWork" -> >>>("no"),
-          "workerLevelOfExpertise.couldBeToldByEngagerHowToWork" -> >>>("no"),
-          "whenWorkHasToBeDone.workingPatternStipulated" -> >>>("no"),
-          "workerDecideWhere.cannotFixWorkerLocation" -> >>>("no"),
-          "workerDecideWhere.workerDecideWhere" -> >>>("no"),
-          "whenWorkHasToBeDone.workinPatternAgreedDeadlines" -> >>>("no")) ++
-        Map(
-          "workerMainIncome.incomeFixed" -> >>>("yes")
-        )
-      )
+          "toldWhatToDo" -> >>>("yes"),
+          "engagerMovingWorker" -> >>>("no"),
+          "workerDecidingHowWorkIsDone" -> >>>("workingSetInstructions"),
+          "whenWorkHasToBeDone" -> >>>("workingPatternAgreed"),
+          "workerDecideWhere" -> >>>("cannotFixWorkerLocation")
+      ))
 
       val maybeDecision = facts ==>: DecisionServiceTestInstance
       maybeDecision.isValid shouldBe true
       maybeDecision.map { decision =>
-        val maybeCarryOver = decision.facts.get("FinancialRisk")
+        val maybeCarryOver = decision.facts.get("Control")
         maybeCarryOver.isDefined shouldBe true
         maybeCarryOver.map { carryOver =>
-          carryOver.value shouldBe "high"
+          carryOver.value shouldBe "OutOfIR35"
         }
       }
     }
