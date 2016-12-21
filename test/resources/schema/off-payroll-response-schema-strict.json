@@ -1,11 +1,21 @@
 {
+  "id": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-response-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "This schema defines the output message for the off-payroll-decision its root object is a Decision",
+  "description": "Decision Response Version 1.0.0-beta",
+  "definitions": {
+    "weightedAnswer": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "LOW"
+      ]
+    }
+  },
   "type": "object",
   "properties": {
     "version": {
       "type": "string",
-      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]$"
+      "pattern": "^[0-9]{1,2}[.][0-9]{1,2}[.][0-9]{1,2}-?[a-zA-Z-_]*$"
     },
     "correlationID": {
       "type": "string"
@@ -20,65 +30,43 @@
         "Unknown"
       ]
     },
-    "carryOnWithQuestions": {
-      "type": "boolean"
-    },
     "score": {
       "type": "object",
       "properties": {
         "personalService": {
-          "type": "string",
-          "enum": [
-            "HIGH",
-            "LOW"
-          ]
+          "$ref": "#/definitions/weightedAnswer"
         },
         "control": {
-          "type": "string",
-          "enum": [
-            "HIGH",
-            "LOW"
-          ]
+          "$ref": "#/definitions/weightedAnswer"
         },
-        "financialRisk": {
-          "type": "string",
-          "enum": [
-            "HIGH",
-            "LOW"
-          ]
+        "financialRiskA": {
+          "$ref": "#/definitions/weightedAnswer"
+        },
+        "financialRiskB": {
+          "$ref": "#/definitions/weightedAnswer"
+        },
+        "partAndParcel": {
+          "$ref": "#/definitions/weightedAnswer"
         },
         "businessStructure": {
-          "type": "string",
-          "enum": [
-            "HIGH",
-            "LOW"
-          ]
-        },
-        "partOfOrganisation": {
-          "type": "string",
-          "enum": [
-            "HIGH",
-            "LOW"
-          ]
-        },
-        "miscellaneous": {
-          "type": "string",
-          "enum": [
-            "HIGH",
-            "LOW"
-          ]
+          "$ref": "#/definitions/weightedAnswer"
         }
       },
-      "minProperties": 6,
-      "addtionalProperties": false
+      "addtionalProperties": false,
+      "required": [
+        "personalService",
+        "control",
+        "financialRiskA",
+        "financialRiskB",
+        "partAndParcel",
+        "businessStructure"
+      ]
     }
   },
   "required": [
     "version",
     "correlationID",
-    "carryOnWithQuestions",
     "score"
   ],
-  "minProperties": 4,
   "addtionalProperties": false
 }
