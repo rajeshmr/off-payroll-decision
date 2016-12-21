@@ -1,5 +1,5 @@
 {
-  "id": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-request-schema.json",
+  "publicId": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-request-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
   "description": "Decision Request Version 1.0.0-beta",
   "definitions": {
@@ -32,7 +32,7 @@
             "contractualObligationInPractise": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "contractrualRightForSubstitute": {
+            "contractualRightForSubstitute": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "actualRightToSendSubstitute": {
@@ -76,7 +76,12 @@
           "type": "object",
           "properties": {
             "toldWhatToDo": {
-              "$ref": "#/definitions/binaryAnswer"
+              "type": "string",
+              "enum": [
+                "Yes",
+                "No",
+                "Sometimes"
+              ]
             },
             "engagerMovingWorker": {
               "$ref": "#/definitions/binaryAnswer"

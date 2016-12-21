@@ -27,16 +27,28 @@ class JsonSchemaSpec extends UnitSpec {
   val tryJson = FileReader.read(FULL_EXAMPLE_REQUEST_JSON_PATH)
 
   " A Json Schema" should {
-    "validate correctly full example request json" in {
+    "validate correctly full example request json should validate with the loose schema" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = tryJson.get
       val validationResult = JsonRequestValidator.validate(requestJsonString)
       printValidationResult(validationResult)
       validationResult.isRight shouldBe true
+
     }
   }
+
+  it should {
+    "validate a request with the Strict Schema" in {
+      tryJson.isSuccess shouldBe true
+      val requestJsonString = tryJson.get
+      val validationResult = JsonRequestStrictValidator.validate(requestJsonString)
+      printValidationResult(validationResult)
+      validationResult.isRight shouldBe true
+    }
+  }
+
     it should {
-      "validate a full response" in {
+      "validate a full response with the loos schema " in {
         tryJson.isSuccess shouldBe true
         val requestJsonString = FileReader.read(FULL_RESPONSE).get
         val validationResult = JsonResponseValidator
@@ -45,6 +57,17 @@ class JsonSchemaSpec extends UnitSpec {
         validationResult.isRight shouldBe true
       }
     }
+
+  it should {
+    "validate a full response with the Strict Schema" in {
+      tryJson.isSuccess shouldBe true
+      val requestJsonString = FileReader.read(FULL_RESPONSE).get
+      val validationResult = JsonResponseStrictValidator
+        .validate(requestJsonString)
+      printValidationResult(validationResult)
+      validationResult.isRight shouldBe true
+    }
+  }
 
     it should {
       "validate request created from a flattened test case" in {
