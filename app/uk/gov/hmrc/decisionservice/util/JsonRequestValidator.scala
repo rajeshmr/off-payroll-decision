@@ -55,10 +55,10 @@ trait JsonValidatorTrait {
 }
 
 
-class JsonValidator(_schemaPath: String) extends JsonValidatorTrait {
-  val schemaPath: String = _schemaPath
+object JsonResponseValidator extends JsonValidatorTrait {
+  val schemaPath: String = "/schema/off-payroll-response-schema.json"
 }
 
-object JsonValidator extends JsonValidatorTrait {
+object JsonRequestValidator extends JsonValidatorTrait {
   val schemaPath: String = "/schema/off-payroll-request-schema.json"
 }

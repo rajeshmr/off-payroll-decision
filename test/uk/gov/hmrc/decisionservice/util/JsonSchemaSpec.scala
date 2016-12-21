@@ -30,7 +30,7 @@ class JsonSchemaSpec extends UnitSpec {
     "validate correctly full example request json" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = tryJson.get
-      val validationResult = JsonValidator.validate(requestJsonString)
+      val validationResult = JsonRequestValidator.validate(requestJsonString)
       printValidationResult(validationResult)
       validationResult.isRight shouldBe true
     }
@@ -39,7 +39,7 @@ class JsonSchemaSpec extends UnitSpec {
       "validate a full response" in {
         tryJson.isSuccess shouldBe true
         val requestJsonString = FileReader.read(FULL_RESPONSE).get
-        val validationResult = new JsonValidator("/schema/off-payroll-response-schema.json")
+        val validationResult = JsonResponseValidator
           .validate(requestJsonString)
         printValidationResult(validationResult)
         validationResult.isRight shouldBe true
@@ -54,7 +54,7 @@ class JsonSchemaSpec extends UnitSpec {
         val request = testCase.request
         val requestJson = Json.toJson(request)
         val requestJsonString = Json.prettyPrint(requestJson)
-        val validationResult = JsonValidator.validate(requestJsonString)
+        val validationResult = JsonRequestValidator.validate(requestJsonString)
         printValidationResult(validationResult)
         validationResult.isRight shouldBe true
       }
@@ -63,7 +63,7 @@ class JsonSchemaSpec extends UnitSpec {
 
   private def printValidationResult(result: Xor[String, Unit]) = {
     result.leftMap { report => {
-      println(report)
+      info(report)
     }
     }
   }

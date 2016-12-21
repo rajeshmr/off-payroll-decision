@@ -17,7 +17,7 @@
 package uk.gov.hmrc.decisionservice
 
 import cats.data.Xor
-import uk.gov.hmrc.decisionservice.util.JsonValidator.validate
+import uk.gov.hmrc.decisionservice.util.JsonRequestValidator.validate
 import uk.gov.hmrc.play.test.UnitSpec
 
 
@@ -287,7 +287,7 @@ class JsonValidatorSpec extends UnitSpec {
     val result = validate(s)
     result.isRight shouldBe false
     result.leftMap { report => {
-      println(report)
+      info(report)
       report.contains(expectedText) shouldBe true
     }
     }

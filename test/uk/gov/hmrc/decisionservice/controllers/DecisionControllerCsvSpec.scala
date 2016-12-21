@@ -22,7 +22,7 @@ import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
-import uk.gov.hmrc.decisionservice.util.{JsonValidator, ScenarioReader}
+import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, ScenarioReader}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
@@ -67,7 +67,7 @@ class DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   def toJsonWithValidation(request:DecisionRequest):JsValue = {
     val requestJson = Json.toJson(request)
 //    val requestJsonString = Json.prettyPrint(requestJson)
-//    val validationResult = JsonValidator.validate(requestJsonString)
+//    val validationResult = JsonRequestValidator.validate(requestJsonString)
 //    validationResult.isRight shouldBe true
     requestJson
   }
