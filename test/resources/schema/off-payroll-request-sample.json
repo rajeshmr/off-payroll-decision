@@ -5,7 +5,7 @@
     "personalService": {
       "contractualObligationForSubstitute": "No",
       "contractualObligationInPractise": "Yes",
-      "contractrualRightForSubstitute": "Yes",
+      "contractualRightForSubstitute": "Yes",
       "actualRightToSendSubstitute": "Yes",
       "contractualRightReflectInPractise": "No",
       "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
@@ -19,7 +19,7 @@
       "workerPayActualHelper": "Yes"
     },
     "control": {
-      "toldWhatToDo": "No",
+      "toldWhatToDo": "Sometimes",
       "engagerMovingWorker": "Yes",
       "workerDecidingHowWorkIsDone": "No",
       "whenWorkHasToBeDone": "workingPatternStipulated",
