@@ -59,6 +59,14 @@ object JsonResponseValidator extends JsonValidatorTrait {
   val schemaPath: String = "/schema/off-payroll-response-schema.json"
 }
 
+object JsonResponseStrictValidator extends JsonValidatorTrait {
+  val schemaPath: String = "/schema/off-payroll-response-schema-strict.json"
+}
+
 object JsonRequestValidator extends JsonValidatorTrait {
   val schemaPath: String = "/schema/off-payroll-request-schema.json"
+}
+
+object JsonRequestStrictValidator extends JsonValidatorTrait {
+  val schemaPath: String = "/schema/off-payroll-request-schema-strict.json"
 }
