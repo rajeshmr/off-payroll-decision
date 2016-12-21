@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice
+package uk.gov.hmrc.decisionservice.util
 
 import cats.data.Xor
 import uk.gov.hmrc.decisionservice.util.JsonRequestValidator.validate
 import uk.gov.hmrc.play.test.UnitSpec
 
 
-class JsonValidatorSpec extends UnitSpec {
+class JsonRequestValidatorSpec extends UnitSpec {
 
   val valid_twoSections = """
    |{
@@ -31,7 +31,7 @@ class JsonValidatorSpec extends UnitSpec {
    |    "personalService": {
    |      "contractualObligationForSubstitute": "No",
    |      "contractualObligationInPractise": "Yes",
-   |      "contractrualRightForSubstitute": "Yes",
+   |      "contractualRightForSubstitute": "Yes",
    |      "actualRightToSendSubstitute": "Yes",
    |      "contractualRightReflectInPractise": "No",
    |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
@@ -45,7 +45,7 @@ class JsonValidatorSpec extends UnitSpec {
    |      "workerPayActualHelper": "Yes"
    |    },
    |    "control": {
-   |      "toldWhatToDo": "No",
+   |      "toldWhatToDo": "Yes",
    |      "engagerMovingWorker": "Yes",
    |      "workerDecidingHowWorkIsDone": "No",
    |      "whenWorkHasToBeDone": "workingPatternStipulated",
@@ -111,7 +111,7 @@ class JsonValidatorSpec extends UnitSpec {
  |    "personalService": {
  |      "contractualObligationForSubstitute": "No",
  |      "contractualObligationInPractise": true,
- |      "contractrualRightForSubstitute": "Yes",
+ |      "contractualRightForSubstitute": "Yes",
  |      "actualRightToSendSubstitute": "Yes",
  |      "contractualRightReflectInPractise": "No",
  |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
@@ -135,7 +135,7 @@ class JsonValidatorSpec extends UnitSpec {
  |    "personalService": {
  |      "contractualObligationForSubstitute": "No",
  |      "contractualObligationInPractise": "Yes",
- |      "contractrualRightForSubstitute": "Yes",
+ |      "contractualRightForSubstitute": "Yes",
  |      "actualRightToSendSubstitute": "Yes",
  |      "contractualRightReflectInPractise": "No",
  |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
@@ -166,7 +166,7 @@ class JsonValidatorSpec extends UnitSpec {
  |    "personalService": {
  |      "contractualObligationForSubstitute": "No",
  |      "contractualObligationInPractise": "Yes",
- |      "contractrualRightForSubstitute": "Yes",
+ |      "contractualRightForSubstitute": "Yes",
  |      "actualRightToSendSubstitute": "Yes",
  |      "contractualRightReflectInPractise": "No",
  |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
@@ -208,11 +208,19 @@ class JsonValidatorSpec extends UnitSpec {
   "json validator" should {
 
     "return true for valid json" in {
-      validate(valid_twoSections).isRight shouldBe true
+
+      validateWithInfo(valid_twoSections, JsonRequestValidator) shouldBe true
+
     }
 
+    "validate a full request when using the strict validator " in {
+
+      validateWithInfo(valid_twoSections, JsonRequestStrictValidator) shouldBe false
+    }
+
+
     "return true for valid json - no answers" in {
-      validate(valid_noAnswers).isRight shouldBe true
+      validateWithInfo(valid_noAnswers, JsonRequestValidator) shouldBe true
     }
 
     "return false for invalid json - InvalidAnswerValue" in {
@@ -238,7 +246,7 @@ class JsonValidatorSpec extends UnitSpec {
              "correlationID": "ut",
              "interview" : {}
         }"""
-      validate(valid_emptyInterview).isRight shouldBe true
+      validateWithInfo(valid_emptyInterview, JsonRequestValidator) shouldBe true
     }
 
     "return false for invalid json - invalidFormatVersionId - should be string" in {
@@ -268,7 +276,7 @@ class JsonValidatorSpec extends UnitSpec {
         "correlationID": "ut",
         "interview" : {}
       }"""
-      validate(valid_versionId).isRight shouldBe true
+      validateWithInfo(valid_versionId, JsonRequestValidator) shouldBe true
     }
 
     "return false for invalid json - enum value is not valid" in {
@@ -279,6 +287,15 @@ class JsonValidatorSpec extends UnitSpec {
       verify(invalid_invalidEnum2, "instance value (\"allDayEveryDay\") not found in enum")
     }
 
+  }
+
+  private def validateWithInfo(json: String, validator: JsonValidatorTrait) = {
+
+    val result = validator.validate(json)
+    if (result.isLeft){
+      result.leftMap( r => info(r))
+    }
+    result.isRight
   }
 
   val verify = verifyError(validate) _
