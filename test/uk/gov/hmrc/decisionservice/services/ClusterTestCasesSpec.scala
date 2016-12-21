@@ -26,8 +26,8 @@ class ClusterTestCasesSpec extends UnitSpec {
     ScenarioTestCase("/test-scenarios/part_of_organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
     ScenarioTestCase("/test-scenarios/financial_risk.csv", "financial_risk","/tables/financial_risk.csv",24),
     ScenarioTestCase("/test-scenarios/control-onlyPassingCases.csv", "control","/tables/control.csv",13),
-    ScenarioTestCase("/test-scenarios/misc.csv", "miscellaneous","/tables/misc.csv",1),
-    ScenarioTestCase("/test-scenarios/business_structure.csv", "business_structure","/tables/business_structure.csv",7))
+    ScenarioTestCase("/test-scenarios/misc.csv", "miscellaneous","/tables/misc.csv",1))
+//    ScenarioTestCase("/test-scenarios/business_structure.csv", "business_structure","/tables/business_structure.csv",7))
 //    ClusterTestCaseFileMetaData("/test-scenarios/personal_service.csv", "personal_service","/tables/personal_service.csv",13)) - has failures
 
   "test case reader " should {

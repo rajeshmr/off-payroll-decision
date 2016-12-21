@@ -17,9 +17,11 @@
 package uk.gov.hmrc.decisionservice.services
 
 import uk.gov.hmrc.decisionservice.model.api.Score
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts, NotValidUseCase}
+import uk.gov.hmrc.decisionservice.model.rules.{EmptyCarryOver, _}
+import uk.gov.hmrc.decisionservice.ruleengine.FactValidatingFunctions._
+import uk.gov.hmrc.decisionservice.ruleengine.MatchingFunctions._
+import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
 import uk.gov.hmrc.play.test.UnitSpec
-
 
 class ComplianceTestCasesSpec extends UnitSpec {
   val testCases = Map(
@@ -45,14 +47,14 @@ class ComplianceTestCasesSpec extends UnitSpec {
       val maybeFacts = testCases.get(USE_CASE_NAME)
       maybeFacts.isDefined shouldBe true
       maybeFacts.map { facts =>
-        val maybeDecision = facts ==>: DecisionServiceInstance
+        val maybeDecision = facts ==>: DecisionServiceTestInstance
         maybeDecision.isValid shouldBe true
         maybeDecision.map { decision =>
           decision.value shouldBe "Unknown"  // should be inIR35
           val maybeBusinessStructureScore = Score.create(decision.facts).get("business_structure")
           maybeBusinessStructureScore.isDefined shouldBe true
           maybeBusinessStructureScore.map{businessStructureScore =>
-            businessStructureScore shouldBe NotValidUseCase.value
+            businessStructureScore shouldBe "low"
           }
         }
       }
