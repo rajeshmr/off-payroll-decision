@@ -1,10 +1,16 @@
 personalService,   contractualObligationForSubstitute            ,      No
+personalService,   contractualObligationInPractise               ,
 personalService,   contractualRightForSubstitute                 ,      Yes
-personalService,   contractualRightReflectInPractise             ,      Yes
-personalService,   engagerArrangeIfWorkerIsUnwillingOrUnable     ,      No
+personalService,   actualRightToSendSubstitute                   ,      Yes
+personalService,   contractualRightReflectInPractise             ,      No
+personalService,   engagerArrangeIfWorkerIsUnwillingOrUnable     ,      Yes
 personalService,   possibleSubstituteRejection                   ,      Yes
 personalService,   contractTermsWorkerPaysSubstitute             ,      Yes
 personalService,   workerSentActualSubstitute                    ,      Yes
-personalService,   actualSubstituteRejection                     ,      Yes
-personalService,   possibleHelper                                ,      No
+personalService,   actualSubstituteRejection                     ,
+personalService,   possibleHelper                                ,
+personalService,   wouldWorkerPayHelper                          ,
+personalService,   workerSentActualHelper                        ,
+personalService,   workerPayActualHelper                         ,
 High
+
