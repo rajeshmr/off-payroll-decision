@@ -66,9 +66,10 @@ class DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
 
   def toJsonWithValidation(request:DecisionRequest):JsValue = {
     val requestJson = Json.toJson(request)
-//    val requestJsonString = Json.prettyPrint(requestJson)
-//    val validationResult = JsonRequestValidator.validate(requestJsonString)
-//    validationResult.isRight shouldBe true
+    val requestJsonString = Json.prettyPrint(requestJson)
+    val validationResult = JsonRequestValidator.validate(requestJsonString)
+    println(validationResult)
+    validationResult.isRight shouldBe true
     requestJson
   }
 
