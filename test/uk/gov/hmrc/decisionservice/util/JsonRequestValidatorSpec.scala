@@ -47,7 +47,7 @@ class JsonRequestValidatorSpec extends UnitSpec {
    |    "control": {
    |      "toldWhatToDo": "Yes",
    |      "engagerMovingWorker": "Yes",
-   |      "workerDecidingHowWorkIsDone": "No",
+   |      "workerDecidingHowWorkIsDone": "WorkerCanGetInstructed",
    |      "whenWorkHasToBeDone": "workingPatternStipulated",
    |      "workerDecideWhere": "couldFixWorkerLocation"
    |    }

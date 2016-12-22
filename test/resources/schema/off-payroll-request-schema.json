@@ -90,9 +90,9 @@
               "type": "string",
               "enum": [
                 "workingSetInstructions",
-                "workerCanGetInstructed",
-                "workerDecidesToClientSatisfaction",
-                "workerFullyDecides"
+                "WorkerCanGetInstructed",
+                "WorkerDecidesToClientSatisfaction",
+                "WorkerFullyDecides"
               ]
             },
             "whenWorkHasToBeDone": {
