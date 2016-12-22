@@ -100,8 +100,6 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     val correlationID = response \\ "correlationID"
     correlationID should have size 1
     correlationID should contain theSameElementsAs Seq(JsString(CORRELATION_ID))
-    val carryOnWithQuestions = response \\ "carryOnWithQuestions"
-    carryOnWithQuestions should have size 1
     val result = response \\ "result"
     result should have size 1
     result(0).as[String] shouldBe expectedResult
