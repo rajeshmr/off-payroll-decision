@@ -21,7 +21,7 @@
     "control": {
       "toldWhatToDo": "Sometimes",
       "engagerMovingWorker": "Yes",
-      "workerDecidingHowWorkIsDone": "No",
+      "workerDecidingHowWorkIsDone": "WorkerDecidesToClientSatisfaction",
       "whenWorkHasToBeDone": "workingPatternStipulated",
       "workerDecideWhere": "couldFixWorkerLocation"
     },
