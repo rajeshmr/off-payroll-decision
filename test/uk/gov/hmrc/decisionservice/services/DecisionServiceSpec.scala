@@ -36,7 +36,7 @@ class DecisionServiceSpec extends UnitSpec {
       val facts =
       Facts(Map(
         "workerVAT" -> >>>("yes"),
-        "businesAccount" -> >>>("yes"),
+        "businessAccount" -> >>>("yes"),
         "advertiseForWork" -> >>>("yes"),
         "businessWebsite" -> >>>("no"),
         "workerPayForTraining" -> >>>("no"),
@@ -63,7 +63,7 @@ class DecisionServiceSpec extends UnitSpec {
       val facts =
       Facts(Map(
         "workerVAT" -> >>>("yes"),
-        "businesAccount" -> >>>("yes"),
+        "businessAccount" -> >>>("yes"),
         "advertiseForWork" -> >>>("yes"),
         "businessWebsite" -> >>>("no"),
         "workerPayForTraining" -> >>>("no"),
@@ -90,7 +90,7 @@ class DecisionServiceSpec extends UnitSpec {
       val facts =
       Facts(Map(
         "workerVAT" -> >>>("yes"),
-        "businesAccount" -> >>>("yes"),
+        "businessAccount" -> >>>("yes"),
         "advertiseForWork" -> >>>("yes"),
         "businessWebsite" -> >>>("no"),
         "workerPayForTraining" -> >>>("no"),
@@ -118,7 +118,7 @@ class DecisionServiceSpec extends UnitSpec {
       Facts(Map(
         "similarWork" -> >>>("10+"),
         "workerVAT" -> >>>("yes"),
-        "businesAccount" -> >>>("yes"),
+        "businessAccount" -> >>>("yes"),
         "advertiseForWork" -> >>>("yes"),
         "businessWebsite" -> >>>("no"),
         "workerPayForTraining" -> >>>("no"),
