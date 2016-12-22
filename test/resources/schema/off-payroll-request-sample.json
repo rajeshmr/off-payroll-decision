@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-beta",
+  "version": "1.0.1-beta",
   "correlationID": "12345",
   "interview": {
     "personalService": {
@@ -34,15 +34,12 @@
       "workerProvideEquipment": "Yes"
     },
     "financialRiskB": {
-      "workerProvideConsumablesMaterials": "No",
-      "engagerPayExpense": "No",
-      "workerNeedEquipment": "No",
-      "workerProvideEquipment": "No",
-      "workerPaidInclusive": "Yes",
       "provideVehicle": "No",
+      "engagerPayVehicleExpense": "No",
       "workerIncurExpense": "No",
+      "engagerPayOtherExpense": "No",
       "workerMainIncome": "incomeProfitOrLosses",
-      "WorkerSufferedLatePayment": "No",
+      "workerSufferedLatePayment": "No",
       "workerProvideAtTheirExpense": "Yes",
       "workerFixAtTheirOwnTime": "Yes",
       "workerPayForMaterialsSubstandardWorker": "No",
