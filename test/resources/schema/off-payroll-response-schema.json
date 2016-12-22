@@ -7,7 +7,11 @@
       "type": "string",
       "enum": [
         "HIGH",
-        "LOW"
+        "MEDIUM",
+        "LOW",
+        "NotValidUseCase",
+        "OUTOFIR35",
+        "INIR35"
       ]
     }
   },
@@ -53,7 +57,7 @@
         }
       },
       "minProperties": 0,
-      "addtionalProperties": false
+      "additionalProperties": false
     }
   },
   "required": [
@@ -62,5 +66,5 @@
     "score"
   ],
   "minProperties": 0,
-  "addtionalProperties": false
+  "additionalProperties": false
 }

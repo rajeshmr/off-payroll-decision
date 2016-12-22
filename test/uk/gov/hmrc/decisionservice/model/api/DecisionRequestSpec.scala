@@ -88,14 +88,12 @@ class DecisionRequestSpec extends UnitSpec {
           "contractrualObligationForSubstitute" -> "No",
           "possibleSubstituteRejection" -> "Yes"
         ))
-      val decisionResponse = DecisionResponse("0.0.1-alpha", "12345", true, Score.createRaw(Map("aa" -> "bb")), "result")
+      val decisionResponse = DecisionResponse("0.0.1-alpha", "12345", Score.createRaw(Map("aa" -> "bb")), "result")
       val response = Json.toJson(decisionResponse)
       val version = response \\ "version"
       version should have size 1
       val correlationID = response \\ "correlationID"
       correlationID should have size 1
-      val carryOnWithQuestions = response \\ "carryOnWithQuestions"
-      carryOnWithQuestions should have size 1
       val result = response \\ "result"
       result should have size 1
     }
