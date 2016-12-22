@@ -1,7 +1,7 @@
 {
   "publicId": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-request-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Decision Request Version 1.0.0-beta",
+  "description": "Decision Request Version 1.0.1-beta",
   "definitions": {
     "binaryAnswer": {
       "type": "string",
@@ -145,25 +145,16 @@
         "financialRiskB": {
           "type": "object",
           "properties": {
-            "workerProvideConsumablesMaterials": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerPayExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerNeedEquipment": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerProvideEquipment": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPaidInclusive": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
             "provideVehicle": {
               "$ref": "#/definitions/binaryAnswer"
             },
+            "engagerPayVehicleExpense": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
             "workerIncurExpense": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayOtherExpense": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerMainIncome": {
@@ -177,7 +168,7 @@
                 "incomeRateByInvoice"
               ]
             },
-            "WorkerSufferedLatePayment": {
+            "workerSufferedLatePayment": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerProvideAtTheirExpense": {
