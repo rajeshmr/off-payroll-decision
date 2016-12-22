@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
   * Created by work on 22/12/2016.
   */
 class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
-  val clusterName = "part_and_parcel"
+  val clusterName = "partAndParcel"
   val PART_AND_PARCEL_SCENARIO_0 = "/test-scenarios/single/part-and-parcel/scenario_0.csv"
   val PART_AND_PARCEL_SCENARIO_1 = "/test-scenarios/single/part-and-parcel/scenario_1.csv"
   val PART_AND_PARCEL_SCENARIO_2 = "/test-scenarios/single/part-and-parcel/scenario_2.csv"
