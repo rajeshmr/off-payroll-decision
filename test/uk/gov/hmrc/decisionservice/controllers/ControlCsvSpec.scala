@@ -18,25 +18,13 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
-  val clusterName = "personal_service"
-  val PERSONAL_SERVICE_SCENARIO_0 = "/test-scenarios/single/personal-service/scenario_0.csv"
-  val PERSONAL_SERVICE_SCENARIO_1 = "/test-scenarios/single/personal-service/scenario_1.csv"
-  val PERSONAL_SERVICE_SCENARIO_2 = "/test-scenarios/single/personal-service/scenario_2.csv"
-  val PERSONAL_SERVICE_SCENARIO_3 = "/test-scenarios/single/personal-service/scenario_3.csv"
+class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
+  val clusterName = "control"
+  val CONTROL_SCENARIO_0 = "/test-scenarios/single/control/scenario_0.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected decision for personal service scenario 0" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario 1" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_1)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario 2" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_2)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario 3" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_3)
+    "return 200 and correct response with the expected decision for control scenario 0" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_0)
     }
   }
 
