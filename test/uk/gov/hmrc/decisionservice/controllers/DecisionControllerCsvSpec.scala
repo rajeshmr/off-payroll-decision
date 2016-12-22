@@ -25,22 +25,11 @@ import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, ScenarioReader}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
+trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   val decisionController = DecisionController
-
-  val TEST_CASE_UNKNOWN = "/test-scenarios/single/scenario_final_unknown.csv"
-  val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/scenario_earlyexit_outofir35.csv"
-
-  "POST /decide" should {
-    "return 200 and correct response with the expected undecided decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
-    }
-    "return 200 and correct response with the expected out IR35 decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35)
-    }
-  }
+  val clusterName:String
 
   def createRequestSendVerifyDecision(path: String): Unit = {
     val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(path)
@@ -51,24 +40,33 @@ class DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.OK
     val response = jsonBodyOf(await(result))
-    verifyResponse(response, testCase.expectedDecision)
+    verifyResponse(response, testCase.expectedDecision, clusterName)
   }
 
-  def verifyResponse(response: JsValue, expectedResult:String): Unit = {
+  def verifyResponse(response: JsValue, expectedResult:String, clusterName:String): Unit = {
+    println(Json.prettyPrint(response))
     val version = response \\ "version"
     version should have size 1
     val correlationID = response \\ "correlationID"
     correlationID should have size 1
     val result = response \\ "result"
     result should have size 1
-    result(0).as[String] shouldBe expectedResult
+    val resultString = result(0).as[String]
+    if (resultString == "Unknown" && expectedResult != "Unknown"){
+      val clusterScore = response \\ clusterName
+      clusterScore should have size 1
+      val clusterScoreString = clusterScore(0).as[String].toLowerCase
+      clusterScoreString shouldBe expectedResult.toLowerCase
+    }
+    else {
+      resultString shouldBe expectedResult
+    }
   }
 
   def toJsonWithValidation(request:DecisionRequest):JsValue = {
     val requestJson = Json.toJson(request)
     val requestJsonString = Json.prettyPrint(requestJson)
     val validationResult = JsonRequestValidator.validate(requestJsonString)
-    println(validationResult)
     validationResult.isRight shouldBe true
     requestJson
   }
