@@ -46,7 +46,6 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   def verifyResponse(response: JsValue, expectedResult:String, clusterName:String): Unit = {
     val responseString = Json.prettyPrint(response)
     val validationResult = JsonResponseValidator.validate(responseString)
-    println(validationResult)
     validationResult.isRight shouldBe true
     val version = response \\ "version"
     version should have size 1
