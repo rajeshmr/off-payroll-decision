@@ -87,7 +87,13 @@
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerDecidingHowWorkIsDone": {
-              "$ref": "#/definitions/binaryAnswer"
+              "type": "string",
+              "enum": [
+                "workingSetInstructions",
+                "WorkerCanGetInstructed",
+                "WorkerDecidesToClientSatisfaction",
+                "WorkerFullyDecides"
+              ]
             },
             "whenWorkHasToBeDone": {
               "type": "string",

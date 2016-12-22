@@ -1,0 +1,9 @@
+control,   toldWhatToDo                 , 	No
+control,   engagerMovingWorker          , 	No
+control,   workerDecidingHowWorkIsDone  ,   workingSetInstructions
+control,   whenWorkHasToBeDone          ,   workinPatternRegularHoursToAgreedDeadlines
+control,   workerDecideWhere            ,   cannotFixWorkerLocation
+MEDIUM
+
+
+

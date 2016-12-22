@@ -22,7 +22,7 @@ import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
-import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, ScenarioReader}
+import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, JsonResponseValidator, ScenarioReader}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
@@ -44,7 +44,10 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   }
 
   def verifyResponse(response: JsValue, expectedResult:String, clusterName:String): Unit = {
-    println(Json.prettyPrint(response))
+    val responseString = Json.prettyPrint(response)
+    val validationResult = JsonResponseValidator.validate(responseString)
+    println(validationResult)
+    validationResult.isRight shouldBe true
     val version = response \\ "version"
     version should have size 1
     val correlationID = response \\ "correlationID"
