@@ -20,11 +20,23 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
   val clusterName = "control"
-  val CONTROL_SCENARIO_0 = "/test-scenarios/single/control/scenario_0.csv"
+  val CONTROL_SCENARIO_0 = "/test-scenarios/single/control/scenario_should_give_MEDIUM_0.csv"
+  val CONTROL_SCENARIO_1 = "/test-scenarios/single/control/scenario_should_give_MEDIUM_1.csv"
+  val CONTROL_SCENARIO_2 = "/test-scenarios/single/control/scenario_should_give_HIGH.csv"
+  val CONTROL_SCENARIO_3 = "/test-scenarios/single/control/scenario_should_give_EXIT_OUT.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected decision for control scenario 0" in {
+    "return 200 and correct response with the expected decision MEDIUM for control scenario 0" in {
       createRequestSendVerifyDecision(CONTROL_SCENARIO_0)
+    }
+    "return 200 and correct response with the expected decision MEDIUM for control scenario 1" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_1)
+    }
+    "return 200 and correct response with the expected decision HIGH for control scenario 2" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_2)
+    }
+    "return 200 and correct response with the expected decision OutsideIR35 for control scenario 3" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_3)
     }
   }
 
