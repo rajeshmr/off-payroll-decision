@@ -52,7 +52,7 @@ Requests use the HTTP `POST` method
 | version              | true               | The version of the Interview sent in the request and therefore applied to this Response                      |
 | correlationID        | true               | Unique number to identify this Interview and correlate it to its  decision |
 | result               | true               | An enumeration of "Outside IR35" &#124; "Inside IR35" &#124; "Unknown"|
-| score                | true               | A map of scores fully populated only when attribute "carryOnWithQuestions" is false and therefore a Decision is final |
+| score                | true               | A map of scores  |
 
 
 * HTTP 400 Bad Request for invalid/error scenarios
