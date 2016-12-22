@@ -68,7 +68,7 @@ object DecisionServiceInstance extends DecisionService {
     List(
       "similarWork",
       "workerVAT",
-      "businesAccount",
+      "businessAccount",
       "advertiseForWork",
       "businessWebsite",
       "workerPayForTraining",

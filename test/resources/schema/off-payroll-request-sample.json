@@ -54,7 +54,7 @@
     },
     "businessStructure": {
       "workerVAT": "No",
-      "businesAccount": "No",
+      "businessAccount": "No",
       "advertiseForWork": "Yes",
       "businessWebsite": "Yes",
       "workerPayForTraining": "Yes",

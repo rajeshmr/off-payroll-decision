@@ -263,12 +263,17 @@
           "type": "object",
           "properties": {
             "similarWork": {
-              "$ref": "#/definitions/binaryAnswer"
+              "type": "string",
+              "enum": [
+                "0-3",
+                "4-9",
+                "10+"
+              ]
             },
             "workerVAT": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "businesAccount": {
+            "businessAccount": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "advertiseForWork": {
@@ -291,7 +296,7 @@
           "additionalProperties": false,
           "required": [
             "workerVAT",
-            "businesAccount",
+            "businessAccount",
             "advertiseForWork",
             "businessWebsite",
             "workerPayForTraining",
