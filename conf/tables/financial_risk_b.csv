@@ -1,4 +1,4 @@
-workPatternImpact,FinancialRisk,provideVehicle,engagerPayExpense,workerIncurExpense,engagerPayExpense,workerMainIncome,WorkerSufferedLatePayment,workerProvideAtTheirExpense,workerFixAtTheirOwnTime,workerPayForMaterialsSubstandardWorker,paidForSubstandardWork,actualEngagerWithholdPayment,CarryOverValue,Exit,CarryOverFactName,,,,,,
+workPatternImpact,financialRisk,provideVehicle,engagerPayExpense,workerIncurExpense,engagerPayExpense,workerMainIncome,WorkerSufferedLatePayment,workerProvideAtTheirExpense,workerFixAtTheirOwnTime,workerPayForMaterialsSubstandardWorker,paidForSubstandardWork,actualEngagerWithholdPayment,CarryOverValue,Exit,CarryOverFactName,,,,,,
 ,HIGH,,,,,,,,,,,,OutOfIR35,TRUE,,,,,,,
 ,,YES,NO,,,,,YES,YES,,,,OutOfIR35,TRUE,,,,,,,
 ,,YES,NO,,,,,YES,,YES,,,OutOfIR35,TRUE,

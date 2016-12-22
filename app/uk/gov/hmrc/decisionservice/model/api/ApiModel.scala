@@ -30,13 +30,17 @@ case class Score( score:Map[String,String])
 
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
-  val elements = List("control", "financial_risk_a", "financial_risk_b", "part_and_parcel", "business_structure", "personal_service")
+  val elements = List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService")
   def create(facts:Map[String,CarryOver]):Map[String,String] =
-    facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,co.value)}.toMap
+    facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,formatValue(co.value))}.toMap
   def createRaw(m:Map[String,String]) = m
+  def formatValue(value:String) = value match {
+    case v@"NotValidUseCase" => v
+    case v => v.toUpperCase
+  }
 }
 
-case class DecisionResponse(version:String, correlationID:String, carryOnWithQuestions: Boolean, score:Map[String,String], result:String)
+case class DecisionResponse(version:String, correlationID:String, score:Map[String,String], result:String)
 
 object DecisionResponse {
   implicit val decisionResponseFormat: Format[DecisionResponse] = Json.format[DecisionResponse]

@@ -63,7 +63,6 @@ trait DecisionController extends BaseController {
     DecisionResponse(
       decisionRequest.version,
       decisionRequest.correlationID,
-      ruleEngineDecision.isFinal,
       Score.create(ruleEngineDecision.facts), responseString(ruleEngineDecision))
   }
 

@@ -7,7 +7,11 @@
       "type": "string",
       "enum": [
         "HIGH",
-        "LOW"
+        "MEDIUM",
+        "LOW",
+        "NotValidUseCase",
+        "OUTOFIR35",
+        "INIR35"
       ]
     }
   },
@@ -52,7 +56,7 @@
           "$ref": "#/definitions/weightedAnswer"
         }
       },
-      "addtionalProperties": false,
+      "additionalProperties": false,
       "required": [
         "personalService",
         "control",
@@ -68,5 +72,5 @@
     "correlationID",
     "score"
   ],
-  "addtionalProperties": false
+  "additionalProperties": false
 }

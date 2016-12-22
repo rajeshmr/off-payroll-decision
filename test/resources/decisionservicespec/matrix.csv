@@ -1,4 +1,4 @@
-Custom  , business_structure, PersonalService
+Custom  , businessStructure , PersonalService
         , high              , low              , inIR35, true
         , high              , high             , outofIR35, true
         , medium            , high             , inIR35, true

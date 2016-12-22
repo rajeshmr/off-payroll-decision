@@ -64,7 +64,7 @@ trait DecisionService {
 }
 
 object DecisionServiceInstance extends DecisionService {
-  lazy val businessStructureRule = SectionRuleSet("business_structure",
+  lazy val businessStructureRule = SectionRuleSet("businessStructure",
     List(
       "similarWork",
       "workerVAT",
@@ -79,10 +79,10 @@ object DecisionServiceInstance extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
     (5, "/tables/control.csv", "control"),
-    (7,  "/tables/financial_risk_a.csv", "financial_risk_a"),
-    (13, "/tables/financial_risk_b.csv", "financial_risk_b"),
-    (4,  "/tables/part_and_parcel.csv", "part_and_parcel"),
-    (14, "/tables/personal_service.csv", "personal_service"),
+    (7,  "/tables/financial_risk_a.csv", "financialRiskA"),
+    (13, "/tables/financial_risk_b.csv", "financialRiskB"),
+    (4,  "/tables/part_and_parcel.csv", "partAndParcel"),
+    (14, "/tables/personal_service.csv", "personalService"),
     (5,  "/tables/matrix_of_matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }
