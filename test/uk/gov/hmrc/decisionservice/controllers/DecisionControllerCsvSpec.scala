@@ -43,6 +43,20 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     verifyResponse(response, testCase.expectedDecision, clusterName)
   }
 
+  def createMultipleRequestsSendVerifyDecision(path: String): Unit = {
+    val testCasesTry = ScenarioReader.readAggregatedTestCasesTransposed(path)
+    testCasesTry.isSuccess shouldBe true
+    val testCases = testCasesTry.get
+    testCases.map { testCase =>
+      val request = testCase.request
+      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJsonWithValidation(request))
+      val result = decisionController.decide()(fakeRequest)
+      status(result) shouldBe Status.OK
+      val response = jsonBodyOf(await(result))
+      verifyResponse(response, testCase.expectedDecision, clusterName)
+    }
+  }
+
   def verifyResponse(response: JsValue, expectedResult:String, clusterName:String): Unit = {
     val responseString = Json.prettyPrint(response)
     val validationResult = JsonResponseValidator.validate(responseString)
