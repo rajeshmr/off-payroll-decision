@@ -18,7 +18,7 @@ package uk.gov.hmrc.decisionservice.util
 
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, Facts}
-import FileTokenizer.tokenize
+import FileTokenizer.{tokenize, tokenizeWithTrailingSeparator}
 
 import scala.util.Try
 
@@ -61,6 +61,23 @@ object ScenarioReader {
       val answers = tokens.collect { case a if a.size > 2 => a(2) }
       val expectedDecision = tokens.last.last
       create(clusterNames, tagNames, answers, expectedDecision)
+    }
+  }
+
+  def readAggregatedTestCasesTransposed(path:String):Try[List[ScenarioRequestTestCase]] = {
+    def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):ScenarioRequestTestCase = {
+      val interviewRaw = clusterNames.zip(tagNames.zip(answers).collect{case (t,a) if !a.isEmpty => (t,a)})
+      val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
+      ScenarioRequestTestCase(expectedDecision, DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview))
+    }
+    tokenizeWithTrailingSeparator(path).map { tokens =>
+      val t = tokens.transpose
+      val clusterNames = t.head.dropRight(1)
+      val tagNames = t.drop(1).head.dropRight(1)
+      val answersAndDecisionRows = t.drop(2)
+      answersAndDecisionRows.map{ answersAndDecisionRow =>
+        create(clusterNames, tagNames, answersAndDecisionRow.dropRight(1), answersAndDecisionRow.last)
+      }
     }
   }
 

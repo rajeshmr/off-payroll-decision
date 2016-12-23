@@ -1,0 +1,15 @@
+personalService, contractualObligationForSubstitute        , Yes          , No           , No           , No   , No
+personalService, contractualObligationInPractise           , Yes          ,              ,              ,      ,
+personalService, contractualRightForSubstitute             ,              , Yes          , Yes          , Yes  , Yes
+personalService, actualRightToSendSubstitute               ,              ,              ,              , Yes  ,
+personalService, contractualRightReflectInPractise         ,              , Yes          , Yes          , No   , Yes
+personalService, engagerArrangeIfWorkerIsUnwillingOrUnable ,              , No           , No           , Yes  , Yes
+personalService, possibleSubstituteRejection               ,              , No           , Yes          , Yes  ,
+personalService, contractTermsWorkerPaysSubstitute         , Yes          , Yes          , Yes          , Yes  ,
+personalService, workerSentActualSubstitute                ,              ,              , Yes          , Yes  ,
+personalService, actualSubstituteRejection                 ,              ,              , No           ,      ,
+personalService, possibleHelper                            ,              ,              ,              ,      , No
+personalService, wouldWorkerPayHelper                      ,              ,              ,              ,      ,
+personalService, workerSentActualHelper                    ,              ,              ,              ,      ,
+personalService, workerPayActualHelper                     ,              ,              ,              ,      ,
+               ,                                           , Outside IR35 , Outside IR35 , Outside IR35 , High , Low
