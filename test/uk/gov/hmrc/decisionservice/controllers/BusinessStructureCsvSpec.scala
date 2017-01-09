@@ -20,11 +20,11 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class BusinessStructureCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
   val clusterName = "businessStructure"
-  val BUSINESS_STRUCTURE_SCENARIO_LOW_0 = "/test-scenarios/single/business-structure/scenario_should_give_LOW_0.csv"
-  val BUSINESS_STRUCTURE_SCENARIO_HIGH_0 = "/test-scenarios/single/business-structure/scenario_should_give_HIGH_0.csv"
-  val BUSINESS_STRUCTURE_SCENARIO_MEDIUM = "/test-scenarios/single/business-structure/scenario_should_give_MEDIUM.csv"
-  val BUSINESS_STRUCTURE_SCENARIO_LOW_1 = "/test-scenarios/single/business-structure/scenario_should_give_LOW_1.csv"
-  val BUSINESS_STRUCTURE_SCENARIO_HIGH_1 = "/test-scenarios/single/business-structure/scenario_should_give_HIGH_1.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_LOW_0 = "/test-scenarios/single/business-structure/scenario-should-give-LOW-0.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_HIGH_0 = "/test-scenarios/single/business-structure/scenario-should-give-HIGH-0.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_MEDIUM = "/test-scenarios/single/business-structure/scenario-should-give-MEDIUM.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_LOW_1 = "/test-scenarios/single/business-structure/scenario-should-give-LOW-1.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_HIGH_1 = "/test-scenarios/single/business-structure/scenario-should-give-HIGH-1.csv"
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for business structure scenario LOW_0" in {
