@@ -18,6 +18,7 @@ package uk.gov.hmrc.decisionservice.util
 
 import cats.data.Xor
 import play.api.libs.json.Json
+import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonSchemaSpec extends UnitSpec {
@@ -71,7 +72,7 @@ class JsonSchemaSpec extends UnitSpec {
 
     it should {
       "validate request created from a flattened test case" in {
-        val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(TEST_CASE_PATH)
+        val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH)
         testCasesTry.isSuccess shouldBe true
         val testCase = testCasesTry.get
         val request = testCase.request

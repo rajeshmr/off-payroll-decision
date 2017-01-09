@@ -14,32 +14,28 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.util
+package uk.gov.hmrc.decisionservice.testutil
 
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, Facts}
-import FileTokenizer.{tokenize, tokenizeWithTrailingSeparator}
 
 import scala.util.Try
 
-case class ScenarioRequestTestCase(expectedDecision:String, request:DecisionRequest)
-
-case class Scenario(expectedDecision:CarryOver, request:Facts)
-case class ScenarioTestCase(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
+import uk.gov.hmrc.decisionservice.util.FileTokenizer.{tokenize,tokenizeWithTrailingSeparator}
 
 
-object ScenarioReader {
-  private val NUM_OF_CLUSTER_RESULT_COLUMNS = 3
+case class RequestAndDecision(request:DecisionRequest, expectedDecision:String)
+
+object RequestAndDecision {
   val VERSION_STRING: String = "1.0.0-alpha"
   val CORRELATION_ID_STRING: String = "test-correlation-id"
 
-  def readFlattenedTestCases(path:String):Try[List[ScenarioRequestTestCase]] = {
-    def create(clusterNames:List[String], tagNames:List[String], answersAndDecision:List[String]):ScenarioRequestTestCase = {
+  def readFlattened(path:String):Try[List[RequestAndDecision]] = {
+    def create(clusterNames:List[String], tagNames:List[String], answersAndDecision:List[String]):RequestAndDecision = {
       val expectedDecision = answersAndDecision.last
       val answers = answersAndDecision.dropRight(1)
       val interviewRaw = clusterNames.zip(tagNames.zip(answers))
       val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
-      ScenarioRequestTestCase(expectedDecision, DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview))
+      RequestAndDecision(DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview), expectedDecision)
     }
     tokenize(path).map { tokens =>
         val clusterNames = tokens(0).dropRight(1)
@@ -49,11 +45,11 @@ object ScenarioReader {
     }
   }
 
-  def readFlattenedTestCaseTransposed(path:String):Try[ScenarioRequestTestCase] = {
-    def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):ScenarioRequestTestCase = {
+  def readFlattenedTransposed(path:String):Try[RequestAndDecision] = {
+    def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):RequestAndDecision = {
       val interviewRaw = clusterNames.zip(tagNames.zip(answers))
       val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
-      ScenarioRequestTestCase(expectedDecision, DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview))
+      RequestAndDecision(DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview), expectedDecision)
     }
     tokenize(path).map { tokens =>
       val clusterNames = tokens.collect { case a if a.size > 2 => a(0) }
@@ -64,11 +60,11 @@ object ScenarioReader {
     }
   }
 
-  def readAggregatedTestCasesTransposed(path:String):Try[List[ScenarioRequestTestCase]] = {
-    def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):ScenarioRequestTestCase = {
+  def readAggregatedTransposed(path:String):Try[List[RequestAndDecision]] = {
+    def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):RequestAndDecision = {
       val interviewRaw = clusterNames.zip(tagNames.zip(answers).collect{case (t,a) if !a.isEmpty => (t,a)})
       val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
-      ScenarioRequestTestCase(expectedDecision, DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview))
+      RequestAndDecision(DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview), expectedDecision)
     }
     tokenizeWithTrailingSeparator(path).map { tokens =>
       val t = tokens.transpose
@@ -77,17 +73,6 @@ object ScenarioReader {
       val answersAndDecisionRows = t.drop(2)
       answersAndDecisionRows.map{ answersAndDecisionRow =>
         create(clusterNames, tagNames, answersAndDecisionRow.dropRight(1), answersAndDecisionRow.last)
-      }
-    }
-  }
-
-  def readScenarios(path:String):Try[List[Scenario]] = {
-    tokenize(path).map { tokens =>
-      val tagNames = tokens(0)
-      val scenarios = tokens.drop(1)
-      scenarios.map { scenario =>
-        val (answers, rest) = scenario.splitAt(tagNames.size - NUM_OF_CLUSTER_RESULT_COLUMNS)
-        Scenario(>>>.apply(rest), Facts(tagNames.zip(answers.map(>>>(_))).toMap))
       }
     }
   }
