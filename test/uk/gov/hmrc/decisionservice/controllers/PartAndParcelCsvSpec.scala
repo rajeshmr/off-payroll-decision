@@ -23,11 +23,11 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
   */
 class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
   val clusterName = "partAndParcel"
-  val PART_AND_PARCEL_SCENARIO_0 = "/test-scenarios/single/part-and-parcel/scenario_0.csv"
-  val PART_AND_PARCEL_SCENARIO_1 = "/test-scenarios/single/part-and-parcel/scenario_1.csv"
-  val PART_AND_PARCEL_SCENARIO_2 = "/test-scenarios/single/part-and-parcel/scenario_2.csv"
-  val PART_AND_PARCEL_SCENARIO_3 = "/test-scenarios/single/part-and-parcel/scenario_3.csv"
-  val PART_AND_PARCEL_SCENARIO_4 = "/test-scenarios/single/part-and-parcel/scenario_4.csv"
+  val PART_AND_PARCEL_SCENARIO_0 = "/test-scenarios/single/part-and-parcel/scenario-0.csv"
+  val PART_AND_PARCEL_SCENARIO_1 = "/test-scenarios/single/part-and-parcel/scenario-1.csv"
+  val PART_AND_PARCEL_SCENARIO_2 = "/test-scenarios/single/part-and-parcel/scenario-2.csv"
+  val PART_AND_PARCEL_SCENARIO_3 = "/test-scenarios/single/part-and-parcel/scenario-3.csv"
+  val PART_AND_PARCEL_SCENARIO_4 = "/test-scenarios/single/part-and-parcel/scenario-4.csv"
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for part and parcel scenario 0" in {

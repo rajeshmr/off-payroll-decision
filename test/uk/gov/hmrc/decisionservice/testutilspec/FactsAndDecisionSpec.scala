@@ -21,9 +21,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 
 class FactsAndDecisionSpec extends UnitSpec {
-  val FLATTENED_TEST_CASES = "/test-scenarios/test-scenario-reader/flattened_test_cases.csv"
-  val FLATTENED_TEST_CASES_TRANSPOSED = "/test-scenarios/test-scenario-reader/flattened_test_case_transposed.csv"
-  val CLUSTER_TEST_CASES = "/test-scenarios/test-scenario-reader/cluster_test_cases.csv"
+  val CLUSTER_TEST_CASES = "/test-scenarios/test-scenario-reader/facts-and-decision.csv"
 
   "test scenario reader" should {
     "read valid cluster test case file" in {

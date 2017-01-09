@@ -23,10 +23,10 @@ object DecisionServiceTestInstance extends DecisionService {
   lazy override val extraRules = List(DecisionServiceInstance.businessStructureRule)
   val csvSectionMetadata = List(
     (5, "/tables/control.csv", "control"),
-    (7,  "/tables/financial_risk_a.csv", "financialRiskA"),
-    (13, "/tables/financial_risk_b.csv", "financialRiskB"),
-    (4,  "/tables/part_and_parcel.csv", "partAndParcel"),
-    (14, "/tables/personal_service.csv", "personalService"),
-    (5,  "/tables/matrix_of_matrices.csv", "matrix")
+    (7,  "/tables/financial-risk-a.csv", "financialRiskA"),
+    (13, "/tables/financial-risk-b.csv", "financialRiskB"),
+    (4,  "/tables/part-and-parcel.csv", "partAndParcel"),
+    (14, "/tables/personal-service.csv", "personalService"),
+    (5,  "/tables/matrix-of-matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }

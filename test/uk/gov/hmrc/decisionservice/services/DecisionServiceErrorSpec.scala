@@ -35,8 +35,8 @@ class DecisionServiceErrorSpec extends UnitSpec {
   object DecisionServiceCsvWithErrorsTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (7, "/decisionservicespec/business_structure_errors.csv", "BusinessStructure"),
-      (9, "/decisionservicespec/personal_service_errors.csv", "PersonalService"),
+      (7, "/decisionservicespec/business-structure-errors.csv", "BusinessStructure"),
+      (9, "/decisionservicespec/personal-service-errors.csv", "PersonalService"),
       (3, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
@@ -44,8 +44,8 @@ class DecisionServiceErrorSpec extends UnitSpec {
   object DecisionServiceCsvWithBadMetadataTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (17, "/decisionservicespec/business_structure.csv", "BusinessStructure"),
-      (19, "/decisionservicespec/personal_service.csv", "PersonalService"),
+      (17, "/decisionservicespec/business-structure.csv", "BusinessStructure"),
+      (19, "/decisionservicespec/personal-service.csv", "PersonalService"),
       (12, "/decisionservicespec/matrix.csv", "matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
@@ -71,9 +71,9 @@ class DecisionServiceErrorSpec extends UnitSpec {
       maybeDecision.isValid shouldBe false
       maybeDecision.leftMap { errors =>
         errors should have size 5
-        errors.filter(_.message.contains("all result tokens are empty in file /decisionservicespec/business_structure_errors.csv")) should have size 1
+        errors.filter(_.message.contains("all result tokens are empty in file /decisionservicespec/business-structure-errors.csv")) should have size 1
         errors.filter(_.message.contains("invalid carry over value exit - out of IR35 in row")) should have size 3
-        errors.filter(_.message.contains("value Medium / High in row 8 in file /decisionservicespec/personal_service_errors.csv")) should have size 1
+        errors.filter(_.message.contains("value Medium / High in row 8 in file /decisionservicespec/personal-service-errors.csv")) should have size 1
       }
     }
     "correctly report errors in metadata files" in {

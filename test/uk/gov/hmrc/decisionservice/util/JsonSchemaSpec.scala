@@ -22,7 +22,7 @@ import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonSchemaSpec extends UnitSpec {
-  val TEST_CASE_PATH = "/schema/schema_checking_testcase.csv"
+  val TEST_CASE_PATH = "/schema/schema-checking-testcase.csv"
   val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/off-payroll-request-sample.json"
   val FULL_RESPONSE = "/schema/off-payroll-response-sample.json"
   val tryJson = FileReader.read(FULL_EXAMPLE_REQUEST_JSON_PATH)
