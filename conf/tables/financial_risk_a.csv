@@ -1,1 +1,20 @@
-workerPaidInclusive,workerneedConsumablesMaterials,workerProvideConsumablesMaterials,engagerPayExpense,workerNeedEquipment,workerProvideEquipment,engagerPayExpense,CarryOverValue,Exit,CarryOverFactNameYES,,,,,,,HIGH,FALSE,financialRiskNO,YES,YES,YES,YES,YES,YES,,FALSE,NO,YES,YES,YES,YES,YES,NO,HIGH,FALSE,financialRiskNO,YES,YES,YES,YES,NO,,,FALSE,NO,YES,YES,YES,NO,,,,FALSE,NO,YES,YES,NO,,,,HIGH,FALSE,financialRiskNO,YES,NO,,YES,YES,YES,,FALSE,NO,YES,NO,,YES,YES,NO,HIGH,FALSE,financialRiskNO,YES,NO,,YES,NO,,,FALSE,NO,YES,NO,,NO,,,,FALSE,NO,NO,,,YES,YES,YES,,FALSE,NO,NO,,,YES,YES,NO,HIGH,FALSE,financialRiskNO,NO,,,YES,NO,,,FALSE,NO,NO,,,NO,,,,FALSE,NO,YES,NO,,NO,,,,FALSE,NO,NO,,,YES,YES,YES,,FALSE,NO,NO,,,YES,YES,NO,HIGH,FALSE,financialRiskNO,NO,,,YES,NO,,,FALSE,NO,NO,,,NO,,,,FALSE,
+workerPaidInclusive,workerneedConsumablesMaterials,workerProvideConsumablesMaterials,engagerPayConsumables,workerNeedEquipment,workerProvideEquipment,engagerPayEquipment,CarryOverValue,Exit,CarryOverFactName
+YES,,,,,,,OutOfIR35,TRUE,
+NO,YES,YES,YES,YES,YES,YES,,FALSE,financialRisk
+NO,YES,YES,YES,YES,YES,NO,OutOfIR35,TRUE,
+NO,YES,YES,YES,YES,NO,,,FALSE,financialRisk
+NO,YES,YES,YES,NO,,,,FALSE,financialRisk
+NO,YES,YES,NO,,,,OutOfIR35,TRUE,
+NO,YES,NO,,YES,YES,YES,,FALSE,financialRisk
+NO,YES,NO,,YES,YES,NO,OutOfIR35,TRUE,
+NO,YES,NO,,YES,NO,,,FALSE,financialRisk
+NO,YES,NO,,NO,,,,FALSE,financialRisk
+NO,NO,,,YES,YES,YES,,FALSE,financialRisk
+NO,NO,,,YES,YES,NO,OutOfIR35,TRUE,
+NO,NO,,,YES,NO,,,FALSE,financialRisk
+NO,NO,,,NO,,,,FALSE,financialRisk
+NO,YES,NO,,NO,,,,FALSE,financialRisk
+NO,NO,,,YES,YES,YES,,FALSE,financialRisk
+NO,NO,,,YES,YES,NO,OutOfIR35,TRUE,
+NO,NO,,,YES,NO,,,FALSE,financialRisk
+NO,NO,,,NO,,,,FALSE,financialRisk
