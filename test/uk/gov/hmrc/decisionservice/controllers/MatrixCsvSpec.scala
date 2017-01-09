@@ -20,8 +20,8 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
   val clusterName = "matrix"
-  val TEST_CASE_UNKNOWN = "/test-scenarios/single/scenario_final_unknown.csv"
-  val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/scenario_earlyexit_outofir35.csv"
+  val TEST_CASE_UNKNOWN = "/test-scenarios/single/scenario-final-unknown.csv"
+  val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/scenario-earlyexit-outofir35.csv"
 
   "POST /decide" should {
     "return 200 and correct response with the expected undecided decision" in {
