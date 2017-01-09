@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.decisionservice.util
+package uk.gov.hmrc.decisionservice.testutilspec
 
+import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
 
 
-class ScenarioReaderSpec extends UnitSpec {
+class RequestAndDecisionSpec extends UnitSpec {
+  val FLATTENED_TEST_CASES = "/test-scenarios/test-scenario-reader/flattened_test_cases.csv"
+  val FLATTENED_TEST_CASES_TRANSPOSED = "/test-scenarios/test-scenario-reader/flattened_test_case_transposed.csv"
+  val CLUSTER_TEST_CASES = "/test-scenarios/test-scenario-reader/cluster_test_cases.csv"
 
-  "test case reader " should {
+  "test scenario reader" should {
     "read valid flattened test case file" in {
-      val testCasesTry = ScenarioReader.readFlattenedTestCases("/test-scenarios/flattened_test_cases.csv")
+      val testCasesTry = RequestAndDecision.readFlattened(FLATTENED_TEST_CASES)
       testCasesTry.isSuccess shouldBe true
       val testCases = testCasesTry.get
       testCases should have size 5
@@ -32,17 +36,11 @@ class ScenarioReaderSpec extends UnitSpec {
       }
     }
     "read valid flattened transposed test case file" in {
-      val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed("/test-scenarios/flattened_test_case_transposed.csv")
+      val testCasesTry = RequestAndDecision.readFlattenedTransposed(FLATTENED_TEST_CASES_TRANSPOSED)
       testCasesTry.isSuccess shouldBe true
       val testCase = testCasesTry.get
       testCase.request.interview should have size 3
       testCase.expectedDecision shouldBe "expected_decision"
-    }
-    "read valid cluster test case file" in {
-      val testCasesTry = ScenarioReader.readScenarios("/test-scenarios/cluster_test_cases.csv")
-      testCasesTry.isSuccess shouldBe true
-      val testCases = testCasesTry.get
-      testCases should have size 5
     }
   }
 

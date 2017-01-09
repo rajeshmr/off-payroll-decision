@@ -18,8 +18,10 @@ package uk.gov.hmrc.decisionservice.services
 
 import play.api.Logger
 import uk.gov.hmrc.decisionservice.ruleengine.{FactMatcherInstance, RulesFileMetaData, RulesLoaderInstance}
-import uk.gov.hmrc.decisionservice.util.{Scenario, ScenarioTestCase, ScenarioReader}
+import uk.gov.hmrc.decisionservice.testutil.FactsAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
+
+case class ScenarioTestCase(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
 
 class ClusterTestCasesSpec extends UnitSpec {
   private val scenarioTestCases = List(
@@ -34,15 +36,15 @@ class ClusterTestCasesSpec extends UnitSpec {
     "read valid cluster test case file" in {
       for (scenarioTestCase <- scenarioTestCases) {
         Logger.info("================= Running tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
-        val testCasesTry = ScenarioReader.readScenarios(scenarioTestCase.factsPath)
-        testCasesTry.isSuccess shouldBe true
-        testCasesTry.map { _.foreach(runAndVerifyTestCase(_, scenarioTestCase)) }
+        val tryFactsAndDecision = FactsAndDecision.read(scenarioTestCase.factsPath)
+        tryFactsAndDecision.isSuccess shouldBe true
+        tryFactsAndDecision.map { _.foreach(runAndVerifyTestCase(_, scenarioTestCase)) }
         Logger.info("================= Finished tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
       }
     }
   }
 
-  def runAndVerifyTestCase(testCase:Scenario, metaData:ScenarioTestCase):Unit = {
+  def runAndVerifyTestCase(testCase:FactsAndDecision, metaData:ScenarioTestCase):Unit = {
     val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(metaData.numOfValueColumns, metaData.rulesPath, metaData.clusterName))
     maybeRules.isValid shouldBe true
     maybeRules.map { ruleSet =>
