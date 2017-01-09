@@ -24,12 +24,12 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class RulesLoaderSpec extends UnitSpec with BeforeAndAfterEach with ScalaFutures with LoneElement with Inspectors with IntegrationPatience {
 
-  val csvFilePath = "/rulesloaderspec/section_rules_sample.csv"
-  val csvFilePathError = "/rulesloaderspec/section_rules_sample_error.csv"
-  val csvFileEmpty = "/rulesloaderspec/section_rules_empty.csv"
-  val csvFileHeadersOnly = "/rulesloaderspec/section_rules_headers_only.csv"
-  val csvFileHeadersError = "/rulesloaderspec/section_rules_headers_error.csv"
-  val csvFileHeadersAndExitError = "/rulesloaderspec/section_rules_headers_exit_error.csv"
+  val csvFilePath = "/rulesloaderspec/section-rules-sample.csv"
+  val csvFilePathError = "/rulesloaderspec/section-rules-sample-error.csv"
+  val csvFileEmpty = "/rulesloaderspec/section-rules-empty.csv"
+  val csvFileHeadersOnly = "/rulesloaderspec/section-rules-headers-only.csv"
+  val csvFileHeadersError = "/rulesloaderspec/section-rules-headers-error.csv"
+  val csvFileHeadersAndExitError = "/rulesloaderspec/section-rules-headers-exit-error.csv"
   val csvMetadata = RulesFileMetaData(3, csvFilePath, "sectionName")
   val csvMetadataError = RulesFileMetaData(3, csvFilePathError, "sectionName")
   val csvMetadataEmpty = RulesFileMetaData(3, csvFileEmpty, "sectionName")

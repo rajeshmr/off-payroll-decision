@@ -1,6 +1,0 @@
-control	 ,  toldWhatToDo                 	, 	No
-control	 ,  engagerMovingWorker          	, 	No
-control	 ,  workerDecidingHowWorkIsDone  	,   workingSetInstructions
-control	 ,  whenWorkHasToBeDone          	,   noDefinedWorkingPattern
-control	 ,  workerDecideWhere            	,   couldFixWorkerLocation
-Unknown
