@@ -37,6 +37,7 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     testCasesTry.isSuccess shouldBe true
     val testCase = testCasesTry.get
     val request = testCase.request
+    println(request)
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJsonWithValidation(request))
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.OK
