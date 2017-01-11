@@ -18,10 +18,7 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
-  val clusterName = "matrix"
-  override val clusterTest = false
-
+class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerFinalCsvSpec {
   val TEST_CASE_NOT_MATCHED_1 = "/test-scenarios/single/matrix/scenario-final-not-matched-1.csv"
   val TEST_CASE_NOT_MATCHED_2 = "/test-scenarios/single/matrix/scenario-final-not-matched-2.csv"
   val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/matrix/scenario-earlyexit-outofir35.csv"
@@ -45,6 +42,4 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
       createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
     }
   }
-
-
 }
