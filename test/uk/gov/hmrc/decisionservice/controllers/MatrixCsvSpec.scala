@@ -20,20 +20,29 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
   val clusterName = "matrix"
+  override val clusterTest = false
 
-  val TEST_CASE_UNKNOWN = "/test-scenarios/single/scenario-final-unknown.csv"
-  val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/scenario-earlyexit-outofir35.csv"
-  val TEST_CASE_INSIDEIR35 = "/test-scenarios/single/scenario-decision-ir35.csv"
+  val TEST_CASE_NOT_MATCHED_1 = "/test-scenarios/single/matrix/scenario-final-not-matched-1.csv"
+  val TEST_CASE_NOT_MATCHED_2 = "/test-scenarios/single/matrix/scenario-final-not-matched-2.csv"
+  val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/matrix/scenario-earlyexit-outofir35.csv"
+  val TEST_CASE_INSIDEIR35 = "/test-scenarios/single/matrix/scenario-decision-ir35.csv"
+  val TEST_CASE_UNKNOWN = "/test-scenarios/single/matrix/scenario-decision-unknown.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected undecided decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
+    "return 200 and correct response with the expected not matched decision (1)" in {
+      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_1)
+    }
+    "return 200 and correct response with the expected not matched decision (2)" in {
+      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_2)
     }
     "return 200 and correct response with the expected out IR35 decision" in {
       createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35)
     }
     "return 200 and correct response with the expected inside IR35 decision" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDEIR35)
+    }
+    "return 200 and correct response with the expected unknown decision" in {
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
     }
   }
 
