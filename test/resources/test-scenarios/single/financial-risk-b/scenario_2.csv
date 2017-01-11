@@ -1,0 +1,13 @@
+financialRiskB,   workPatternImpact                      ,	workPatternImpact
+financialRiskB,   financialRisk                          ,
+financialRiskB,   provideVehicle                         ,
+financialRiskB,   workerIncurExpense                     ,	Yes
+financialRiskB,   engagerPayOtherExpense                 ,	No
+financialRiskB,   workerMainIncome                       ,	incomeRateByInvoice
+financialRiskB,   workerSufferedLatePayment              ,	Yes
+financialRiskB,   workerProvideAtTheirExpense            ,
+financialRiskB,   workerFixAtTheirOwnTime                ,
+financialRiskB,   workerPayForMaterialsSubstandardWorker ,
+financialRiskB,   paidForSubstandardWork                 ,
+financialRiskB,   actualEngagerWithholdPayment           ,
+Outside IR35

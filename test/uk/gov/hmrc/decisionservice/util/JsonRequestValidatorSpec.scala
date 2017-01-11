@@ -55,6 +55,42 @@ class JsonRequestValidatorSpec extends UnitSpec {
    |}
    """.stripMargin
 
+  val valid_withNewFinancialRiskAFields = """
+   |{
+   |  "version": "1.0.0-beta",
+   |  "correlationID": "12345",
+   |  "interview": {
+   |    "personalService": {
+   |      "contractualObligationForSubstitute": "No",
+   |      "contractualObligationInPractise": "Yes",
+   |      "contractualRightForSubstitute": "Yes",
+   |      "actualRightToSendSubstitute": "Yes",
+   |      "contractualRightReflectInPractise": "No",
+   |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
+   |      "possibleSubstituteRejection": "No",
+   |      "contractTermsWorkerPaysSubstitute": "Yes",
+   |      "workerSentActualSubstitute": "Yes",
+   |      "actualSubstituteRejection": "Yes",
+   |      "possibleHelper": "Yes",
+   |      "wouldWorkerPayHelper": "Yes",
+   |      "workerSentActualHelper": "No",
+   |      "workerPayActualHelper": "Yes"
+   |    },
+   |    "control": {
+   |      "toldWhatToDo": "Yes",
+   |      "engagerMovingWorker": "Yes",
+   |      "workerDecidingHowWorkIsDone": "WorkerCanGetInstructed",
+   |      "whenWorkHasToBeDone": "workingPatternStipulated",
+   |      "workerDecideWhere": "couldFixWorkerLocation"
+   |    },
+   |    "financialRiskA": {
+   |      "engagerPayConsumables": "Yes",
+   |      "engagerPayEquipment": "Yes"
+   |    }
+   |  }
+   |}
+   """.stripMargin
+
   val valid_noAnswers = """{
                               "version": "89.90.73C",
                               "correlationID": "adipisicing ullamco",
@@ -210,6 +246,12 @@ class JsonRequestValidatorSpec extends UnitSpec {
     "return true for valid json" in {
 
       validateWithInfo(valid_twoSections, JsonRequestValidator) shouldBe true
+
+    }
+
+    "return true for valid json - with New FinancialRiskA fields" in {
+
+      validateWithInfo(valid_withNewFinancialRiskAFields, JsonRequestValidator) shouldBe true
 
     }
 
