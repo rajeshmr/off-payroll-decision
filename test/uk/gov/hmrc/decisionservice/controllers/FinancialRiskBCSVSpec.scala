@@ -24,6 +24,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 class FinancialRiskBCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
 
   val clusterName = "financialRiskB"
+  override val clusterTest = false
   val FINANCIAL_RISK_B_SCENARIO_0 = "/test-scenarios/single/financial-risk-b/scenario_0.csv"
   val FINANCIAL_RISK_B_SCENARIO_1 = "/test-scenarios/single/financial-risk-b/scenario_1.csv"
   val FINANCIAL_RISK_B_SCENARIO_2 = "/test-scenarios/single/financial-risk-b/scenario_2.csv"

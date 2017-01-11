@@ -30,8 +30,8 @@ sealed trait RuleEngineDecision {
   def isFinal: Boolean
 }
 
-case class RuleEngineDecisionUndecided(facts: Map[String,CarryOver]) extends RuleEngineDecision {
-  override def value = "Unknown"
+case class RuleEngineDecisionNotMatched(facts: Map[String,CarryOver]) extends RuleEngineDecision {
+  override def value = "Not Matched"
   override def isFinal = false
 }
 
@@ -66,8 +66,8 @@ trait RuleEngine {
         Logger.debug(s"decision found: '${ff.value}'\n")
         RuleEngineDecisionImpl(ff.value, f.facts)
       case f =>
-        Logger.debug(s"decision not found - undecided\n")
-        RuleEngineDecisionUndecided(f.facts)
+        Logger.debug(s"final decision not found - not matched\n")
+        RuleEngineDecisionNotMatched(f.facts)
     }
   }
 }

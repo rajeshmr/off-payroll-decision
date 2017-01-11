@@ -30,6 +30,7 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   val decisionController = DecisionController
+  val clusterTest:Boolean = true
   val clusterName:String
 
   def createRequestSendVerifyDecision(path: String): Unit = {
@@ -37,7 +38,6 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     testCasesTry.isSuccess shouldBe true
     val testCase = testCasesTry.get
     val request = testCase.request
-    println(request)
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJsonWithValidation(request))
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.OK
@@ -70,7 +70,7 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     val result = response \\ "result"
     result should have size 1
     val resultString = result(0).as[String]
-    if (resultString == "Unknown" && expectedResult != "Unknown"){
+    if (clusterTest){
       val clusterScore = response \\ clusterName
       clusterScore should have size 1
       val clusterScoreString = clusterScore(0).as[String].toLowerCase
