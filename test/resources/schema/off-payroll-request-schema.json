@@ -129,13 +129,16 @@
             "workerProvideConsumablesMaterials": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayExpense": {
+            "engagerPayConsumables": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerNeedEquipment": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerProvideEquipment": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "engagerPayEquipment": {
               "$ref": "#/definitions/binaryAnswer"
             }
           },

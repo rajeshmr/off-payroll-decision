@@ -1,0 +1,8 @@
+financialRiskA,   workerPaidInclusive                  , 	No
+financialRiskA,   workerNeedConsumablesMaterials       , 	Yes
+financialRiskA,   workerProvideConsumablesMaterials    , 	Yes
+financialRiskA,   engagerPayConsumables                , 	Yes
+financialRiskA,   workerNeedEquipment                  , 	Yes
+financialRiskA,   workerProvideEquipment               , 	Yes
+financialRiskA,   engagerPayEquipment                  , 	No
+Outside IR35
