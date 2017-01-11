@@ -29,9 +29,10 @@
       "workerPaidInclusive": "No",
       "workerNeedConsumablesMaterials": "No",
       "workerProvideConsumablesMaterials": "Yes",
-      "engagerPayExpense": "Yes",
+      "engagerPayConsumables": "Yes",
       "workerNeedEquipment": "No",
-      "workerProvideEquipment": "Yes"
+      "workerProvideEquipment": "Yes",
+      "engagerPayEquipment": "No"
     },
     "financialRiskB": {
       "provideVehicle": "No",
