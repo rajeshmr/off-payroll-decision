@@ -25,9 +25,14 @@ case class Facts(facts:Map[String,CarryOver]){
   def ==+>:(rules:SectionRuleSet):Validation[Facts] = {
     val defaultFactName = rules.section
     Logger.debug(s"matching for section:\t'$defaultFactName'")
-    Logger.debug(s"headings:\t${rules.headings.mkString("\t,")}")
-    Logger.debug(s"facts:   \t${rules.headings.map(facts.getOrElse(_, >>>("")).value).mkString("\t,")}")
-    FactMatcherInstance.matchFacts(facts,rules).map { carryOver =>
+    Logger.debug(s"headings:\t${rules.headings.mkString(", ")}")
+    val factsString = rules.headings.map{ h =>
+      val v = facts.getOrElse(h, >>>("")).value
+      v + " " * (h.length - v.length)}.mkString(", ")
+    Logger.debug(s"facts:   \t${factsString}")
+    val facts1: Validation[CarryOver] = FactMatcherInstance.matchFacts(facts, rules)
+    println(facts1)
+    facts1.map { carryOver =>
       val factName = carryOver.name.getOrElse(defaultFactName)
       val newFact = (factName -> carryOver)
       Logger.debug(s"new fact:\t$factName -> '${carryOver.value}' ${if (carryOver.exit) "EXIT" else ""}")
