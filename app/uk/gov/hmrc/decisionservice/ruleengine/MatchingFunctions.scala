@@ -43,4 +43,3 @@ object MatchingFunctions {
     result
   }
 }
-

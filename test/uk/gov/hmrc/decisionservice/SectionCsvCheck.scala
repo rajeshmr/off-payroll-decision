@@ -48,7 +48,7 @@ trait CsvCheck {
 }
 
 object BusinessStructureCheck extends Properties("business structure check") with CsvCheck with UnitSpec {
-  val csvMetadata = RulesFileMetaData(7, "/decisionservicespec/business_structure.csv", "BusinessStructure")
+  val csvMetadata = RulesFileMetaData(7, "/decisionservicespec/business-structure.csv", "BusinessStructure")
   val gen = for {
     y <- Gen.listOfN(csvMetadata.valueCols, Gen.oneOf[String]("Yes", "No"))
   } yield {
@@ -65,7 +65,7 @@ object BusinessStructureCheck extends Properties("business structure check") wit
 
 
 object PersonalServiceCheck extends Properties("personal service check") with CsvCheck with UnitSpec {
-  val csvMetadata = RulesFileMetaData(9, "/decisionservicespec/personal_service.csv", "PersonalService")
+  val csvMetadata = RulesFileMetaData(9, "/decisionservicespec/personal-service.csv", "PersonalService")
   val gen = for {
     y <- Gen.listOfN(csvMetadata.valueCols, Gen.oneOf[String]("Yes", "No"))
   } yield {

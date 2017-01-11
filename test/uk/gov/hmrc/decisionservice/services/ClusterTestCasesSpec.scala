@@ -18,31 +18,31 @@ package uk.gov.hmrc.decisionservice.services
 
 import play.api.Logger
 import uk.gov.hmrc.decisionservice.ruleengine.{FactMatcherInstance, RulesFileMetaData, RulesLoaderInstance}
-import uk.gov.hmrc.decisionservice.util.{Scenario, ScenarioTestCase, ScenarioReader}
+import uk.gov.hmrc.decisionservice.testutil.FactsAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
+
+case class ScenarioTestCase(factsPath:String, clusterName:String, rulesPath:String, numOfValueColumns:Int)
 
 class ClusterTestCasesSpec extends UnitSpec {
   private val scenarioTestCases = List(
-    ScenarioTestCase("/test-scenarios/part_of_organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
-    ScenarioTestCase("/test-scenarios/financial_risk.csv", "financial_risk","/tables/financial_risk.csv",24),
-    ScenarioTestCase("/test-scenarios/control-onlyPassingCases.csv", "control","/tables/control.csv",13),
-    ScenarioTestCase("/test-scenarios/misc.csv", "miscellaneous","/tables/misc.csv",1))
-//    ScenarioTestCase("/test-scenarios/business_structure.csv", "business_structure","/tables/business_structure.csv",7))
-//    ClusterTestCaseFileMetaData("/test-scenarios/personal_service.csv", "personal_service","/tables/personal_service.csv",13)) - has failures
+    ScenarioTestCase("/test-scenarios/cluster-test-cases/part-of-organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
+    ScenarioTestCase("/test-scenarios/cluster-test-cases/financial-risk.csv", "financial_risk","/tables/financial_risk.csv",24),
+    ScenarioTestCase("/test-scenarios/cluster-test-cases/control-onlyPassingCases.csv", "control","/tables/control.csv",13),
+    ScenarioTestCase("/test-scenarios/cluster-test-cases/misc.csv", "miscellaneous","/tables/misc.csv",1))
 
   "test case reader " should {
     "read valid cluster test case file" in {
       for (scenarioTestCase <- scenarioTestCases) {
         Logger.info("================= Running tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
-        val testCasesTry = ScenarioReader.readScenarios(scenarioTestCase.factsPath)
-        testCasesTry.isSuccess shouldBe true
-        testCasesTry.map { _.foreach(runAndVerifyTestCase(_, scenarioTestCase)) }
+        val tryFactsAndDecision = FactsAndDecision.read(scenarioTestCase.factsPath)
+        tryFactsAndDecision.isSuccess shouldBe true
+        tryFactsAndDecision.map { _.foreach(runAndVerifyTestCase(_, scenarioTestCase)) }
         Logger.info("================= Finished tests for Cluster: " + scenarioTestCase.clusterName + " ===================")
       }
     }
   }
 
-  def runAndVerifyTestCase(testCase:Scenario, metaData:ScenarioTestCase):Unit = {
+  def runAndVerifyTestCase(testCase:FactsAndDecision, metaData:ScenarioTestCase):Unit = {
     val maybeRules = RulesLoaderInstance.load(RulesFileMetaData(metaData.numOfValueColumns, metaData.rulesPath, metaData.clusterName))
     maybeRules.isValid shouldBe true
     maybeRules.map { ruleSet =>

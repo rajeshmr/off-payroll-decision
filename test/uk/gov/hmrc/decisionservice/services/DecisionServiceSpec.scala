@@ -26,7 +26,7 @@ class DecisionServiceSpec extends UnitSpec {
     lazy val maybeSectionRules = loadSectionRules()
     lazy override val extraRules = List(DecisionServiceInstance.businessStructureRule)
     val csvSectionMetadata = List(
-        (9, "/decisionservicespec/personal_service.csv", "PersonalService"),
+        (9, "/decisionservicespec/personal-service.csv", "PersonalService"),
         (3, "/decisionservicespec/matrix.csv", "Matrix")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }

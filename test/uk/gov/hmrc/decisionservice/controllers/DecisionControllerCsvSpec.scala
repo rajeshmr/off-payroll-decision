@@ -22,7 +22,8 @@ import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
-import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, JsonResponseValidator, ScenarioReader}
+import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
+import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, JsonResponseValidator}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
@@ -32,7 +33,7 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   val clusterName:String
 
   def createRequestSendVerifyDecision(path: String): Unit = {
-    val testCasesTry = ScenarioReader.readFlattenedTestCaseTransposed(path)
+    val testCasesTry = RequestAndDecision.readFlattenedTransposed(path)
     testCasesTry.isSuccess shouldBe true
     val testCase = testCasesTry.get
     val request = testCase.request
@@ -45,7 +46,7 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   }
 
   def createMultipleRequestsSendVerifyDecision(path: String): Unit = {
-    val testCasesTry = ScenarioReader.readAggregatedTestCasesTransposed(path)
+    val testCasesTry = RequestAndDecision.readAggregatedTransposed(path)
     testCasesTry.isSuccess shouldBe true
     val testCases = testCasesTry.get
     testCases.map { testCase =>
