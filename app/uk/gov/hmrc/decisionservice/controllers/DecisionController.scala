@@ -52,7 +52,7 @@ trait DecisionController extends BaseController {
             Ok(Json.toJson(response))
           case Validated.Invalid(error) =>
             val errorResponse = ErrorResponse(error(0).code, error(0).message)
-            Logger.info("{" + requestLog + "," + fmt(errorResponse) + "}")
+            Logger.info("{" + requestLog + "," + errorResponse + "}")
             BadRequest(Json.toJson(errorResponse))
         }
       case JsError(jsonErrors) =>
@@ -66,15 +66,14 @@ trait DecisionController extends BaseController {
   }
 
   def fmt(m:Map[String,String]):String = {
-    m.toList.map(a => "\"" + a._1 + "\":" + "\"" + a._2 + "\"" ).mkString(",")
+    def fmt(p:(String,String)):String = p match {
+      case (a,b) => "\"" + a + "\":" + "\"" + b + "\""
+    }
+    m.toList.map(fmt(_)).mkString(",")
   }
 
   def fmt(decisionResponse: DecisionResponse):String = {
-    "\"result\":" + "\"" + decisionResponse.result + "\""
-  }
-
-  def fmt(errorResponse: ErrorResponse):String = {
-    ""
+    List(fmt(decisionResponse.score), "\"result\":" + "\"" + decisionResponse.result + "\"").mkString(",")
   }
 
   def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
