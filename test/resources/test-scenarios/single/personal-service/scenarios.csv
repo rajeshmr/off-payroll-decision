@@ -12,4 +12,4 @@ personalService, possibleHelper                            ,              ,     
 personalService, wouldWorkerPayHelper                      ,              ,              ,              ,      ,
 personalService, workerSentActualHelper                    ,              ,              ,              ,      ,
 personalService, workerPayActualHelper                     ,              ,              ,              ,      ,
-               ,                                           , Outside IR35 , Outside IR35 , Outside IR35 , High , Low
+               ,                                           , OUTOFIR35    , OUTOFIR35    , OUTOFIR35    , High , Low

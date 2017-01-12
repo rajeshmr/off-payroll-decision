@@ -69,7 +69,8 @@ trait DecisionController extends BaseController {
   def responseString(ruleEngineDecision: RuleEngineDecision):String = ruleEngineDecision.value.toLowerCase match {
     case "inir35" => "Inside IR35"
     case "outofir35" => "Outside IR35"
-    case _ => "Unknown"
+    case "unknown" => "Unknown"
+    case _ => "Not Matched"
   }
 }
 

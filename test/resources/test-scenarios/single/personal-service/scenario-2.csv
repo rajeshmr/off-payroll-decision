@@ -6,4 +6,4 @@ personalService,   possibleSubstituteRejection                   ,      Yes
 personalService,   contractTermsWorkerPaysSubstitute             ,      Yes
 personalService,   workerSentActualSubstitute                    ,      Yes
 personalService,   actualSubstituteRejection                     ,      No
-Outside IR35
+OUTOFIR35

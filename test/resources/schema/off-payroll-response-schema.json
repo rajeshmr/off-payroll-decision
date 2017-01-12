@@ -31,7 +31,8 @@
         "Self-Employed",
         "Inside IR35",
         "Employed",
-        "Unknown"
+        "Unknown",
+        "Not Matched"
       ]
     },
     "score": {

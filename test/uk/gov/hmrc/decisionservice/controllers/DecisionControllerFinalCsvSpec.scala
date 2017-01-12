@@ -21,7 +21,7 @@ import akka.stream.ActorMaterializer
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
+import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse}
 import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
 import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, JsonResponseValidator}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -30,19 +30,17 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   val decisionController = DecisionController
-  val clusterName:String
 
   def createRequestSendVerifyDecision(path: String): Unit = {
     val testCasesTry = RequestAndDecision.readFlattenedTransposed(path)
     testCasesTry.isSuccess shouldBe true
     val testCase = testCasesTry.get
     val request = testCase.request
-    println(request)
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJsonWithValidation(request))
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.OK
     val response = jsonBodyOf(await(result))
-    verifyResponse(response, testCase.expectedDecision, clusterName)
+    verifyResponse(response, testCase.expectedDecision)
   }
 
   def createMultipleRequestsSendVerifyDecision(path: String): Unit = {
@@ -55,30 +53,20 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
       val result = decisionController.decide()(fakeRequest)
       status(result) shouldBe Status.OK
       val response = jsonBodyOf(await(result))
-      verifyResponse(response, testCase.expectedDecision, clusterName)
+      verifyResponse(response, testCase.expectedDecision)
     }
   }
 
-  def verifyResponse(response: JsValue, expectedResult:String, clusterName:String): Unit = {
+  def verifyDecision(expectedResult: String, decisionResponse: DecisionResponse): Unit
+
+  def verifyResponse(response: JsValue, expectedResult:String): Unit = {
     val responseString = Json.prettyPrint(response)
     val validationResult = JsonResponseValidator.validate(responseString)
     validationResult.isRight shouldBe true
-    val version = response \\ "version"
-    version should have size 1
-    val correlationID = response \\ "correlationID"
-    correlationID should have size 1
-    val result = response \\ "result"
-    result should have size 1
-    val resultString = result(0).as[String]
-    if (resultString == "Unknown" && expectedResult != "Unknown"){
-      val clusterScore = response \\ clusterName
-      clusterScore should have size 1
-      val clusterScoreString = clusterScore(0).as[String].toLowerCase
-      clusterScoreString shouldBe expectedResult.toLowerCase
-    }
-    else {
-      resultString shouldBe expectedResult
-    }
+    val jsResult = Json.fromJson[DecisionResponse](response)
+    jsResult.isSuccess shouldBe true
+    val decisionResponse = jsResult.get
+    verifyDecision(expectedResult, decisionResponse)
   }
 
   def toJsonWithValidation(request:DecisionRequest):JsValue = {
@@ -88,5 +76,19 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     validationResult.isRight shouldBe true
     requestJson
   }
+}
 
+trait DecisionControllerFinalCsvSpec extends DecisionControllerCsvSpec {
+  override def verifyDecision(expectedResult: String, decisionResponse: DecisionResponse): Unit = {
+    decisionResponse.result shouldBe expectedResult
+  }
+}
+
+trait DecisionControllerClusterCsvSpec extends DecisionControllerFinalCsvSpec {
+  val clusterName:String
+  override def verifyDecision(expectedResult: String, decisionResponse: DecisionResponse): Unit = {
+    val maybeClusterResult = decisionResponse.score.get(clusterName)
+    maybeClusterResult.isDefined shouldBe true
+    maybeClusterResult.map(_.toLowerCase) shouldBe Some(expectedResult.toLowerCase)
+  }
 }

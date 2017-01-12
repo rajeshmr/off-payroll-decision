@@ -21,7 +21,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 /**
   * Created by work on 22/12/2016.
   */
-class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
+class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
   val clusterName = "partAndParcel"
   val PART_AND_PARCEL_SCENARIO_0 = "/test-scenarios/single/part-and-parcel/scenario-0.csv"
   val PART_AND_PARCEL_SCENARIO_1 = "/test-scenarios/single/part-and-parcel/scenario-1.csv"
@@ -46,5 +46,4 @@ class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with Decisi
       createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_4)
     }
   }
-
 }
