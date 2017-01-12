@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
-import cats.data.{Validated, Xor}
-import play.Logger
+import cats.data.Validated
+import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.Validation
-import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
@@ -36,16 +35,24 @@ import scala.concurrent.Future
 
 trait DecisionController extends BaseController {
   val decisionService:DecisionService
+  val logger = Logger("accesslog")
 
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
+        logger.info("{\"request\":" + Json.prettyPrint(request.body))
         doDecide(req).map {
-          case Validated.Valid(decision) => Ok(Json.toJson(decisionToResponse(req, decision)))
-          case Validated.Invalid(error) => BadRequest(Json.toJson(ErrorResponse(error(0).code, error(0).message)))
+          case Validated.Valid(decision) =>
+            val response = Json.toJson(decisionToResponse(req, decision))
+            logger.info("\"response\":" + Json.prettyPrint(response) + "}")
+            Ok(response)
+          case Validated.Invalid(error) =>
+            val errorResponse = Json.toJson(ErrorResponse(error(0).code, error(0).message))
+            logger.info("\"errorResponse\":" + Json.prettyPrint(errorResponse) + "}")
+            BadRequest(errorResponse)
         }
       case JsError(jsonErrors) =>
-        Logger.debug(s"incorrect request: ${jsonErrors} ")
+        logger.info("{\"incorrectRequest\":" + jsonErrors + "}")
         Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))))
     }
   }
