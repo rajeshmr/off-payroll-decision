@@ -1,0 +1,8 @@
+// loading data:
+
+curl -XPOST 'localhost:9200/decision/_bulk?pretty' --data-binary @access.log
+
+// delete index
+
+curl -XDELETE http://localhost:9200/decision
+

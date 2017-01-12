@@ -1,40 +1,40 @@
-personalService     ,   contractualObligationForSubstitute        , No
-personalService     ,   contractualRightForSubstitute             , Yes
-personalService     ,   contractualRightReflectInPractise         , Yes
-personalService     ,   engagerArrangeIfWorkerIsUnwillingOrUnable , Yes
-personalService     ,   possibleHelper                            , No
+personalService     ,   contractualObligationForSubstitute        ,     No
+personalService     ,   contractualRightForSubstitute             ,     Yes
+personalService     ,   contractualRightReflectInPractise         ,     Yes
+personalService     ,   engagerArrangeIfWorkerIsUnwillingOrUnable ,     Yes
+personalService     ,   possibleHelper                            ,     No
 control             ,   toldWhatToDo                              , 	No
 control             ,   engagerMovingWorker                       , 	Yes
 control             ,   workerDecidingHowWorkIsDone               , 	workingSetInstructions
 control             ,   whenWorkHasToBeDone                       , 	workinPatternRegularHoursToAgreedDeadlines
 control             ,   workerDecideWhere                         , 	couldFixWorkerLocation
-financialRiskA      ,         workerPaidInclusive                 , 	No
-financialRiskA      ,         workerNeedConsumablesMaterials      , 	Yes
-financialRiskA      ,         workerProvideConsumablesMaterials   , 	Yes
-financialRiskA      ,         engagerPayConsumables               , 	Yes
-financialRiskA      ,         workerNeedEquipment                 , 	Yes
-financialRiskA      ,         workerProvideEquipment              , 	Yes
-financialRiskA      ,         engagerPayEquipment                 , 	Yes
-financialRiskB      ,         provideVehicle                      , 	Yes
-financialRiskB      ,         engagerPayVehicleExpense            , 	Yes
-financialRiskB      ,         workerIncurExpense                  , 	Yes
-financialRiskB      ,         engagerPayOtherExpense              , 	Yes
-financialRiskB      ,         workerMainIncome                    , 	incomeRateByInvoice
-financialRiskB      ,         workerSufferedLatePayment           , 	No
-financialRiskB      ,         workerProvideAtTheirExpense         , 	Yes
-financialRiskB      ,         workerFixAtTheirOwnTime             , 	No
-financialRiskB      ,         workerPayForMaterialsSubstandardWorker         , 	No
-financialRiskB      ,         paidForSubstandardWork                         , 	No
-businessStructure   ,         similarWork                                    , 4-9
-businessStructure   ,         workerVAT                                      , Yes
-businessStructure   ,         businessAccount                                , Yes
-businessStructure   ,         advertiseForWork                               , Yes
-businessStructure   ,         businessWebsite                                ,
-businessStructure   ,         workerPayForTraining                           ,
-businessStructure   ,         workerExpenseRunningBusinessPremises           ,
-businessStructure   ,         workerPaysForInsurance                         ,
-partAndParcel,   workerReceivesBenefits                , Yes
-partAndParcel,   workerAsLineManager                   ,
-partAndParcel,   contactWithEngagerCustomer            ,
-partAndParcel,   workerRepresentsEngagerBusiness       ,
+financialRiskA      ,   workerPaidInclusive                       , 	No
+financialRiskA      ,   workerNeedConsumablesMaterials            , 	Yes
+financialRiskA      ,   workerProvideConsumablesMaterials         , 	Yes
+financialRiskA      ,   engagerPayConsumables                     , 	Yes
+financialRiskA      ,   workerNeedEquipment                       , 	Yes
+financialRiskA      ,   workerProvideEquipment                    , 	Yes
+financialRiskA      ,   engagerPayEquipment                       , 	Yes
+financialRiskB      ,   provideVehicle                            , 	Yes
+financialRiskB      ,   engagerPayVehicleExpense                  , 	Yes
+financialRiskB      ,   workerIncurExpense                        , 	Yes
+financialRiskB      ,   engagerPayOtherExpense                    , 	Yes
+financialRiskB      ,   workerMainIncome                          , 	incomeRateByInvoice
+financialRiskB      ,   workerSufferedLatePayment                 , 	No
+financialRiskB      ,   workerProvideAtTheirExpense               , 	Yes
+financialRiskB      ,   workerFixAtTheirOwnTime                   , 	No
+financialRiskB      ,   workerPayForMaterialsSubstandardWorker    , 	No
+financialRiskB      ,   paidForSubstandardWork                    , 	No
+businessStructure   ,   similarWork                               ,     4-9
+businessStructure   ,   workerVAT                                 ,     Yes
+businessStructure   ,   businessAccount                           ,     Yes
+businessStructure   ,   advertiseForWork                          ,     Yes
+businessStructure   ,   businessWebsite                           ,
+businessStructure   ,   workerPayForTraining                      ,
+businessStructure   ,   workerExpenseRunningBusinessPremises      ,
+businessStructure   ,   workerPaysForInsurance                    ,
+partAndParcel       ,   workerReceivesBenefits                    ,     Yes
+partAndParcel       ,   workerAsLineManager                       ,
+partAndParcel       ,   contactWithEngagerCustomer                ,
+partAndParcel       ,   workerRepresentsEngagerBusiness           ,
 Not Matched
