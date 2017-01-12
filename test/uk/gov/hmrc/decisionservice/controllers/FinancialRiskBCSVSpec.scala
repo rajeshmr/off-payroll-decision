@@ -21,9 +21,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 /**
   * Created by work on 09/01/2017.
   */
-class FinancialRiskBCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerCsvSpec {
-
-  val clusterName = "financialRiskB"
+class FinancialRiskBCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerFinalCsvSpec {
   val FINANCIAL_RISK_B_SCENARIO_0 = "/test-scenarios/single/financial-risk-b/scenario_0.csv"
   val FINANCIAL_RISK_B_SCENARIO_1 = "/test-scenarios/single/financial-risk-b/scenario_1.csv"
   val FINANCIAL_RISK_B_SCENARIO_2 = "/test-scenarios/single/financial-risk-b/scenario_2.csv"
@@ -39,5 +37,4 @@ class FinancialRiskBCSVSpec extends UnitSpec with WithFakeApplication with Decis
       createRequestSendVerifyDecision(FINANCIAL_RISK_B_SCENARIO_2)
     }
   }
-
 }
