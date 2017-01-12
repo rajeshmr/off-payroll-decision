@@ -16,9 +16,11 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import cats.data.Validated
 import play.api.Logger
-import play.api.libs.json.{JsError, JsSuccess, Json}
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
@@ -36,25 +38,43 @@ import scala.concurrent.Future
 trait DecisionController extends BaseController {
   val decisionService:DecisionService
   val logger = Logger("accesslog")
+  val id:AtomicInteger = new AtomicInteger
 
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
-        logger.info("{\"request\":" + Json.prettyPrint(request.body))
+        val requestLog = fmt(req)
         doDecide(req).map {
           case Validated.Valid(decision) =>
-            val response = Json.toJson(decisionToResponse(req, decision))
-            logger.info("\"response\":" + Json.prettyPrint(response) + "}")
-            Ok(response)
+            val response = decisionToResponse(req, decision)
+            logger.info("{\"index\":{\"_index\":\"decision\",\"_type\":\"act\",\"_id\":" + id.getAndIncrement() + "}}")
+            logger.info("{" + requestLog + "," + fmt(response) + "}")
+            Ok(Json.toJson(response))
           case Validated.Invalid(error) =>
-            val errorResponse = Json.toJson(ErrorResponse(error(0).code, error(0).message))
-            logger.info("\"errorResponse\":" + Json.prettyPrint(errorResponse) + "}")
-            BadRequest(errorResponse)
+            val errorResponse = ErrorResponse(error(0).code, error(0).message)
+            Logger.info("{" + requestLog + "," + fmt(errorResponse) + "}")
+            BadRequest(Json.toJson(errorResponse))
         }
       case JsError(jsonErrors) =>
-        logger.info("{\"incorrectRequest\":" + jsonErrors + "}")
+        Logger.info("{\"incorrectRequest\":" + jsonErrors + "}")
         Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))))
     }
+  }
+
+  def fmt(decisionRequest: DecisionRequest):String = {
+    decisionRequest.interview.values.map(fmt(_)).mkString(",")
+  }
+
+  def fmt(m:Map[String,String]):String = {
+    m.toList.map(a => "\"" + a._1 + "\":" + "\"" + a._2 + "\"" ).mkString(",")
+  }
+
+  def fmt(decisionResponse: DecisionResponse):String = {
+    "\"result\":" + "\"" + decisionResponse.result + "\""
+  }
+
+  def fmt(errorResponse: ErrorResponse):String = {
+    ""
   }
 
   def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
