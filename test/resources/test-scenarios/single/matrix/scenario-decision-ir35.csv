@@ -23,7 +23,7 @@ financialRiskB      ,         workerProvideAtTheirExpense         , 	Yes
 financialRiskB      ,         workerFixAtTheirOwnTime             , 	No
 financialRiskB      ,         workerPayForMaterialsSubstandardWorker         , 	No
 financialRiskB      ,         paidForSubstandardWork                         , 	No
-businessStructure   ,         similarWork                                    , 0-3
+businessStructure   ,         similarWork                                    , zeroToThree
 businessStructure   ,         workerVAT                                      ,
 businessStructure   ,         businessAccount                                ,
 businessStructure   ,         advertiseForWork                               ,
