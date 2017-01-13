@@ -54,6 +54,7 @@ curl -XPUT http://localhost:9200/decision -d '
                "wouldWorkerPayHelper":{ "type":  "string" },
                "workerSentActualHelper":{ "type":  "string" },
                "workerPayActualHelper":{ "type":  "string" },
+               "correlationId":{ "type":  "string" },
                "partAndParcel":{ "type":  "string" },
                "financialRiskB":{ "type":  "string" },
                "personalService":{ "type":  "string" },

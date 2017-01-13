@@ -9,3 +9,21 @@ curl -XDELETE http://localhost:9200/decision
 // copy log
 
 cp ~/hmrc/off-payroll-decision-service/logs/access.log .
+
+// display indices
+
+curl 'localhost:9200/_cat/indices?v'
+
+// display mapping
+
+curl 'localhost:9200/decision/_mapping'
+curl 'localhost:9200/decision/_mapping/_default_'
+
+// analyse field
+
+curl -XGET 'localhost:9200/decision/_analyze?pretty' -d'
+{
+  "field": "control",
+  "text": "HIGH"
+}'
+

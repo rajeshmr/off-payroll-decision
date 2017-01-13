@@ -72,8 +72,12 @@ trait DecisionController extends BaseController {
     m.toList.map(fmt(_)).mkString(",")
   }
 
+  def fmt(fieldName:String, fieldValue:String):String = {
+    "\"" + fieldName + "\":" + "\"" + fieldValue + "\""
+  }
+
   def fmt(decisionResponse: DecisionResponse):String = {
-    List(fmt(decisionResponse.score), "\"result\":" + "\"" + decisionResponse.result + "\"").mkString(",")
+    List(fmt("correlationId",decisionResponse.correlationID), fmt(decisionResponse.score), fmt("result", decisionResponse.result)).mkString(",")
   }
 
   def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
