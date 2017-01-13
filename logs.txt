@@ -476,7 +476,7 @@
 [[37minfo[0m] application - Starting microservice : off-payroll-decision : in mode : Test
 [[36mdebug[0m] application - matching for section:	'businessStructure'
 [[36mdebug[0m] application - headings:	similarWork	,workerVAT	,businessAccount	,advertiseForWork	,businessWebsite	,workerPayForTraining	,workerExpenseRunningBusinessPremises	,workerPaysForInsurance
-[[36mdebug[0m] application - facts:   	zeroToTen	,	,	,	,	,	,	,
+[[36mdebug[0m] application - facts:   	zeroToThree	,	,	,	,	,	,	,
 [[36mdebug[0m] application - pseudo-match result is: >>>(low)
 [[36mdebug[0m] application - new fact:	businessStructure -> 'low' 
 [[36mdebug[0m] application - matching for section:	'control'
@@ -1268,7 +1268,7 @@
 [[37minfo[0m] application - Starting microservice : off-payroll-decision : in mode : Test
 [[36mdebug[0m] application - matching for section:	'businessStructure'
 [[36mdebug[0m] application - headings:	similarWork	,workerVAT	,businessAccount	,advertiseForWork	,businessWebsite	,workerPayForTraining	,workerExpenseRunningBusinessPremises	,workerPaysForInsurance
-[[36mdebug[0m] application - facts:   	zeroToTen	,	,	,	,	,	,	,
+[[36mdebug[0m] application - facts:   	zeroToThree	,	,	,	,	,	,	,
 [[36mdebug[0m] application - pseudo-match result is: >>>(low)
 [[36mdebug[0m] application - new fact:	businessStructure -> 'low' 
 [[36mdebug[0m] application - matching for section:	'control'

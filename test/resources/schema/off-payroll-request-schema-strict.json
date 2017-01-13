@@ -269,7 +269,7 @@
             "similarWork": {
               "type": "string",
               "enum": [
-                "zeroToTen",
+                "zeroToThree",
                 "fourToNine",
                 "tenPlus"
               ]
