@@ -269,9 +269,9 @@
             "similarWork": {
               "type": "string",
               "enum": [
-                "0-3",
-                "4-9",
-                "10+"
+                "zeroToTen",
+                "fourToNine",
+                "tenPlus"
               ]
             },
             "workerVAT": {
