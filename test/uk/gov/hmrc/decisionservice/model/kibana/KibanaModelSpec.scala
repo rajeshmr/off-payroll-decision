@@ -22,13 +22,8 @@ import uk.gov.hmrc.play.test.UnitSpec
 class KibanaModelSpec extends UnitSpec {
   "kibana index Scala object" should {
     "be correctly converted to json object" in {
-      val kibanaIndex = KibanaIndex(KibanaIndexNested("decision", "act", 123))
-      val jsValue:JsValue = Json.toJson(kibanaIndex)
-      jsValue.toString shouldBe "{\"index\":{\"_index\":\"decision\",\"_type\":\"act\",\"_id\":123}}"
-      val index = jsValue \\ "_index"
-      val id = jsValue \\ "_id"
-      index should have size 1
-      id should have size 1
+      val kibanaIndex = KibanaIndex(123)
+      kibanaIndex.asLogLine shouldBe "{\"index\":{\"_index\":\"decision\",\"_type\":\"act\",\"_id\":123}}"
     }
   }
   "kibana row Scala object" should {

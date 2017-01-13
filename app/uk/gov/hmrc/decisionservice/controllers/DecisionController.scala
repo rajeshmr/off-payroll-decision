@@ -20,11 +20,12 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import cats.data.Validated
 import play.api.Logger
-import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
+import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
+import uk.gov.hmrc.decisionservice.model.kibana.{KibanaIndex, KibanaRow}
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
@@ -43,16 +44,14 @@ trait DecisionController extends BaseController {
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
-        val requestLog = fmt(req)
         doDecide(req).map {
           case Validated.Valid(decision) =>
             val response = decisionToResponse(req, decision)
-            logger.info("{\"index\":{\"_index\":\"decision\",\"_type\":\"act\",\"_id\":" + id.getAndIncrement() + "}}")
-            logger.info("{" + requestLog + "," + fmt(response) + "}")
+            logger.info(KibanaIndex(id.getAndIncrement()).asLogLine)
+            logger.info(createKibanaRow(req,response).asLogLine)
             Ok(Json.toJson(response))
           case Validated.Invalid(error) =>
             val errorResponse = ErrorResponse(error(0).code, error(0).message)
-            Logger.info("{" + requestLog + "," + errorResponse + "}")
             BadRequest(Json.toJson(errorResponse))
         }
       case JsError(jsonErrors) =>
@@ -61,23 +60,10 @@ trait DecisionController extends BaseController {
     }
   }
 
-  def fmt(decisionRequest: DecisionRequest):String = {
-    decisionRequest.interview.values.map(fmt(_)).mkString(",")
-  }
-
-  def fmt(m:Map[String,String]):String = {
-    def fmt(p:(String,String)):String = p match {
-      case (a,b) => "\"" + a + "\":" + "\"" + b + "\""
-    }
-    m.toList.map(fmt(_)).mkString(",")
-  }
-
-  def fmt(fieldName:String, fieldValue:String):String = {
-    "\"" + fieldName + "\":" + "\"" + fieldValue + "\""
-  }
-
-  def fmt(decisionResponse: DecisionResponse):String = {
-    List(fmt("correlationId",decisionResponse.correlationID), fmt(decisionResponse.score), fmt("result", decisionResponse.result)).mkString(",")
+  def createKibanaRow(decisionRequest: DecisionRequest, decisionResponse: DecisionResponse):KibanaRow = {
+    val requestList = decisionRequest.interview.values.map(_.toList).reduceLeft(_ ::: _)
+    val responseList = decisionResponse.score.toList ::: List(("correlationId",decisionResponse.correlationID), ("result", decisionResponse.result))
+    KibanaRow((requestList ::: responseList).toMap)
   }
 
   def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
