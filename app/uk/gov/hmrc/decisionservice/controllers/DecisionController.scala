@@ -39,24 +39,32 @@ import scala.concurrent.Future
 trait DecisionController extends BaseController {
   val decisionService:DecisionService
   val logger = Logger("accesslog")
+  val ioLogger = Logger("inputoutputlog")
   val id:AtomicInteger = new AtomicInteger
 
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
+        ioLogger.info(s"request: ${Json.prettyPrint(request.body)}")
         doDecide(req).map {
           case Validated.Valid(decision) =>
             val response = decisionToResponse(req, decision)
             logger.info(KibanaIndex(id.getAndIncrement()).asLogLine)
             logger.info(createKibanaRow(req,response).asLogLine)
-            Ok(Json.toJson(response))
+            val responseBody = Json.toJson(response)
+            ioLogger.info(s"response: ${Json.prettyPrint(responseBody)}")
+            Ok(responseBody)
           case Validated.Invalid(error) =>
             val errorResponse = ErrorResponse(error(0).code, error(0).message)
-            BadRequest(Json.toJson(errorResponse))
+            val errorResponseBody = Json.toJson(errorResponse)
+            ioLogger.info(s"error response: ${Json.prettyPrint(errorResponseBody)}")
+            BadRequest(errorResponseBody)
         }
       case JsError(jsonErrors) =>
         Logger.info("{\"incorrectRequest\":" + jsonErrors + "}")
-        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))))
+        val errorResponseBody = Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))
+        ioLogger.info(s"incorrect request response: ${Json.prettyPrint(errorResponseBody)}")
+        Future.successful(BadRequest(errorResponseBody))
     }
   }
 
