@@ -32,8 +32,8 @@ object MatchingFunctions {
     val result = factValues match {
       case Nil => None
       case x::xs => x.value match {
-        case "0-3" => Some(>>>("low"))
-        case "10+" => Some(>>>("high"))
+        case "zeroToThree" => Some(>>>("low"))
+        case "tenPlus" => Some(>>>("high"))
         case _ =>
           val count = xs.count(_.value.toLowerCase == "yes")
           Some(>>>(if (count < 2) "low" else if (count < 4) "medium" else "high"))

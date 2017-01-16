@@ -1,4 +1,4 @@
-businessStructure, similarWork                           , 0-3 , 4-9, 4-9   , 4-9 , 10+
+businessStructure, similarWork                           , zeroToThree , fourToNine, fourToNine   , fourToNine , tenPlus
 businessStructure, workerVAT                             ,     , No , Yes   , Yes ,
 businessStructure, businessAccount                       ,     , No , Yes   , Yes ,
 businessStructure, advertiseForWork                      ,     , No , Yes   , Yes ,
