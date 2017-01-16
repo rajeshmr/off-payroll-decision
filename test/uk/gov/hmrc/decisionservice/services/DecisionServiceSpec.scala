@@ -116,7 +116,7 @@ class DecisionServiceSpec extends UnitSpec {
     "produce correct decision for a special custom fact 3" in {
       val facts =
       Facts(Map(
-        "similarWork" -> >>>("10+"),
+        "similarWork" -> >>>("tenPlus"),
         "workerVAT" -> >>>("yes"),
         "businessAccount" -> >>>("yes"),
         "advertiseForWork" -> >>>("yes"),
