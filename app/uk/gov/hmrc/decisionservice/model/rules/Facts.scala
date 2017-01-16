@@ -16,21 +16,21 @@
 
 package uk.gov.hmrc.decisionservice.model.rules
 
-import uk.gov.hmrc.decisionservice.ruleengine.FactMatcherInstance
 import play.api.Logger
 import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.ruleengine.FactMatcherInstance
 
 case class Facts(facts:Map[String,CarryOver]){
 
   def ==+>:(rules:SectionRuleSet):Validation[Facts] = {
     val defaultFactName = rules.section
-    Logger.debug(s"matching for section:\t'$defaultFactName'")
-    Logger.debug(s"headings:\t${rules.headings.mkString("\t,")}")
-    Logger.debug(s"facts:   \t${rules.headings.map(facts.getOrElse(_, >>>("")).value).mkString("\t,")}")
+    Logger.info(s"matching for section:\t'$defaultFactName'")
+    Logger.info(s"headings:\t${rules.headings.mkString("\t,")}")
+    Logger.info(s"facts:   \t${rules.headings.map(facts.getOrElse(_, >>>("")).value).mkString("\t,")}")
     FactMatcherInstance.matchFacts(facts,rules).map { carryOver =>
       val factName = carryOver.name.getOrElse(defaultFactName)
       val newFact = (factName -> carryOver)
-      Logger.debug(s"new fact:\t$factName -> '${carryOver.value}' ${if (carryOver.exit) "EXIT" else ""}")
+      Logger.info(s"new fact:\t$factName -> '${carryOver.value}' ${if (carryOver.exit) "EXIT" else ""}")
       Facts(facts + newFact)
     }
   }

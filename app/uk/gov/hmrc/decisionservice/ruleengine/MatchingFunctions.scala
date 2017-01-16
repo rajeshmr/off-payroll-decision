@@ -23,7 +23,7 @@ object MatchingFunctions {
   def matches(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
     factValues.zip(sr.values).filterNot(>>>.equivalent(_)) match {
       case Nil =>
-        Logger.debug(s"matched:\t${sr.values.map(_.value).mkString("\t,")}")
+        Logger.info(s"matched:\t${sr.values.map(_.value).mkString("\t,")}")
         Some(sr.result)
       case _ => None
     }
@@ -39,7 +39,7 @@ object MatchingFunctions {
           Some(>>>(if (count < 2) "low" else if (count < 4) "medium" else "high"))
       }
     }
-    Logger.debug(s"pseudo-match result is: ${result.getOrElse("none")}")
+    Logger.info(s"pseudo-match result is: ${result.getOrElse("none")}")
     result
   }
 }
