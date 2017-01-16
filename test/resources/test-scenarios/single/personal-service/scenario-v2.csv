@@ -1,0 +1,15 @@
+personalService,   contractualObligationForSubstitute                  ,    Yes
+personalService,   contractualObligationInPractise       ,
+personalService,   contractualRightForSubstitute    ,
+personalService,   actualRightToSendSubstitute                ,
+personalService,   contractualRightReflectInPractise                  ,
+personalService,   engagerArrangeIfWorkerIsUnwillingOrUnable               ,
+personalService,   possibleSubstituteRejection                  ,
+personalService,   contractTermsWorkerPaysSubstitute                  ,
+personalService,   workerSentActualSubstitute       ,
+personalService,   actualSubstituteRejection    ,
+personalService,   possibleHelper                ,
+personalService,   wouldWorkerPayHelper                  ,
+personalService,   workerSentActualHelper               ,
+personalService,   workerPayActualHelper                  ,
+NotValidUseCase

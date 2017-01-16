@@ -60,13 +60,14 @@ trait RuleEngine {
           }
       }
     }
+    Logger.info(s"processing rules for ${rules.rules.size} clusters against ${facts.facts.size} facts")
     val maybeFacts = go(rules.rules, facts)
     maybeFacts.map {
       case f@FinalFact(ff) =>
-        Logger.debug(s"decision found: '${ff.value}'\n")
+        Logger.info(s"decision found: '${ff.value}'\n")
         RuleEngineDecisionImpl(ff.value, f.facts)
       case f =>
-        Logger.debug(s"final decision not found - not matched\n")
+        Logger.info(s"final decision not found - not matched\n")
         RuleEngineDecisionNotMatched(f.facts)
     }
   }

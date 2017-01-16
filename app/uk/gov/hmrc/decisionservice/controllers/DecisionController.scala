@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
-import cats.data.{Validated, Xor}
-import play.Logger
+import java.util.concurrent.atomic.AtomicInteger
+
+import cats.data.Validated
+import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.Validation
-import uk.gov.hmrc.decisionservice.model.DecisionServiceError
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
+import uk.gov.hmrc.decisionservice.model.kibana.{KibanaIndex, KibanaRow}
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
@@ -36,18 +38,40 @@ import scala.concurrent.Future
 
 trait DecisionController extends BaseController {
   val decisionService:DecisionService
+  val logger = Logger("accesslog")
+  val ioLogger = Logger("inputoutputlog")
+  val id:AtomicInteger = new AtomicInteger
 
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
+        ioLogger.info(s"request: ${Json.prettyPrint(request.body)}")
         doDecide(req).map {
-          case Validated.Valid(decision) => Ok(Json.toJson(decisionToResponse(req, decision)))
-          case Validated.Invalid(error) => BadRequest(Json.toJson(ErrorResponse(error(0).code, error(0).message)))
+          case Validated.Valid(decision) =>
+            val response = decisionToResponse(req, decision)
+            logger.info(KibanaIndex(id.getAndIncrement()).asLogLine)
+            logger.info(createKibanaRow(req,response).asLogLine)
+            val responseBody = Json.toJson(response)
+            ioLogger.info(s"response: ${Json.prettyPrint(responseBody)}")
+            Ok(responseBody)
+          case Validated.Invalid(error) =>
+            val errorResponse = ErrorResponse(error(0).code, error(0).message)
+            val errorResponseBody = Json.toJson(errorResponse)
+            ioLogger.info(s"error response: ${Json.prettyPrint(errorResponseBody)}")
+            BadRequest(errorResponseBody)
         }
       case JsError(jsonErrors) =>
-        Logger.debug(s"incorrect request: ${jsonErrors} ")
-        Future.successful(BadRequest(Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))))
+        Logger.info("{\"incorrectRequest\":" + jsonErrors + "}")
+        val errorResponseBody = Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))
+        ioLogger.info(s"incorrect request response: ${Json.prettyPrint(errorResponseBody)}")
+        Future.successful(BadRequest(errorResponseBody))
     }
+  }
+
+  def createKibanaRow(decisionRequest: DecisionRequest, decisionResponse: DecisionResponse):KibanaRow = {
+    val requestList = decisionRequest.interview.values.map(_.toList).reduceLeft(_ ::: _)
+    val responseList = decisionResponse.score.toList ::: List(("correlationId",decisionResponse.correlationID), ("result", decisionResponse.result))
+    KibanaRow((requestList ::: responseList).toMap)
   }
 
   def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {

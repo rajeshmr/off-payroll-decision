@@ -24,6 +24,9 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with Deci
   val PERSONAL_SERVICE_SCENARIO_1 = "/test-scenarios/single/personal-service/scenario-1.csv"
   val PERSONAL_SERVICE_SCENARIO_2 = "/test-scenarios/single/personal-service/scenario-2.csv"
   val PERSONAL_SERVICE_SCENARIO_3 = "/test-scenarios/single/personal-service/scenario-3.csv"
+  val PERSONAL_SERVICE_SCENARIO_V1 = "/test-scenarios/single/personal-service/scenario-v1.csv"
+  val PERSONAL_SERVICE_SCENARIO_V2 = "/test-scenarios/single/personal-service/scenario-v2.csv"
+  val PERSONAL_SERVICE_SCENARIO_V3 = "/test-scenarios/single/personal-service/scenario-v3.csv"
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for personal service scenario 0" in {
@@ -37,6 +40,15 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with Deci
     }
     "return 200 and correct response with the expected decision for personal service scenario 3" in {
       createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_3)
+    }
+    "return 200 and correct response with the expected decision for personal service scenario V1" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V1)
+    }
+    "return 200 and correct response with the expected decision for personal service scenario V2" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V2)
+    }
+    "return 200 and correct response with the expected decision for personal service scenario V3" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V3)
     }
   }
 }
