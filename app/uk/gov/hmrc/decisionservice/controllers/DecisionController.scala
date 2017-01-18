@@ -50,7 +50,7 @@ trait DecisionController extends BaseController {
 //            Logger.info(KibanaIndex(id.getAndIncrement()).asLogLine)
             Logger.info(createKibanaRow(req,response).asLogLine)
             val responseBody = Json.toJson(response)
-            Logger.info(s"response: ${responseBody}")
+            Logger.info(s"response: ${responseBody.toString.replaceAll("\"","")}")
             Logger.info(s"${response.result}")
             Ok(responseBody)
           case Validated.Invalid(error) =>
