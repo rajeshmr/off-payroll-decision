@@ -64,10 +64,10 @@ trait RuleEngine {
     val maybeFacts = go(rules.rules, facts)
     maybeFacts.map {
       case f@FinalFact(ff) =>
-        Logger.info(s"decision found: '${ff.value}'\n")
+        Logger.info(s"final decision: ${ff.value}")
         RuleEngineDecisionImpl(ff.value, f.facts)
       case f =>
-        Logger.info(s"final decision not found - not matched\n")
+        Logger.info(s"final decision: not matched")
         RuleEngineDecisionNotMatched(f.facts)
     }
   }

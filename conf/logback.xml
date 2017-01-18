@@ -5,8 +5,8 @@
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${application.home:-.}/logs/decision-service.log</file>
-        <encoder>
-            <pattern>%date - [%level] %message%n</pattern>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
         </encoder>
     </appender>
 
@@ -16,27 +16,27 @@
         </encoder>
     </appender>
 
-    <appender name="ACCESS_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+    <!--appender name="ACCESS_LOG_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/access.log</file>
         <encoder>
             <pattern>%message%n</pattern>
         </encoder>
-    </appender>
+    </appender-->
 
-    <appender name="INPUT_OUTPUT_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+    <!--appender name="INPUT_OUTPUT_LOG_FILE" class="ch.qos.logback.core.FileAppender">
         <file>logs/inputoutput.log</file>
         <encoder>
             <pattern>%date - %message%n</pattern>
         </encoder>
-    </appender>
+    </appender-->
 
-    <logger name="inputoutputlog" level="INFO" additivity="false">
+    <!--logger name="inputoutputlog" level="INFO" additivity="false">
         <appender-ref ref="INPUT_OUTPUT_LOG_FILE" />
-    </logger>
+    </logger-->
 
-    <logger name="accesslog" level="INFO" additivity="false">
+    <!--logger name="accesslog" level="INFO" additivity="false">
         <appender-ref ref="ACCESS_LOG_FILE" />
-    </logger>
+    </logger-->
 
     <logger name="play" level="DEBUG" />
     <logger name="application" level="DEBUG" />
