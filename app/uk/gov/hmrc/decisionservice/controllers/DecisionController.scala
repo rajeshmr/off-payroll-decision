@@ -43,7 +43,7 @@ trait DecisionController extends BaseController {
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
-        Logger.info(s"request: ${request.body}")
+        Logger.info(s"request: ${request.body.toString.replaceAll("\"","")}")
         doDecide(req).map {
           case Validated.Valid(decision) =>
             val response = decisionToResponse(req, decision)
@@ -56,13 +56,13 @@ trait DecisionController extends BaseController {
           case Validated.Invalid(error) =>
             val errorResponse = ErrorResponse(error(0).code, error(0).message)
             val errorResponseBody = Json.toJson(errorResponse)
-            Logger.info(s"error response: ${Json.prettyPrint(errorResponseBody)}")
+            Logger.info(s"error response: ${errorResponseBody}")
             BadRequest(errorResponseBody)
         }
       case JsError(jsonErrors) =>
         Logger.info("{\"incorrectRequest\":" + jsonErrors + "}")
         val errorResponseBody = Json.toJson(ErrorResponse(REQUEST_FORMAT, JsError.toJson(jsonErrors).toString()))
-        Logger.info(s"incorrect request response: ${Json.prettyPrint(errorResponseBody)}")
+        Logger.info(s"incorrect request response: ${errorResponseBody}")
         Future.successful(BadRequest(errorResponseBody))
     }
   }
