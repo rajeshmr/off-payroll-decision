@@ -19,13 +19,13 @@ package uk.gov.hmrc.decisionservice.controllers
 import java.util.concurrent.atomic.AtomicInteger
 
 import cats.data.Validated
+import org.slf4j.MDC
 import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.Validation
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
-import uk.gov.hmrc.decisionservice.model.kibana.{KibanaIndex, KibanaRow}
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
@@ -35,7 +35,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-
 trait DecisionController extends BaseController {
   val decisionService:DecisionService
   val id:AtomicInteger = new AtomicInteger
@@ -43,12 +42,11 @@ trait DecisionController extends BaseController {
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
+        MDC.put("correlationID", req.correlationID)
         Logger.info(s"request: ${request.body.toString.replaceAll("\"","")}")
         doDecide(req).map {
           case Validated.Valid(decision) =>
             val response = decisionToResponse(req, decision)
-//            Logger.info(KibanaIndex(id.getAndIncrement()).asLogLine)
-            Logger.info(createKibanaRow(req,response).asLogLine)
             val responseBody = Json.toJson(response)
             Logger.info(s"response: ${responseBody.toString.replaceAll("\"","")}")
             Logger.info(s"${response.result}")
@@ -65,12 +63,6 @@ trait DecisionController extends BaseController {
         Logger.info(s"incorrect request response: ${errorResponseBody}")
         Future.successful(BadRequest(errorResponseBody))
     }
-  }
-
-  def createKibanaRow(decisionRequest: DecisionRequest, decisionResponse: DecisionResponse):KibanaRow = {
-    val requestList = decisionRequest.interview.values.map(_.toList).reduceLeft(_ ::: _)
-    val responseList = decisionResponse.score.toList ::: List(("correlationId",decisionResponse.correlationID), ("result", decisionResponse.result))
-    KibanaRow((requestList ::: responseList).toMap)
   }
 
   def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
