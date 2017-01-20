@@ -42,7 +42,7 @@ trait DecisionController extends BaseController {
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
-        MDC.put("correlationID", req.correlationID)
+        MDC.put("correlation", req.correlationID)
         Logger.info(s"request: ${request.body.toString.replaceAll("\"","")}")
         doDecide(req).map {
           case Validated.Valid(decision) =>
