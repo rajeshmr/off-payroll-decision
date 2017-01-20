@@ -6,7 +6,7 @@
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${application.home:-.}/logs/decision-service.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%date{ISO8601} level=[%level] logger=[%logger] thread=[%thread] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
+            <pattern>%date{ISO8601} correlationID=[%X{correlationID}] level=[%level] logger=[%logger] thread=[%thread] message=[%message] %replace(exception=[%xException]){'^exception=\[\]$',''}%n</pattern>
         </encoder>
     </appender>
 
