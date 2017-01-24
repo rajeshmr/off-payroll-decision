@@ -1,0 +1,38 @@
+personalService     ,   contractualObligationForSubstitute        , 	Yes
+personalService     ,   contractualObligationInPractise           , 	No
+personalService     ,   engagerArrangeIfWorkerIsUnwillingOrUnable , 	No
+control             ,   toldWhatToDo                              , 	Yes
+control             ,   engagerMovingWorker                       , 	No
+control             ,   workerDecidingHowWorkIsDone               , 	workingSetInstructions
+control             ,   whenWorkHasToBeDone                       , 	workinPatternRegularHoursToAgreedDeadlines
+control             ,   workerDecideWhere                         , 	couldFixWorkerLocation
+financialRiskA      ,         workerPaidInclusive                 , 	No
+financialRiskA      ,         workerNeedConsumablesMaterials      , 	Yes
+financialRiskA      ,         workerProvideConsumablesMaterials   , 	Yes
+financialRiskA      ,         engagerPayConsumables               , 	Yes
+financialRiskA      ,         workerNeedEquipment                 , 	Yes
+financialRiskA      ,         workerProvideEquipment              , 	Yes
+financialRiskA      ,         engagerPayEquipment                 , 	Yes
+financialRiskB      ,         provideVehicle                      , 	Yes
+financialRiskB      ,         engagerPayVehicleExpense            , 	Yes
+financialRiskB      ,         workerIncurExpense                  , 	Yes
+financialRiskB      ,         engagerPayOtherExpense              , 	No
+financialRiskB      ,         workerMainIncome                    , 	incomeRateByInvoice
+financialRiskB      ,         workerSufferedLatePayment           , 	No
+financialRiskB      ,         workerProvideAtTheirExpense         , 	Yes
+financialRiskB      ,         workerFixAtTheirOwnTime             , 	No
+financialRiskB      ,         workerPayForMaterialsSubstandardWorker         , 	No
+financialRiskB      ,         paidForSubstandardWork                         , 	No
+businessStructure   ,         similarWork                                    , zeroToThree
+businessStructure   ,         workerVAT                                      ,
+businessStructure   ,         businessAccount                                ,
+businessStructure   ,         advertiseForWork                               ,
+businessStructure   ,         businessWebsite                                ,
+businessStructure   ,         workerPayForTraining                           ,
+businessStructure   ,         workerExpenseRunningBusinessPremises           ,
+businessStructure   ,         workerPaysForInsurance                         ,
+partAndParcel,   workerReceivesBenefits                , No
+partAndParcel,   workerAsLineManager                   , No
+partAndParcel,   contactWithEngagerCustomer            , No
+partAndParcel,   workerRepresentsEngagerBusiness       ,
+Inside IR35
