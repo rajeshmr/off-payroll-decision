@@ -23,6 +23,7 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
   val TEST_CASE_NOT_MATCHED_2 = "/test-scenarios/single/matrix/scenario-final-not-matched-2.csv"
   val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/matrix/scenario-earlyexit-outofir35.csv"
   val TEST_CASE_INSIDEIR35 = "/test-scenarios/single/matrix/scenario-decision-ir35.csv"
+  val TEST_CASE_INSIDEIR35_MATCH_FINANCIAL_RISK_BLANK = "/test-scenarios/single/matrix/scenario-decision-ir35-matches-financialRiskBlank.csv"
   val TEST_CASE_UNKNOWN = "/test-scenarios/single/matrix/scenario-decision-unknown.csv"
 
   "POST /decide" should {
@@ -37,6 +38,9 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
     }
     "return 200 and correct response with the expected inside IR35 decision" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDEIR35)
+    }
+    "return 200 and correct response with the expected inside IR35 decision - matches Financial Risk Blank" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDEIR35_MATCH_FINANCIAL_RISK_BLANK)
     }
     "return 200 and correct response with the expected unknown decision" in {
       createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
