@@ -31,8 +31,8 @@ businessStructure   ,         businessWebsite                                ,
 businessStructure   ,         workerPayForTraining                           ,
 businessStructure   ,         workerExpenseRunningBusinessPremises           ,
 businessStructure   ,         workerPaysForInsurance                         ,
-partAndParcel,   workerReceivesBenefits                ,
-partAndParcel,   workerAsLineManager                   ,
-partAndParcel,   contactWithEngagerCustomer            ,
+partAndParcel,   workerReceivesBenefits                , No
+partAndParcel,   workerAsLineManager                   , No
+partAndParcel,   contactWithEngagerCustomer            , No
 partAndParcel,   workerRepresentsEngagerBusiness       ,
 Inside IR35
