@@ -1,0 +1,10 @@
+businessStructure, similarWork                           ,
+businessStructure, workerVAT                             , No
+businessStructure, businessAccount                       , No
+businessStructure, advertiseForWork                      , No
+businessStructure, businessWebsite                       , No
+businessStructure, workerPayForTraining                  , No
+businessStructure, workerExpenseRunningBusinessPremises  , No
+businessStructure, workerPaysForInsurance                , No
+LOW
+
