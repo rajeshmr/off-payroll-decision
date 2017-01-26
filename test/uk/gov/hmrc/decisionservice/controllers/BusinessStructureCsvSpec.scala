@@ -24,6 +24,8 @@ class BusinessStructureCsvSpec extends UnitSpec with WithFakeApplication with De
   val BUSINESS_STRUCTURE_SCENARIO_HIGH_0 = "/test-scenarios/single/business-structure/scenario-should-give-HIGH-0.csv"
   val BUSINESS_STRUCTURE_SCENARIO_MEDIUM = "/test-scenarios/single/business-structure/scenario-should-give-MEDIUM.csv"
   val BUSINESS_STRUCTURE_SCENARIO_LOW_1 = "/test-scenarios/single/business-structure/scenario-should-give-LOW-1.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_LOW_2 = "/test-scenarios/single/business-structure/scenario-should-give-LOW-2.csv"
+  val BUSINESS_STRUCTURE_SCENARIO_NOTVALIDUSECASE = "/test-scenarios/single/business-structure/scenario-should-give-NotValidUseCase.csv"
   val BUSINESS_STRUCTURE_SCENARIO_HIGH_1 = "/test-scenarios/single/business-structure/scenario-should-give-HIGH-1.csv"
 
   "POST /decide" should {
@@ -38,6 +40,12 @@ class BusinessStructureCsvSpec extends UnitSpec with WithFakeApplication with De
     }
     "return 200 and correct response with the expected decision for business structure scenario LOW_1" in {
       createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_1)
+    }
+    "return 200 and correct response with the expected decision for business structure scenario LOW_2" in {
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_2)
+    }
+    "return 200 and correct response with the expected decision for business structure scenario NotValidUseCase" in {
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_NOTVALIDUSECASE)
     }
     "return 200 and correct response with the expected decision for business structure scenario HIGH_1" in {
       createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_HIGH_1)

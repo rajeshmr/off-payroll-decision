@@ -17,7 +17,7 @@
 package uk.gov.hmrc.decisionservice.ruleengine
 
 import play.api.Logger
-import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, SectionRule}
+import uk.gov.hmrc.decisionservice.model.rules.{>>>, CarryOver, NotValidUseCase, SectionRule}
 
 object MatchingFunctions {
   def matches(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
@@ -30,7 +30,8 @@ object MatchingFunctions {
   }
   def businessStructureMatches(sr: SectionRule, factValues: List[CarryOver]): Option[CarryOver] = {
     val result = factValues match {
-      case Nil => None
+      case Nil => Some(NotValidUseCase)
+      case xs if (xs.forall(_.isEmpty)) => Some(NotValidUseCase)
       case x::xs => x.value match {
         case "zeroToThree" => Some(>>>("low"))
         case "tenPlus" => Some(>>>("high"))

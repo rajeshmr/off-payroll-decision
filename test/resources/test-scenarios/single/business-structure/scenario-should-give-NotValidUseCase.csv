@@ -1,0 +1,10 @@
+businessStructure, similarWork                           ,
+businessStructure, workerVAT                             ,
+businessStructure, businessAccount                       ,
+businessStructure, advertiseForWork                      ,
+businessStructure, businessWebsite                       ,
+businessStructure, workerPayForTraining                  ,
+businessStructure, workerExpenseRunningBusinessPremises  ,
+businessStructure, workerPaysForInsurance                ,
+notvalidusecase
+
