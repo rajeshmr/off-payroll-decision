@@ -27,7 +27,7 @@ class ClusterTestCasesSpec extends UnitSpec {
   private val scenarioTestCases = List(
     ScenarioTestCase("/test-scenarios/cluster-test-cases/part-of-organisation.csv", "part_of_organisation","/tables/part_of_organisation.csv",5),
     ScenarioTestCase("/test-scenarios/cluster-test-cases/financial-risk.csv", "financial_risk","/tables/financial_risk.csv",24),
-    ScenarioTestCase("/test-scenarios/cluster-test-cases/control-onlyPassingCases.csv", "control","/tables/control.csv",13),
+    ScenarioTestCase("/test-scenarios/cluster-test-cases/control-onlyPassingCases.csv", "control", "/tables/1.0.1-beta/control.csv",13),
     ScenarioTestCase("/test-scenarios/cluster-test-cases/misc.csv", "miscellaneous","/tables/misc.csv",1))
 
   "test case reader " should {
