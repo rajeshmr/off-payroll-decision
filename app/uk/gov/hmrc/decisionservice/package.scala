@@ -25,6 +25,7 @@ package object decisionservice {
 
   object Versions {
     val VERSION1 = "1.0.1-beta"
+    val VERSION2 = "1.0.2-alpha"
   }
 
 }

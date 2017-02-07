@@ -28,14 +28,13 @@ import uk.gov.hmrc.decisionservice.model.FactError
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance}
+import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance102alpha}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
-  private val VERSION = Versions.VERSION1
   private val CORRELATION_ID = "12345"
   private val BAD_REQUEST_JSON = """{}"""
   private val TEST_ERROR_CODE = 15
@@ -49,12 +48,17 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   }
 
   object DecisionTestController extends DecisionController {
-    lazy val decisionServices = Map(VERSION -> DecisionServiceTestInstance)
-
+    lazy val decisionServices = Map(
+      Versions.VERSION1 -> DecisionServiceTestInstance,
+      Versions.VERSION2 -> DecisionServiceTestInstance102alpha
+    )
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
-    lazy val decisionServices = Map(VERSION -> ErrorGeneratingDecisionService)
+    lazy val decisionServices = Map(
+      Versions.VERSION1 -> ErrorGeneratingDecisionService,
+      Versions.VERSION2 -> ErrorGeneratingDecisionService
+    )
   }
 
   val interview = Map(
@@ -63,18 +67,13 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       "contractualObligationInPractise" -> "Yes",
       "contractTermsWorkerPaysSubstitute" -> "Yes"
     ))
-  val decisionRequest = DecisionRequest(VERSION, CORRELATION_ID, interview)
 
   "POST /decide" should {
-    "return 200 and correct response when request is correct" in {
-      val EXPECTED_RESULT: String = "Outside IR35"
-      val decisionController = DecisionTestController
-      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
-      val result = decisionController.decide()(fakeRequest)
-      status(result) shouldBe Status.OK
-      val response = jsonBodyOf(await(result))
-      verifyResponse(response, EXPECTED_RESULT)
-      verifyScore(response)
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION1}" in {
+      runPostExpected200(Versions.VERSION1)
+    }
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION2}" in {
+      runPostExpected200(Versions.VERSION2)
     }
     "return 400 and error response when request does not conform to schema" in {
       val decisionController = DecisionTestController
@@ -84,20 +83,40 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       val errorResponse = jsonBodyOf(await(result))
       verifyErrorResponse(errorResponse)
     }
-    "return 400 and error response when there is error in decision service" in {
-      val decisionController = DecisionTestControllerWithErrorGeneratingDecisionService
-      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
-      val result = decisionController.decide()(fakeRequest)
-      status(result) shouldBe Status.BAD_REQUEST
-      val errorResponse = jsonBodyOf(await(result))
-      verifyErrorResponse(errorResponse)
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION1}" in {
+      runPostExpected400(Versions.VERSION1)
+    }
+    s"return 400 and error response when there is error in decision service for versino ${Versions.VERSION2}" in {
+      runPostExpected400(Versions.VERSION2)
     }
   }
 
-  def verifyResponse(response: JsValue, expectedResult:String): Unit = {
-    val version = response \\ "version"
-    version should have size 1
-    version should contain theSameElementsAs Seq(JsString(VERSION))
+  def runPostExpected200(version:String) = {
+    val decisionRequest = DecisionRequest(version, CORRELATION_ID, interview)
+    val EXPECTED_RESULT: String = "Outside IR35"
+    val decisionController = DecisionTestController
+    val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
+    val result = decisionController.decide()(fakeRequest)
+    status(result) shouldBe Status.OK
+    val response = jsonBodyOf(await(result))
+    verifyResponse(response, EXPECTED_RESULT, version)
+    verifyScore(response)
+  }
+
+  def runPostExpected400(version:String) = {
+    val decisionRequest = DecisionRequest(version, CORRELATION_ID, interview)
+    val decisionController = DecisionTestControllerWithErrorGeneratingDecisionService
+    val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
+    val result = decisionController.decide()(fakeRequest)
+    status(result) shouldBe Status.BAD_REQUEST
+    val errorResponse = jsonBodyOf(await(result))
+    verifyErrorResponse(errorResponse)
+  }
+
+  def verifyResponse(response: JsValue, expectedResult:String, version:String): Unit = {
+    val versionJs = response \\ "version"
+    versionJs should have size 1
+    versionJs should contain theSameElementsAs Seq(JsString(version))
     val correlationID = response \\ "correlationID"
     correlationID should have size 1
     correlationID should contain theSameElementsAs Seq(JsString(CORRELATION_ID))
