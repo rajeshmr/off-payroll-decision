@@ -23,4 +23,6 @@ sealed trait DecisionServiceError {
 
 case class RulesFileError(code:Int, message:String) extends DecisionServiceError
 
+case class VersionError(code:Int, message:String) extends DecisionServiceError
+
 case class FactError(code:Int, message:String) extends DecisionServiceError
