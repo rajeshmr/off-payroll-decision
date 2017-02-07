@@ -23,7 +23,7 @@ import play.api.http.Status
 import play.api.libs.json.Json._
 import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.{Validation, Versions}
 import uk.gov.hmrc.decisionservice.model.FactError
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
@@ -35,10 +35,10 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
-  private val VERSION: String = "0.0.1-alpha"
-  private val CORRELATION_ID: String = "12345"
-  private val BAD_REQUEST_JSON: String = """{}"""
-  private val TEST_ERROR_CODE: Int = 15
+  private val VERSION = Versions.VERSION1
+  private val CORRELATION_ID = "12345"
+  private val BAD_REQUEST_JSON = """{}"""
+  private val TEST_ERROR_CODE = 15
 
   object ErrorGeneratingDecisionService extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
@@ -49,12 +49,12 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   }
 
   object DecisionTestController extends DecisionController {
-    lazy val decisionServices = Map("1.0.0" -> DecisionServiceTestInstance)
+    lazy val decisionServices = Map(VERSION -> DecisionServiceTestInstance)
 
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
-    lazy val decisionServices = Map("1.0.0" -> ErrorGeneratingDecisionService)
+    lazy val decisionServices = Map(VERSION -> ErrorGeneratingDecisionService)
   }
 
   val interview = Map(
