@@ -18,14 +18,15 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import cats.data.Validated
+import cats.data.{Validated, ValidatedFunctions}
 import org.slf4j.MDC
 import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
 import uk.gov.hmrc.decisionservice.Validation
+import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, VersionError}
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
-import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse, ErrorResponse, Score}
+import uk.gov.hmrc.decisionservice.model.api._
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
@@ -35,20 +36,21 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
+
 trait DecisionController extends BaseController {
-  val decisionService:DecisionService
-  val id:AtomicInteger = new AtomicInteger
+  val decisionServices: Map[String, DecisionService]
+  val id: AtomicInteger = new AtomicInteger
 
   def decide() = Action.async(parse.json) { implicit request =>
     request.body.validate[DecisionRequest] match {
       case JsSuccess(req, _) =>
         MDC.put("correlation", req.correlationID)
-        Logger.info(s"request: ${request.body.toString.replaceAll("\"","")}")
+        Logger.info(s"request: ${request.body.toString.replaceAll("\"", "")}")
         doDecide(req).map {
           case Validated.Valid(decision) =>
             val response = decisionToResponse(req, decision)
             val responseBody = Json.toJson(response)
-            Logger.info(s"response: ${responseBody.toString.replaceAll("\"","")}")
+            Logger.info(s"response: ${responseBody.toString.replaceAll("\"", "")}")
             Logger.info(s"${response.result}")
             Ok(responseBody)
           case Validated.Invalid(error) =>
@@ -65,23 +67,29 @@ trait DecisionController extends BaseController {
     }
   }
 
-  def doDecide(decisionRequest:DecisionRequest):Future[Validation[RuleEngineDecision]] = Future {
-      requestToFacts(decisionRequest) ==>: decisionService
+  def doDecide(decisionRequest: DecisionRequest): Future[Validation[RuleEngineDecision]] = Future {
+    decisionInstance(decisionRequest.version).fold[Validation[RuleEngineDecision]]{
+      Validated.Invalid(List(VersionError(ErrorCodes.INVALID_VERSION, s"not supported version ${decisionRequest.version}")))} {
+      decisionService => requestToFacts(decisionRequest) ==>: decisionService
+    }
   }
+
+//  def decisionInstance(version: String): Option[DecisionService] = decisionServices.get(version)
+  def decisionInstance(version: String): Option[DecisionService] = decisionServices.toList.headOption.map(_._2) // TODO 
 
   def requestToFacts(decisionRequest: DecisionRequest): Facts = {
     val listsOfStringPairs = decisionRequest.interview.toList.collect { case (a, b) => b.toList }.flatten
     Facts(listsOfStringPairs.collect { case (a, b) => (a, >>>(b)) }.toMap)
   }
 
-  def decisionToResponse(decisionRequest:DecisionRequest, ruleEngineDecision: RuleEngineDecision):DecisionResponse = {
+  def decisionToResponse(decisionRequest: DecisionRequest, ruleEngineDecision: RuleEngineDecision): DecisionResponse = {
     DecisionResponse(
       decisionRequest.version,
       decisionRequest.correlationID,
       Score.create(ruleEngineDecision.facts), responseString(ruleEngineDecision))
   }
 
-  def responseString(ruleEngineDecision: RuleEngineDecision):String = ruleEngineDecision.value.toLowerCase match {
+  def responseString(ruleEngineDecision: RuleEngineDecision): String = ruleEngineDecision.value.toLowerCase match {
     case "inir35" => "Inside IR35"
     case "outofir35" => "Outside IR35"
     case "unknown" => "Unknown"
@@ -90,5 +98,6 @@ trait DecisionController extends BaseController {
 }
 
 object DecisionController extends DecisionController {
-  lazy val decisionService = DecisionServiceInstance
+  lazy val decisionServices = Map("1.0.0" -> DecisionServiceInstance)
 }
+

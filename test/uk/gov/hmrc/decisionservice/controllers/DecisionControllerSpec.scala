@@ -49,11 +49,12 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   }
 
   object DecisionTestController extends DecisionController {
-    lazy val decisionService = DecisionServiceTestInstance
+    lazy val decisionServices = Map("1.0.0" -> DecisionServiceTestInstance)
+
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
-    lazy val decisionService = ErrorGeneratingDecisionService
+    lazy val decisionServices = Map("1.0.0" -> ErrorGeneratingDecisionService)
   }
 
   val interview = Map(
