@@ -25,7 +25,7 @@ class TablesNonFinalDecisionSpec extends UnitSpec {
   object DecisionServiceTestInstance extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
     val csvSectionMetadata = List(
-      (5, "/tables/control.csv", "Control")
+      (5, "/tables/1.0.1-beta/control.csv", "Control")
     ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
   }
 
