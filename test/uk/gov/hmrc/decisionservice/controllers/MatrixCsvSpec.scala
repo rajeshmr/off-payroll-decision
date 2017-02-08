@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerFinalCsvSpec {
@@ -28,22 +29,22 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
 
   "POST /decide" should {
     "return 200 and correct response with the expected not matched decision (1)" in {
-      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_1)
+      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_1, Versions.VERSION1)
     }
     "return 200 and correct response with the expected not matched decision (2)" in {
-      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_2)
+      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_2, Versions.VERSION1)
     }
     "return 200 and correct response with the expected out IR35 decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35)
+      createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35, Versions.VERSION1)
     }
     "return 200 and correct response with the expected inside IR35 decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35)
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35, Versions.VERSION1)
     }
     "return 200 and correct response with the expected inside IR35 decision - matches Financial Risk Blank" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK)
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK, Versions.VERSION1)
     }
     "return 200 and correct response with the expected unknown decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN, Versions.VERSION1)
     }
   }
 }

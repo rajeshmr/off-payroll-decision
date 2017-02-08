@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
@@ -27,16 +28,16 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision MEDIUM for control scenario 0" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0)
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_0, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision MEDIUM for control scenario 1" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_1)
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_1, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision HIGH for control scenario 2" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_2)
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_2, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision OutsideIR35 for control scenario 3" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_3)
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_3, Versions.VERSION1)
     }
   }
 }

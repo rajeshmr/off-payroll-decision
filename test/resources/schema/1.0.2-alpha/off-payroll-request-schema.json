@@ -209,42 +209,6 @@
           },
           "minProperties": 0,
           "additionalProperties": false
-        },
-        "businessStructure": {
-          "type": "object",
-          "properties": {
-            "similarWork": {
-              "type": "string",
-              "enum": [
-                "zeroToThree",
-                "fourToNine",
-                "tenPlus"
-              ]
-            },
-            "workerVAT": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "businessAccount": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "advertiseForWork": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "businessWebsite": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPayForTraining": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerExpenseRunningBusinessPremises": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPaysForInsurance": {
-              "$ref": "#/definitions/binaryAnswer"
-            }
-          },
-          "minProperties": 0,
-          "additionalProperties": false
         }
       },
       "minProperties": 0,

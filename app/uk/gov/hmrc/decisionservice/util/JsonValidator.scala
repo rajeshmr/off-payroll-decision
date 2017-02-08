@@ -20,6 +20,7 @@ import cats.data.Xor
 import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.core.report.ProcessingReport
 import com.github.fge.jsonschema.main.JsonSchemaFactory
+import uk.gov.hmrc.decisionservice.Versions
 
 import scala.io.Source
 
@@ -54,19 +55,28 @@ trait JsonValidatorTrait {
   }
 }
 
-
-object JsonResponseValidator extends JsonValidatorTrait {
-  val schemaPath: String = "/schema/1.0.1-beta/off-payroll-response-schema.json"
-}
+case class JsonSchemaValidator(val schemaPath: String) extends JsonValidatorTrait
 
 object JsonResponseStrictValidator extends JsonValidatorTrait {
   val schemaPath: String = "/schema/1.0.1-beta/off-payroll-response-schema-strict.json"
 }
 
-object JsonRequestValidator extends JsonValidatorTrait {
-  val schemaPath: String = "/schema/1.0.1-beta/off-payroll-request-schema.json"
-}
-
 object JsonRequestStrictValidator extends JsonValidatorTrait {
   val schemaPath: String = "/schema/1.0.1-beta/off-payroll-request-schema-strict.json"
+}
+
+object JsonResponseValidatorFactory {
+  lazy val jsonResponseValidators = Map(
+    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-response-schema.json"),
+    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-response-schema.json")
+  )
+  def apply(version:String):Option[JsonSchemaValidator] = jsonResponseValidators.get(version)
+}
+
+object JsonRequestValidatorFactory {
+  lazy val jsonRequestValidators = Map(
+    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-request-schema.json"),
+    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-request-schema.json")
+  )
+  def apply(version:String):Option[JsonSchemaValidator] = jsonRequestValidators.get(version)
 }

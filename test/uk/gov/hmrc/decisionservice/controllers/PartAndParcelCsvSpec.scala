@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 /**
@@ -31,19 +32,19 @@ class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with Decisi
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for part and parcel scenario 0" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0)
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for part and parcel scenario 1" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_1)
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_1, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for part and parcel scenario 2" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_2)
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_2, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for part and parcel scenario 3" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_3)
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_3, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for part and parcel scenario 4" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_4)
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_4, Versions.VERSION1)
     }
   }
 }
