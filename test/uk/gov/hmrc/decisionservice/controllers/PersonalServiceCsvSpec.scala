@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
@@ -30,25 +31,25 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with Deci
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for personal service scenario 0" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for personal service scenario 1" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_1)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_1, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for personal service scenario 2" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_2)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_2, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for personal service scenario 3" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_3)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_3, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for personal service scenario V1" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V1)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V1, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for personal service scenario V2" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V2)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V2, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for personal service scenario V3" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V3)
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V3, Versions.VERSION1)
     }
   }
 }

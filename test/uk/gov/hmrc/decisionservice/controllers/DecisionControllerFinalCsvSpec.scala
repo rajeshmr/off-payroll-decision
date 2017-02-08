@@ -21,9 +21,10 @@ import akka.stream.ActorMaterializer
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, DecisionResponse}
 import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
-import uk.gov.hmrc.decisionservice.util.{JsonRequestValidator, JsonResponseValidator}
+import uk.gov.hmrc.decisionservice.util.{JsonRequestValidatorFactory, JsonResponseValidatorFactory}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
@@ -31,25 +32,15 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
   implicit val materializer = ActorMaterializer()
   val decisionController = DecisionController
 
-  def createRequestSendVerifyDecision(path: String): Unit = {
+  def createRequestSendVerifyDecision(path: String, version:String): Unit = {
     val testCasesTry = RequestAndDecision.readFlattenedTransposed(path)
     testCasesTry.isSuccess shouldBe true
     val testCase = testCasesTry.get
     val request = testCase.request
-    val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJsonWithValidation(request))
-    val result = decisionController.decide()(fakeRequest)
-    status(result) shouldBe Status.OK
-    val response = jsonBodyOf(await(result))
-    verifyResponse(response, testCase.expectedDecision)
-  }
-
-  def createMultipleRequestsSendVerifyDecision(path: String): Unit = {
-    val testCasesTry = RequestAndDecision.readAggregatedTransposed(path)
-    testCasesTry.isSuccess shouldBe true
-    val testCases = testCasesTry.get
-    testCases.map { testCase =>
-      val request = testCase.request
-      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJsonWithValidation(request))
+    val maybeJsonRequest = toJsonWithValidation(request, version)
+    maybeJsonRequest.isDefined shouldBe true
+    maybeJsonRequest.map { jsonRequest =>
+      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(jsonRequest)
       val result = decisionController.decide()(fakeRequest)
       status(result) shouldBe Status.OK
       val response = jsonBodyOf(await(result))
@@ -57,24 +48,49 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     }
   }
 
+  def createMultipleRequestsSendVerifyDecision(path: String, version:String): Unit = {
+    val testCasesTry = RequestAndDecision.readAggregatedTransposed(path)
+    testCasesTry.isSuccess shouldBe true
+    val testCases = testCasesTry.get
+    testCases.map { testCase =>
+      val request = testCase.request
+      val maybeJsonRequest = toJsonWithValidation(request, version)
+      maybeJsonRequest.isDefined shouldBe true
+      maybeJsonRequest.map { jsonRequest =>
+        val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(jsonRequest)
+        val result = decisionController.decide()(fakeRequest)
+        status(result) shouldBe Status.OK
+        val response = jsonBodyOf(await(result))
+        verifyResponse(response, testCase.expectedDecision)
+      }
+    }
+  }
+
   def verifyDecision(expectedResult: String, decisionResponse: DecisionResponse): Unit
 
   def verifyResponse(response: JsValue, expectedResult:String): Unit = {
     val responseString = Json.prettyPrint(response)
-    val validationResult = JsonResponseValidator.validate(responseString)
-    validationResult.isRight shouldBe true
-    val jsResult = Json.fromJson[DecisionResponse](response)
-    jsResult.isSuccess shouldBe true
-    val decisionResponse = jsResult.get
-    verifyDecision(expectedResult, decisionResponse)
+    val maybeResponseValidator = JsonResponseValidatorFactory(Versions.VERSION1)
+    maybeResponseValidator.isDefined shouldBe true
+    maybeResponseValidator.map { responseValidator =>
+      val validationResult = responseValidator.validate(responseString)
+      validationResult.isRight shouldBe true
+      val jsResult = Json.fromJson[DecisionResponse](response)
+      jsResult.isSuccess shouldBe true
+      val decisionResponse = jsResult.get
+      verifyDecision(expectedResult, decisionResponse)
+    }
   }
 
-  def toJsonWithValidation(request:DecisionRequest):JsValue = {
+  def toJsonWithValidation(request:DecisionRequest, version:String):Option[JsValue] = {
     val requestJson = Json.toJson(request)
     val requestJsonString = Json.prettyPrint(requestJson)
-    val validationResult = JsonRequestValidator.validate(requestJsonString)
-    validationResult.isRight shouldBe true
-    requestJson
+    val maybeRequestValidator = JsonRequestValidatorFactory(version)
+    maybeRequestValidator.map { validator =>
+      val validationResult = validator.validate(requestJsonString)
+      validationResult.isRight shouldBe true
+      requestJson
+    }
   }
 }
 
