@@ -57,12 +57,20 @@ trait JsonValidatorTrait {
 
 case class JsonSchemaValidator(val schemaPath: String) extends JsonValidatorTrait
 
-object JsonResponseStrictValidator extends JsonValidatorTrait {
-  val schemaPath: String = "/schema/1.0.1-beta/off-payroll-response-schema-strict.json"
+object JsonResponseStrictValidatorFactory {
+  lazy val jsonResponseValidators = Map(
+    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-response-schema-strict.json"),
+    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-response-schema-strict.json")
+  )
+  def apply(version:String):Option[JsonSchemaValidator] = jsonResponseValidators.get(version)
 }
 
-object JsonRequestStrictValidator extends JsonValidatorTrait {
-  val schemaPath: String = "/schema/1.0.1-beta/off-payroll-request-schema-strict.json"
+object JsonRequestStrictValidatorFactory {
+  lazy val jsonRequestValidators = Map(
+    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-request-schema-strict.json"),
+    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-request-schema-strict.json")
+  )
+  def apply(version:String):Option[JsonSchemaValidator] = jsonRequestValidators.get(version)
 }
 
 object JsonResponseValidatorFactory {

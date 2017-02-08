@@ -46,7 +46,9 @@ class JsonSchemaSpec extends UnitSpec {
     "validate a request with the Strict Schema" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = tryJson.get
-      val validationResult = JsonRequestStrictValidator.validate(requestJsonString)
+      val maybeValidator = JsonRequestStrictValidatorFactory(Versions.VERSION1)
+      maybeValidator.isDefined shouldBe true
+      val validationResult = maybeValidator.get.validate(requestJsonString)
       printValidationResult(validationResult)
       validationResult.isRight shouldBe true
     }
@@ -68,8 +70,9 @@ class JsonSchemaSpec extends UnitSpec {
     "validate a full response with the Strict Schema" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = FileReader.read(FULL_RESPONSE).get
-      val validationResult = JsonResponseStrictValidator
-        .validate(requestJsonString)
+      val maybeValidator = JsonResponseStrictValidatorFactory(Versions.VERSION1)
+      maybeValidator.isDefined shouldBe true
+      val validationResult = maybeValidator.get.validate(requestJsonString)
       printValidationResult(validationResult)
       validationResult.isRight shouldBe true
     }
@@ -85,11 +88,9 @@ class JsonSchemaSpec extends UnitSpec {
       val requestJsonString = Json.prettyPrint(requestJson)
       val maybeValidator = JsonRequestValidatorFactory(Versions.VERSION1)
       maybeValidator.isDefined shouldBe true
-      maybeValidator.map { validator =>
-        val validationResult = validator.validate(requestJsonString)
-        printValidationResult(validationResult)
-        validationResult.isRight shouldBe true
-      }
+      val validationResult = maybeValidator.get.validate(requestJsonString)
+      printValidationResult(validationResult)
+      validationResult.isRight shouldBe true
     }
   }
 
@@ -106,11 +107,9 @@ class JsonSchemaSpec extends UnitSpec {
     val requestJsonString = FileReader.read(responsePath).get
     val maybeValidator = JsonResponseValidatorFactory(version)
     maybeValidator.isDefined shouldBe true
-    maybeValidator.map { validator =>
-      val validationResult = validator.validate(requestJsonString)
-      printValidationResult(validationResult)
-      validationResult.isRight shouldBe true
-    }
+    val validationResult = maybeValidator.get.validate(requestJsonString)
+    printValidationResult(validationResult)
+    validationResult.isRight shouldBe true
   }
 
 }

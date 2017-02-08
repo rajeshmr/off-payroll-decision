@@ -245,22 +245,16 @@ class JsonRequestValidatorSpec extends UnitSpec {
   "json validator" should {
 
     "return true for valid json" in {
-
       validateWithInfo(valid_twoSections, jsonRequestValidator) shouldBe true
-
     }
 
     "return true for valid json - with New FinancialRiskA fields" in {
-
       validateWithInfo(valid_withNewFinancialRiskAFields, jsonRequestValidator) shouldBe true
-
     }
 
-    "validate a full request when using the strict validator " in {
-
-      validateWithInfo(valid_twoSections, JsonRequestStrictValidator) shouldBe false
+    s"validate a full request when using the strict validator for version ${Versions.VERSION1}" in {
+      validateWithInfo(valid_twoSections, JsonRequestStrictValidatorFactory(Versions.VERSION1).get) shouldBe false
     }
-
 
     "return true for valid json - no answers" in {
       validateWithInfo(valid_noAnswers, jsonRequestValidator) shouldBe true
@@ -333,7 +327,6 @@ class JsonRequestValidatorSpec extends UnitSpec {
   }
 
   private def validateWithInfo(json: String, validator: JsonValidatorTrait) = {
-
     val result = validator.validate(json)
     if (result.isLeft){
       result.leftMap( r => info(r))
@@ -345,9 +338,9 @@ class JsonRequestValidatorSpec extends UnitSpec {
     val result = jsonRequestValidator.validate(s)
     result.isRight shouldBe false
     result.leftMap { report => {
-        info(report)
-        report.contains(expectedText) shouldBe true
-      }
+      info(report)
+      report.contains(expectedText) shouldBe true
+    }
     }
   }
 
