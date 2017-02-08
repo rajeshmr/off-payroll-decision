@@ -56,13 +56,11 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
       val request = testCase.request
       val maybeJsonRequest = toJsonWithValidation(request, version)
       maybeJsonRequest.isDefined shouldBe true
-      maybeJsonRequest.map { jsonRequest =>
-        val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(jsonRequest)
-        val result = decisionController.decide()(fakeRequest)
-        status(result) shouldBe Status.OK
-        val response = jsonBodyOf(await(result))
-        verifyResponse(response, testCase.expectedDecision)
-      }
+      val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(maybeJsonRequest.get)
+      val result = decisionController.decide()(fakeRequest)
+      status(result) shouldBe Status.OK
+      val response = jsonBodyOf(await(result))
+      verifyResponse(response, testCase.expectedDecision)
     }
   }
 
@@ -72,20 +70,19 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     val responseString = Json.prettyPrint(response)
     val maybeResponseValidator = JsonResponseValidatorFactory(Versions.VERSION1)
     maybeResponseValidator.isDefined shouldBe true
-    maybeResponseValidator.map { responseValidator =>
-      val validationResult = responseValidator.validate(responseString)
-      validationResult.isRight shouldBe true
-      val jsResult = Json.fromJson[DecisionResponse](response)
-      jsResult.isSuccess shouldBe true
-      val decisionResponse = jsResult.get
-      verifyDecision(expectedResult, decisionResponse)
-    }
+    val validationResult = maybeResponseValidator.get.validate(responseString)
+    validationResult.isRight shouldBe true
+    val jsResult = Json.fromJson[DecisionResponse](response)
+    jsResult.isSuccess shouldBe true
+    val decisionResponse = jsResult.get
+    verifyDecision(expectedResult, decisionResponse)
   }
 
   def toJsonWithValidation(request:DecisionRequest, version:String):Option[JsValue] = {
     val requestJson = Json.toJson(request)
     val requestJsonString = Json.prettyPrint(requestJson)
     val maybeRequestValidator = JsonRequestValidatorFactory(version)
+    maybeRequestValidator.isDefined shouldBe true
     maybeRequestValidator.map { validator =>
       val validationResult = validator.validate(requestJsonString)
       validationResult.isRight shouldBe true
