@@ -25,7 +25,8 @@ import play.api.libs.json.{JsObject, JsString, JsValue, Json}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.decisionservice.{Validation, Versions}
 import uk.gov.hmrc.decisionservice.model.FactError
-import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, Score}
+import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
+import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, ErrorCodes, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
 import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance102alpha}
@@ -81,13 +82,16 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       val result = decisionController.decide()(fakeRequest)
       status(result) shouldBe Status.BAD_REQUEST
       val errorResponse = jsonBodyOf(await(result))
-      verifyErrorResponse(errorResponse)
+      verifyErrorResponse(errorResponse, REQUEST_FORMAT)
     }
     s"return 400 and error response when there is error in decision service for version ${Versions.VERSION1}" in {
-      runPostExpected400(Versions.VERSION1)
+      runPostExpected400(Versions.VERSION1, TEST_ERROR_CODE)
     }
-    s"return 400 and error response when there is error in decision service for versino ${Versions.VERSION2}" in {
-      runPostExpected400(Versions.VERSION2)
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION2}" in {
+      runPostExpected400(Versions.VERSION2, TEST_ERROR_CODE)
+    }
+    "return 400 and error response when not supported version is passed in the request" in {
+      runPostExpected400("NotSupportedVersion", INVALID_VERSION)
     }
   }
 
@@ -103,14 +107,14 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     verifyScore(response)
   }
 
-  def runPostExpected400(version:String) = {
+  def runPostExpected400(version:String, expectedErrorCode:Int) = {
     val decisionRequest = DecisionRequest(version, CORRELATION_ID, interview)
     val decisionController = DecisionTestControllerWithErrorGeneratingDecisionService
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.BAD_REQUEST
     val errorResponse = jsonBodyOf(await(result))
-    verifyErrorResponse(errorResponse)
+    verifyErrorResponse(errorResponse, expectedErrorCode)
   }
 
   def verifyResponse(response: JsValue, expectedResult:String, version:String): Unit = {
@@ -134,9 +138,10 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     score(0).as[JsObject].fields should have size Score.elements.size
   }
 
-  def verifyErrorResponse(response: JsValue): Unit = {
+  def verifyErrorResponse(response: JsValue, expectedErrorCode:Int): Unit = {
     val code = response \\ "code"
     code should have size 1
+    code.head.as[Int] shouldBe expectedErrorCode
     val message = response \\ "message"
     message should have size 1
   }
