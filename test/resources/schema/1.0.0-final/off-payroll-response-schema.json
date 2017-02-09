@@ -44,10 +44,7 @@
         "control": {
           "$ref": "#/definitions/weightedAnswer"
         },
-        "financialRiskA": {
-          "$ref": "#/definitions/weightedAnswer"
-        },
-        "financialRiskB": {
+        "financialRisk": {
           "$ref": "#/definitions/weightedAnswer"
         },
         "partAndParcel": {

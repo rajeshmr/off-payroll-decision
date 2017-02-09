@@ -22,12 +22,17 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 /**
   * Created by work on 09/01/2017.
   */
-class FinancialRiskCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerFinalCsvSpec {
+class FinancialRiskCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
+  val clusterName = "financialRisk"
   val FINANCIAL_RISK_SCENARIO_0 = s"/test-scenarios/${Versions.VERSION2}/financial-risk/scenario_0.csv"
+  val FINANCIAL_RISK_SCENARIOS = s"/test-scenarios/${Versions.VERSION2}/financial-risk/scenarios.csv"
 
   "POST /decide" should {
     s"return 200 and expected decision for financial risk scenario 0 for version ${Versions.VERSION2}" in {
       createRequestSendVerifyDecision(FINANCIAL_RISK_SCENARIO_0, Versions.VERSION2)
+    }
+    s"return 200 and expected decision for financial risk scenarios for version ${Versions.VERSION2}" in {
+      createMultipleRequestsSendVerifyDecision(FINANCIAL_RISK_SCENARIOS, Versions.VERSION2)
     }
   }
 }
