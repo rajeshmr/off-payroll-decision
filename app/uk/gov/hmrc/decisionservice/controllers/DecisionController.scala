@@ -75,7 +75,6 @@ trait DecisionController extends BaseController {
   }
 
   def decisionInstance(version: String): Option[DecisionService] = decisionServices.get(version)
-//  def decisionInstance(version: String): Option[DecisionService] = decisionServices.toList.headOption.map(_._2)
 
   def requestToFacts(decisionRequest: DecisionRequest): Facts = {
     val listsOfStringPairs = decisionRequest.interview.toList.collect { case (a, b) => b.toList }.flatten
