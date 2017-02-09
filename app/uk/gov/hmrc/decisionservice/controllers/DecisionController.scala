@@ -29,7 +29,7 @@ import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api._
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance, DecisionServiceInstance101Alpha}
+import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance, DecisionServiceInstance100Final}
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -99,7 +99,7 @@ trait DecisionController extends BaseController {
 object DecisionController extends DecisionController {
   lazy val decisionServices = Map(
     Versions.VERSION1 -> DecisionServiceInstance,
-    Versions.VERSION2 -> DecisionServiceInstance101Alpha
+    Versions.VERSION2 -> DecisionServiceInstance100Final
   )
 }
 
