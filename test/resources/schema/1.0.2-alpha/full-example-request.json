@@ -1,0 +1,54 @@
+{
+  "version": "0.0.1-alpha",
+  "correlationID": "12345",
+  "interview": {
+    "partOfOrganisation": {
+      "workerRepresentsEngagerBusiness": "No",
+      "contactWithEngagerCustomer": "Yes",
+      "workerReceivesBenefits": "No",
+      "workerAsLineManager": "No"
+    },
+    "financialRisk": {
+      "workerMainIncome": "shareProfitLoss",
+      "engagerPayExpense": "No",
+      "provideVehicle": "No",
+      "workerProvideConsumablesMaterials": "Yes",
+      "workerIncurExpense": "Yes",
+      "workerNeedEquipment": "No",
+      "engagerPayForVehicle": "No",
+      "workerProvideEquipment": "No",
+      "engagerPayForConsumablesMaterials": "No"
+    },
+    "miscellaneous": {
+      "similarWork": "Yes"
+    },
+    "businessStructure": {
+      "workerVAT": "No",
+      "advertiseForWork": "No",
+      "workerPaysForInsurance": "Yes",
+      "businessWebsite": "Yes",
+      "businessAccount": "No",
+      "workerExpenseRunningBusinessPremises": "No",
+      "workerPayForTraining": "Yes"
+    },
+    "personalService": {
+      "workerSentActualSubstitiute": "No",
+      "contractrualObligationForSubstitute": "No",
+      "possibleSubstituteRejection": "Yes",
+      "contractualRightForSubstitute": "Yes",
+      "workerPayActualHelper": "Yes",
+      "engagerArrangeWorker": "Yes",
+      "contractTermsWorkerPaysSubstitute": "No",
+      "workerSentActualHelper": "No",
+      "possibleHelper": "Yes"
+    },
+    "control": {
+      "workerLevelOfExpertise": "lowExperience",
+      "whenWorkHasToBeDone": "free",
+      "engagerMovingWorker": "No",
+      "toldWhatToDo": "No",
+      "workerDecideWhere": "toldWhere",
+      "workerDecidingHowWorkIsDone": "Yes"
+    }
+  }
+}

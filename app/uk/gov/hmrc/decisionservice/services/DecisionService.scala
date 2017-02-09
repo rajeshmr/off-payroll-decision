@@ -78,11 +78,23 @@ object DecisionServiceInstance extends DecisionService {
   lazy override val extraRules = List(businessStructureRule)
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
-    (5, "/tables/control.csv", "control"),
-    (7,  "/tables/financial-risk-a.csv", "financialRiskA"),
-    (13, "/tables/financial-risk-b.csv", "financialRiskB"),
-    (4,  "/tables/part-and-parcel.csv", "partAndParcel"),
-    (14, "/tables/personal-service.csv", "personalService"),
-    (5,  "/tables/matrix-of-matrices.csv", "matrix")
+    (5, "/tables/1.0.1-beta/control.csv", "control"),
+    (7, "/tables/1.0.1-beta/financial-risk-a.csv", "financialRiskA"),
+    (13, "/tables/1.0.1-beta/financial-risk-b.csv", "financialRiskB"),
+    (4, "/tables/1.0.1-beta/part-and-parcel.csv", "partAndParcel"),
+    (14, "/tables/1.0.1-beta/personal-service.csv", "personalService"),
+    (5, "/tables/1.0.1-beta/matrix-of-matrices.csv", "matrix")
+  ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
+}
+
+object DecisionServiceInstance101Alpha extends DecisionService {
+  lazy val maybeSectionRules = loadSectionRules()
+  lazy val csvSectionMetadata = List(
+    (5, "/tables/1.0.2-alpha/control.csv", "control"),
+    (7, "/tables/1.0.2-alpha/financial-risk-a.csv", "financialRiskA"),
+    (13, "/tables/1.0.2-alpha/financial-risk-b.csv", "financialRiskB"),
+    (4, "/tables/1.0.2-alpha/part-and-parcel.csv", "partAndParcel"),
+    (14, "/tables/1.0.2-alpha/personal-service.csv", "personalService"),
+    (5, "/tables/1.0.2-alpha/matrix-of-matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }

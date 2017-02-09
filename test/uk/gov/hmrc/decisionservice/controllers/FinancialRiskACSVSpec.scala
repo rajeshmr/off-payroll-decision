@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 /**
@@ -29,10 +30,10 @@ class FinancialRiskACSVSpec extends UnitSpec with WithFakeApplication with Decis
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for financial risk a scenario 0" in {
-      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_0)
+      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_0, Versions.VERSION1)
     }
     "return 200 and correct response with the expected decision for financial risk a scenario 1" in {
-      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_1)
+      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_1, Versions.VERSION1)
     }
 //    "return 200 and correct response with the expected decision for financial risk a scenario 2" in {
 //      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_2)

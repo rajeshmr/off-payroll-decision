@@ -16,17 +16,17 @@
 
 package uk.gov.hmrc.decisionservice.testutil
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 
 import scala.util.Try
-
-import uk.gov.hmrc.decisionservice.util.FileTokenizer.{tokenize,tokenizeWithTrailingSeparator}
+import uk.gov.hmrc.decisionservice.util.FileTokenizer.{tokenize, tokenizeWithTrailingSeparator}
 
 
 case class RequestAndDecision(request:DecisionRequest, expectedDecision:String)
 
 object RequestAndDecision {
-  val VERSION_STRING: String = "1.0.0-alpha"
+  val VERSION_STRING = Versions.VERSION1
   val CORRELATION_ID_STRING: String = "test-correlation-id"
 
   def readFlattened(path:String):Try[List[RequestAndDecision]] = {
