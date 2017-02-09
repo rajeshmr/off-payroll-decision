@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class BusinessStructureAggregatedCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
@@ -24,7 +25,7 @@ class BusinessStructureAggregatedCsvSpec extends UnitSpec with WithFakeApplicati
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for business structure scenario LOW_0" in {
-      createMultipleRequestsSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIOS)
+      createMultipleRequestsSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIOS, Versions.VERSION1)
     }
   }
 }

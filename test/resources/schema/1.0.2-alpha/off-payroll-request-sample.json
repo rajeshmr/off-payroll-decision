@@ -1,0 +1,66 @@
+{
+  "version": "1.0.1-beta",
+  "correlationID": "12345",
+  "interview": {
+    "personalService": {
+      "contractualObligationForSubstitute": "No",
+      "contractualObligationInPractise": "Yes",
+      "contractualRightForSubstitute": "Yes",
+      "actualRightToSendSubstitute": "Yes",
+      "contractualRightReflectInPractise": "No",
+      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
+      "possibleSubstituteRejection": "No",
+      "contractTermsWorkerPaysSubstitute": "Yes",
+      "workerSentActualSubstitute": "Yes",
+      "actualSubstituteRejection": "Yes",
+      "possibleHelper": "Yes",
+      "wouldWorkerPayHelper": "Yes",
+      "workerSentActualHelper": "No",
+      "workerPayActualHelper": "Yes"
+    },
+    "control": {
+      "toldWhatToDo": "Sometimes",
+      "engagerMovingWorker": "Yes",
+      "workerDecidingHowWorkIsDone": "WorkerDecidesToClientSatisfaction",
+      "whenWorkHasToBeDone": "workingPatternStipulated",
+      "workerDecideWhere": "couldFixWorkerLocation"
+    },
+    "financialRiskA": {
+      "workerPaidInclusive": "No",
+      "workerNeedConsumablesMaterials": "No",
+      "workerProvideConsumablesMaterials": "Yes",
+      "engagerPayConsumables": "Yes",
+      "workerNeedEquipment": "No",
+      "workerProvideEquipment": "Yes",
+      "engagerPayEquipment": "No"
+    },
+    "financialRiskB": {
+      "provideVehicle": "No",
+      "engagerPayVehicleExpense": "No",
+      "workerIncurExpense": "No",
+      "engagerPayOtherExpense": "No",
+      "workerMainIncome": "incomeProfitOrLosses",
+      "workerSufferedLatePayment": "No",
+      "workerProvideAtTheirExpense": "Yes",
+      "workerFixAtTheirOwnTime": "Yes",
+      "workerPayForMaterialsSubstandardWorker": "No",
+      "paidForSubstandardWork": "No",
+      "actualEngagerWithholdPayment": "Yes"
+    },
+    "partAndParcel": {
+      "workerReceivesBenefits": "Yes",
+      "workerAsLineManager": "Yes",
+      "contactWithEngagerCustomer": "No",
+      "workerRepresentsEngagerBusiness": "No"
+    },
+    "businessStructure": {
+      "workerVAT": "No",
+      "businessAccount": "No",
+      "advertiseForWork": "Yes",
+      "businessWebsite": "Yes",
+      "workerPayForTraining": "Yes",
+      "workerExpenseRunningBusinessPremises": "Yes",
+      "workerPaysForInsurance": "No"
+    }
+  }
+}

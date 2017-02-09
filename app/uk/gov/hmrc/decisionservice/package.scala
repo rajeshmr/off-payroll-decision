@@ -23,4 +23,9 @@ package object decisionservice {
 
   type Validation[T] = Validated[List[DecisionServiceError],T]
 
+  object Versions {
+    val VERSION1 = "1.0.1-beta"
+    val VERSION2 = "1.0.2-alpha"
+  }
+
 }

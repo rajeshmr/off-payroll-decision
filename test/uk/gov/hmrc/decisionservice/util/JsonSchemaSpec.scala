@@ -18,23 +18,27 @@ package uk.gov.hmrc.decisionservice.util
 
 import cats.data.Xor
 import play.api.libs.json.Json
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonSchemaSpec extends UnitSpec {
-  val TEST_CASE_PATH = "/schema/schema-checking-testcase.csv"
-  val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/off-payroll-request-sample.json"
-  val FULL_RESPONSE = "/schema/off-payroll-response-sample.json"
+  val TEST_CASE_PATH = "/schema/1.0.1-beta/schema-checking-testcase.csv"
+  val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/1.0.1-beta/off-payroll-request-sample.json"
+  val FULL_RESPONSE = "/schema/1.0.1-beta/off-payroll-response-sample.json"
   val tryJson = FileReader.read(FULL_EXAMPLE_REQUEST_JSON_PATH)
 
   " A Json Schema" should {
-    "validate correctly full example request json should validate with the loose schema" in {
+    s"validate correctly full example request json should validate with the loose schema for version ${Versions.VERSION1}" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = tryJson.get
-      val validationResult = JsonRequestValidator.validate(requestJsonString)
-      printValidationResult(validationResult)
-      validationResult.isRight shouldBe true
-
+      val maybeValidator = JsonRequestValidatorFactory(Versions.VERSION1)
+      maybeValidator.isDefined shouldBe true
+      maybeValidator.map { validator =>
+        val validationResult = validator.validate(requestJsonString)
+        printValidationResult(validationResult)
+        validationResult.isRight shouldBe true
+      }
     }
   }
 
@@ -42,54 +46,70 @@ class JsonSchemaSpec extends UnitSpec {
     "validate a request with the Strict Schema" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = tryJson.get
-      val validationResult = JsonRequestStrictValidator.validate(requestJsonString)
+      val maybeValidator = JsonRequestStrictValidatorFactory(Versions.VERSION1)
+      maybeValidator.isDefined shouldBe true
+      val validationResult = maybeValidator.get.validate(requestJsonString)
       printValidationResult(validationResult)
       validationResult.isRight shouldBe true
     }
   }
 
-    it should {
-      "validate a full response with the loos schema " in {
-        tryJson.isSuccess shouldBe true
-        val requestJsonString = FileReader.read(FULL_RESPONSE).get
-        val validationResult = JsonResponseValidator
-          .validate(requestJsonString)
-        printValidationResult(validationResult)
-        validationResult.isRight shouldBe true
-      }
+  it should {
+    s"validate a full response with the lose schema for version ${Versions.VERSION1}" in {
+      validateResponseWithSchema(Versions.VERSION1)
     }
+  }
+
+  it should {
+    s"validate a full response with the lose schema for version ${Versions.VERSION2}" in {
+      validateResponseWithSchema(Versions.VERSION2)
+    }
+  }
 
   it should {
     "validate a full response with the Strict Schema" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = FileReader.read(FULL_RESPONSE).get
-      val validationResult = JsonResponseStrictValidator
-        .validate(requestJsonString)
+      val maybeValidator = JsonResponseStrictValidatorFactory(Versions.VERSION1)
+      maybeValidator.isDefined shouldBe true
+      val validationResult = maybeValidator.get.validate(requestJsonString)
       printValidationResult(validationResult)
       validationResult.isRight shouldBe true
     }
   }
 
-    it should {
-      "validate request created from a flattened test case" in {
-        val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH)
-        testCasesTry.isSuccess shouldBe true
-        val testCase = testCasesTry.get
-        val request = testCase.request
-        val requestJson = Json.toJson(request)
-        val requestJsonString = Json.prettyPrint(requestJson)
-        val validationResult = JsonRequestValidator.validate(requestJsonString)
-        printValidationResult(validationResult)
-        validationResult.isRight shouldBe true
-      }
+  it should {
+    "validate request created from a flattened test case" in {
+      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH)
+      testCasesTry.isSuccess shouldBe true
+      val testCase = testCasesTry.get
+      val request = testCase.request
+      val requestJson = Json.toJson(request)
+      val requestJsonString = Json.prettyPrint(requestJson)
+      val maybeValidator = JsonRequestValidatorFactory(Versions.VERSION1)
+      maybeValidator.isDefined shouldBe true
+      val validationResult = maybeValidator.get.validate(requestJsonString)
+      printValidationResult(validationResult)
+      validationResult.isRight shouldBe true
     }
-
+  }
 
   private def printValidationResult(result: Xor[String, Unit]) = {
     result.leftMap { report => {
       info(report)
     }
     }
+  }
+
+  def validateResponseWithSchema(version:String): Unit ={
+    val responsePath = s"/schema/${version}/off-payroll-response-sample.json"
+    tryJson.isSuccess shouldBe true
+    val requestJsonString = FileReader.read(responsePath).get
+    val maybeValidator = JsonResponseValidatorFactory(version)
+    maybeValidator.isDefined shouldBe true
+    val validationResult = maybeValidator.get.validate(requestJsonString)
+    printValidationResult(validationResult)
+    validationResult.isRight shouldBe true
   }
 
 }
