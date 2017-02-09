@@ -30,7 +30,7 @@ case class Score( score:Map[String,String])
 
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
-  val elements = List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService")
+  val elements = List("control", "financialRisk", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService")
   def create(facts:Map[String,CarryOver]):Map[String,String] =
     facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,formatValue(co.value))}.toMap
   def createRaw(m:Map[String,String]) = m
