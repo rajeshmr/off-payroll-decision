@@ -90,11 +90,11 @@ object DecisionServiceInstance extends DecisionService {
 object DecisionServiceInstance101Alpha extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
-    (5, "/tables/1.0.2-alpha/control.csv", "control"),
-    (7, "/tables/1.0.2-alpha/financial-risk-a.csv", "financialRiskA"),
-    (13, "/tables/1.0.2-alpha/financial-risk-b.csv", "financialRiskB"),
-    (4, "/tables/1.0.2-alpha/part-and-parcel.csv", "partAndParcel"),
-    (14, "/tables/1.0.2-alpha/personal-service.csv", "personalService"),
-    (5, "/tables/1.0.2-alpha/matrix-of-matrices.csv", "matrix")
+    (5, "/tables/1.0.0-final/control.csv", "control"),
+    (7, "/tables/1.0.0-final/financial-risk-a.csv", "financialRiskA"),
+    (13, "/tables/1.0.0-final/financial-risk-b.csv", "financialRiskB"),
+    (4, "/tables/1.0.0-final/part-and-parcel.csv", "partAndParcel"),
+    (14, "/tables/1.0.0-final/personal-service.csv", "personalService"),
+    (5, "/tables/1.0.0-final/matrix-of-matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }
