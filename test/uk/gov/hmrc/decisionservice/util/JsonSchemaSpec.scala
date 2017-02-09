@@ -67,7 +67,7 @@ class JsonSchemaSpec extends UnitSpec {
   }
 
   it should {
-    "validate a full response with the Strict Schema" in {
+    s"validate a full response with the Strict Schema for version ${Versions.VERSION1}" in {
       tryJson.isSuccess shouldBe true
       val requestJsonString = FileReader.read(FULL_RESPONSE).get
       val maybeValidator = JsonResponseStrictValidatorFactory(Versions.VERSION1)
@@ -79,8 +79,8 @@ class JsonSchemaSpec extends UnitSpec {
   }
 
   it should {
-    "validate request created from a flattened test case" in {
-      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH)
+    s"validate request created from a flattened test case for version ${Versions.VERSION1}" in {
+      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH, Versions.VERSION1)
       testCasesTry.isSuccess shouldBe true
       val testCase = testCasesTry.get
       val request = testCase.request
