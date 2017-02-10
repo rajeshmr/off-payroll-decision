@@ -110,7 +110,6 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     val decisionRequest = DecisionRequest(version, CORRELATION_ID, sampleInterviewForVersion(version))
     val EXPECTED_RESULT: String = "Outside IR35"
     val decisionController = DecisionTestController
-    println(s"XXX${toJson(decisionRequest)}")
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
     val result = decisionController.decide()(fakeRequest)
     status(result) shouldBe Status.OK
