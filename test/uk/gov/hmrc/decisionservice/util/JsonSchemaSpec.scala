@@ -93,14 +93,14 @@ class JsonSchemaSpec extends UnitSpec {
     }
   }
 
-  private def readExampleRequestJson(version:String):String = {
+  private def readExampleRequestJson(version: String): String = {
     val exampleRequestPath = s"/schema/${version}/off-payroll-request-sample.json"
     val tryJson = FileReader.read(exampleRequestPath)
     tryJson.isSuccess shouldBe true
     tryJson.get
   }
 
-  private def readExampleResponseJson(version:String):String = {
+  private def readExampleResponseJson(version: String): String = {
     val exampleResponsePath = s"/schema/${version}/off-payroll-response-sample.json"
     val tryJson = FileReader.read(exampleResponsePath)
     tryJson.isSuccess shouldBe true
@@ -109,14 +109,14 @@ class JsonSchemaSpec extends UnitSpec {
 
   private def printValidationResult(result: Xor[String, Unit]) = {
     result.leftMap { report => {
-      println(report)
+      info(report)
     }
     }
   }
 
-  def validateRequestWithSchema(version:String): Unit = validateRequestWithSchema(version, JsonRequestValidatorFactory(version))
+  def validateRequestWithSchema(version: String): Unit = validateRequestWithSchema(version, JsonRequestValidatorFactory(version))
 
-  def validateRequestWithStrictSchema(version:String): Unit = validateRequestWithSchema(version, JsonRequestStrictValidatorFactory(version))
+  def validateRequestWithStrictSchema(version: String): Unit = validateRequestWithSchema(version, JsonRequestStrictValidatorFactory(version))
 
   def validateRequestWithSchema(version: String, maybeValidator: Option[JsonSchemaValidator]): Unit = {
     val requestJsonString = readExampleRequestJson(version)
@@ -128,15 +128,9 @@ class JsonSchemaSpec extends UnitSpec {
     }
   }
 
-  def validateResponseWithSchema(version:String): Unit = {
-    val maybeValidator = JsonResponseValidatorFactory(version)
-    validateResponseWithSchema(version, maybeValidator)
-  }
+  def validateResponseWithSchema(version: String): Unit = validateResponseWithSchema(version, JsonResponseValidatorFactory(version))
 
-  def validateResponseWithStrictSchema(version:String): Unit = {
-    val maybeValidator = JsonResponseStrictValidatorFactory(version)
-    validateResponseWithSchema(version, maybeValidator)
-  }
+  def validateResponseWithStrictSchema(version: String): Unit = validateResponseWithSchema(version, JsonResponseStrictValidatorFactory(version))
 
   def validateResponseWithSchema(version: String, maybeValidator: Option[JsonSchemaValidator]): Unit = {
     val requestJsonString = readExampleResponseJson(version)
