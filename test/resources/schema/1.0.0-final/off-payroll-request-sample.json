@@ -3,20 +3,11 @@
   "correlationID": "12345",
   "interview": {
     "personalService": {
-      "contractualObligationForSubstitute": "No",
-      "contractualObligationInPractise": "Yes",
-      "contractualRightForSubstitute": "Yes",
-      "actualRightToSendSubstitute": "Yes",
-      "contractualRightReflectInPractise": "No",
-      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
-      "possibleSubstituteRejection": "No",
-      "contractTermsWorkerPaysSubstitute": "Yes",
-      "workerSentActualSubstitute": "Yes",
-      "actualSubstituteRejection": "Yes",
-      "possibleHelper": "Yes",
-      "wouldWorkerPayHelper": "Yes",
-      "workerSentActualHelper": "No",
-      "workerPayActualHelper": "Yes"
+      "workerSentActualSubstitute": "yesClientAgreed",
+      "workerPayActualSubstitute": "No",
+      "possibleSubstituteRejection": "Yes",
+      "possibleSubstituteWorkerPay": "Yes",
+      "wouldWorkerPayHelper": "Yes"
     },
     "control": {
       "toldWhatToDo": "Sometimes",
