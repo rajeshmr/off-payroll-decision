@@ -66,6 +66,8 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     val maybeResponseValidator = JsonResponseValidatorFactory(version)
     maybeResponseValidator.isDefined shouldBe true
     val validationResult = maybeResponseValidator.get.validate(responseString)
+    println(version)
+    println(validationResult)
     validationResult.isRight shouldBe true
     val jsResult = Json.fromJson[DecisionResponse](response)
     jsResult.isSuccess shouldBe true
@@ -79,7 +81,6 @@ trait DecisionControllerCsvSpec extends UnitSpec with WithFakeApplication {
     val maybeRequestValidator = JsonRequestValidatorFactory(version)
     maybeRequestValidator.isDefined shouldBe true
     val validationResult = maybeRequestValidator.get.validate(requestJsonString)
-    println(validationResult)
     validationResult.isRight shouldBe true
     requestJson
   }

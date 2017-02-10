@@ -30,11 +30,20 @@ case class Score( score:Map[String,String])
 
 object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
-  val elements = List("control", "financialRisk", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService")
-  def create(facts:Map[String,CarryOver]):Map[String,String] =
-    facts.toList.collect { case (a,co) if (Score.elements.contains(a)) => (a,formatValue(co.value))}.toMap
-  def createRaw(m:Map[String,String]) = m
-  def formatValue(value:String) = value match {
+  def elements(version:String):List[String] = {
+    val versionToElements = Map(
+      "1.0.1-beta" -> List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService"),
+      "1.0.0-final" -> List("control", "financialRisk", "partAndParcel", "businessStructure", "personalService")
+    )
+    versionToElements.getOrElse(version, List())
+  }
+
+  def create(facts: Map[String, CarryOver], version:String): Map[String, String] =
+    facts.toList.collect { case (a, co) if (elements(version).contains(a)) => (a, formatValue(co.value)) }.toMap
+
+  def createRaw(m: Map[String, String]) = m
+
+  def formatValue(value: String) = value match {
     case v@"NotValidUseCase" => v
     case v => v.toUpperCase
   }
