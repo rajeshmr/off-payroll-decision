@@ -26,46 +26,24 @@
         "personalService": {
           "type": "object",
           "properties": {
-            "contractualObligationForSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
+            "workerSentActualSubstitute": {
+              "type": "string",
+              "enum": [
+                "yesClientAgreed",
+                "notAgreedWithClient",
+                "noSubstitutionHappened"
+              ]
             },
-            "contractualObligationInPractise": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "contractualRightForSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "actualRightToSendSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "contractualRightReflectInPractise": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerArrangeIfWorkerIsUnwillingOrUnable": {
+            "workerPayActualSubstitute": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "possibleSubstituteRejection": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "contractTermsWorkerPaysSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerSentActualSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "actualSubstituteRejection": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "possibleHelper": {
+            "possibleSubstituteWorkerPay": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "wouldWorkerPayHelper": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerSentActualHelper": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPayActualHelper": {
               "$ref": "#/definitions/binaryAnswer"
             }
           },
