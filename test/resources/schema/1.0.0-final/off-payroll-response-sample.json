@@ -4,8 +4,7 @@
   "score": {
     "personalService": "HIGH",
     "control": "LOW",
-    "financialRiskA": "LOW",
-    "financialRiskB": "LOW",
+    "financialRisk": "LOW",
     "partAndParcel": "LOW",
     "businessStructure": "LOW"
   },

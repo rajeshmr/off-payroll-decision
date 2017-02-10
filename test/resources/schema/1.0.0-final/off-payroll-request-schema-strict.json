@@ -140,28 +140,52 @@
             "workerDecideWhere"
           ]
         },
-        "financialRiskA": {
+        "financialRisk": {
           "type": "object",
           "properties": {
-            "workerPaidInclusive": {
+            "workerProvidedMaterials": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerNeedConsumablesMaterials": {
+            "workerProvidedEquipment": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerProvideConsumablesMaterials": {
+            "workerUsedVehicle": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayConsumables": {
+            "workerHadOtherExpenses": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerNeedEquipment": {
+            "expensesAreNotRelevantForRole": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerProvideEquipment": {
+            "incomeCalendarPeriods": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayEquipment": {
+            "incomeFixed": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "incomePieceRate": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "incomeCommission": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "incomeProfitOrLosses": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "asPartOfUsualRateInWorkingHours": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "outsideOfUsualRateAndHours": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "outsideOfHoursNoCharge": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "noObligationToCorrect": {
+              "$ref": "#/definitions/binaryAnswer"
+            },
+            "cannotBeCorrected": {
               "$ref": "#/definitions/binaryAnswer"
             }
           },
@@ -175,67 +199,6 @@
             "workerNeedEquipment",
             "workerProvideEquipment",
             "engagerPayEquipment"
-          ]
-        },
-        "financialRiskB": {
-          "type": "object",
-          "properties": {
-            "provideVehicle": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerPayVehicleExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerIncurExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerPayOtherExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerMainIncome": {
-              "type": "string",
-              "enum": [
-                "incomeCalendarPeriods",
-                "incomePieceRate",
-                "incomeCommission",
-                "incomeFixed",
-                "incomeProfitOrLosses",
-                "incomeRateByInvoice"
-              ]
-            },
-            "workerSufferedLatePayment": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerProvideAtTheirExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerFixAtTheirOwnTime": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPayForMaterialsSubstandardWorker": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "paidForSubstandardWork": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "actualEngagerWithholdPayment": {
-              "$ref": "#/definitions/binaryAnswer"
-            }
-          },
-          
-          "additionalProperties": false,
-          "required": [
-            "provideVehicle",
-            "engagerPayVehicleExpense",
-            "workerIncurExpense",
-            "engagerPayOtherExpense",
-            "workerMainIncome",
-            "workerSufferedLatePayment",
-            "workerProvideAtTheirExpense",
-            "workerFixAtTheirOwnTime",
-            "workerPayForMaterialsSubstandardWorker",
-            "paidForSubstandardWork",
-            "actualEngagerWithholdPayment"
           ]
         },
         "partAndParcel": {
@@ -261,51 +224,6 @@
             "workerAsLineManager",
             "contactWithEngagerCustomer",
             "workerRepresentsEngagerBusiness"
-          ]
-        },
-        "businessStructure": {
-          "type": "object",
-          "properties": {
-            "similarWork": {
-              "type": "string",
-              "enum": [
-                "zeroToThree",
-                "fourToNine",
-                "tenPlus"
-              ]
-            },
-            "workerVAT": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "businessAccount": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "advertiseForWork": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "businessWebsite": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPayForTraining": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerExpenseRunningBusinessPremises": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPaysForInsurance": {
-              "$ref": "#/definitions/binaryAnswer"
-            }
-          },
-          
-          "additionalProperties": false,
-          "required": [
-            "workerVAT",
-            "businessAccount",
-            "advertiseForWork",
-            "businessWebsite",
-            "workerPayForTraining",
-            "workerExpenseRunningBusinessPremises",
-            "workerPaysForInsurance"
           ]
         }
       },

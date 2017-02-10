@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.decisionservice.services
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.model.api.Score
-import uk.gov.hmrc.decisionservice.model.rules.{EmptyCarryOver, _}
-import uk.gov.hmrc.decisionservice.ruleengine.FactValidatingFunctions._
-import uk.gov.hmrc.decisionservice.ruleengine.MatchingFunctions._
-import uk.gov.hmrc.decisionservice.ruleengine.RulesFileMetaData
+import uk.gov.hmrc.decisionservice.model.rules._
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ComplianceTestCasesSpec extends UnitSpec {
@@ -51,9 +49,9 @@ class ComplianceTestCasesSpec extends UnitSpec {
         maybeDecision.isValid shouldBe true
         maybeDecision.map { decision =>
           decision.value shouldBe "Not Matched"
-          val maybeBusinessStructureScore = Score.create(decision.facts).get("businessStructure")
+          val maybeBusinessStructureScore = Score.create(decision.facts, Versions.VERSION1).get("businessStructure")
           maybeBusinessStructureScore.isDefined shouldBe true
-          maybeBusinessStructureScore.map{businessStructureScore =>
+          maybeBusinessStructureScore.map { businessStructureScore =>
             businessStructureScore shouldBe "NotValidUseCase"
           }
         }
