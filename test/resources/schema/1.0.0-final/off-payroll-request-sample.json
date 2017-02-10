@@ -25,42 +25,26 @@
       "whenWorkHasToBeDone": "workingPatternStipulated",
       "workerDecideWhere": "couldFixWorkerLocation"
     },
-    "financialRiskA": {
-      "workerPaidInclusive": "No",
-      "workerNeedConsumablesMaterials": "No",
-      "workerProvideConsumablesMaterials": "Yes",
-      "engagerPayConsumables": "Yes",
-      "workerNeedEquipment": "No",
-      "workerProvideEquipment": "Yes",
-      "engagerPayEquipment": "No"
-    },
-    "financialRiskB": {
-      "provideVehicle": "No",
-      "engagerPayVehicleExpense": "No",
-      "workerIncurExpense": "No",
-      "engagerPayOtherExpense": "No",
-      "workerMainIncome": "incomeProfitOrLosses",
-      "workerSufferedLatePayment": "No",
-      "workerProvideAtTheirExpense": "Yes",
-      "workerFixAtTheirOwnTime": "Yes",
-      "workerPayForMaterialsSubstandardWorker": "No",
-      "paidForSubstandardWork": "No",
-      "actualEngagerWithholdPayment": "Yes"
+    "financialRisk": {
+      "workerProvidedMaterials": "No",
+      "workerProvidedEquipment": "No",
+      "workerUsedVehicle": "No",
+      "workerHadOtherExpenses": "No",
+      "expensesAreNotRelevantForRole": "No",
+      "incomeCalendarPeriods": "No",
+      "incomeFixed": "No",
+      "incomePieceRate": "No",
+      "incomeCommission": "No",
+      "incomeProfitOrLosses": "No",
+      "asPartOfUsualRateInWorkingHours": "No",
+      "outsideOfUsualRateAndHours": "No",
+      "outsideOfHoursNoCharge": "No"
     },
     "partAndParcel": {
       "workerReceivesBenefits": "Yes",
       "workerAsLineManager": "Yes",
       "contactWithEngagerCustomer": "No",
       "workerRepresentsEngagerBusiness": "No"
-    },
-    "businessStructure": {
-      "workerVAT": "No",
-      "businessAccount": "No",
-      "advertiseForWork": "Yes",
-      "businessWebsite": "Yes",
-      "workerPayForTraining": "Yes",
-      "workerExpenseRunningBusinessPremises": "Yes",
-      "workerPaysForInsurance": "No"
     }
   }
 }
