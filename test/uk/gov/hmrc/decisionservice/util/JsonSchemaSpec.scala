@@ -26,8 +26,6 @@ import scala.util.Try
 
 class JsonSchemaSpec extends UnitSpec {
   val TEST_CASE_PATH = "/schema/1.0.1-beta/schema-checking-testcase.csv"
-  val FULL_RESPONSE = "/schema/1.0.1-beta/off-payroll-response-sample.json"
-
 
   " A Json Schema" should {
     s"validate correctly full example request json with the loose schema for version ${Versions.VERSION1}" in {
