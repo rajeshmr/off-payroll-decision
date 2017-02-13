@@ -1,0 +1,27 @@
+personalService     ,   workerSentActualSubstitute                ,  yesClientAgreed
+personalService     ,   workerPayActualSubstitute                 ,  No
+personalService     ,   possibleSubstituteRejection               ,  No
+personalService     ,   possibleSubstituteWorkerPay               ,  Yes
+personalService     ,   wouldWorkerPayHelper                      ,  Yes
+control             ,   engagerMovingWorker                       ,  canMoveWorkerWithPermission
+control             ,   workerDecidingHowWorkIsDone               ,  workerAgreeWithOthers
+control             ,   whenWorkHasToBeDone                       ,  scheduleDecidedForWorker
+control             ,   workerDecideWhere                         ,  workerAgreeWithOthers
+financialRisk       ,   workerProvidedMaterials                   ,  No
+financialRisk       ,   workerProvidedEquipment                   ,  No
+financialRisk       ,   workerUsedVehicle                         ,  No
+financialRisk       ,   workerHadOtherExpenses                    ,  No
+financialRisk       ,   expensesAreNotRelevantForRole             ,  Yes
+financialRisk       ,   incomeCalendarPeriods                     ,  No
+financialRisk       ,   incomeFixed                               ,  Yes
+financialRisk       ,   incomePieceRate                           ,
+financialRisk       ,   incomeCommission                          ,
+financialRisk       ,   incomeProfitOrLosses                      ,
+financialRisk       ,   asPartOfUsualRateInWorkingHours           ,  Yes
+financialRisk       ,   outsideOfUsualRateAndHours                ,
+financialRisk       ,   outsideOfHoursNoCharge                    ,
+partAndParcel       ,   workerReceivesBenefits                    ,  Yes
+partAndParcel       ,   workerAsLineManager                       ,  No
+partAndParcel       ,   contactWithEngagerCustomer                ,  No
+partAndParcel       ,   workerRepresentsEngagerBusiness           ,
+Inside IR35

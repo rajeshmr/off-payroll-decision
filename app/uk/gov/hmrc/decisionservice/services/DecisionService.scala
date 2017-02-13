@@ -94,6 +94,6 @@ object DecisionServiceInstance100Final extends DecisionService {
     (15, "/tables/1.0.0-final/financial-risk.csv", "financialRisk"),
     (4, "/tables/1.0.0-final/part-and-parcel.csv", "partAndParcel"),
     (5, "/tables/1.0.0-final/personal-service.csv", "personalService"),
-    (5, "/tables/1.0.0-final/matrix-of-matrices.csv", "matrix")
+    (4, "/tables/1.0.0-final/matrix-of-matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }
