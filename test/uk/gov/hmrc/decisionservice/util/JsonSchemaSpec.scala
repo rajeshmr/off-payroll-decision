@@ -34,7 +34,7 @@ class JsonSchemaSpec extends UnitSpec {
   }
 
   it should {
-    "validate correctly full example request json with the loose schema for version " + Versions.VERSION2 in {
+    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION2}" in {
       validateRequestWithSchema(Versions.VERSION2)
     }
   }
