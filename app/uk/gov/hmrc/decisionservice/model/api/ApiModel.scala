@@ -33,7 +33,7 @@ object Score {
   def elements(version:String):List[String] = {
     val versionToElements = Map(
       "1.0.1-beta" -> List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService"),
-      "1.0.0-final" -> List("control", "financialRisk", "partAndParcel", "businessStructure", "personalService")
+      "1.0.0-final" -> List("control", "financialRisk", "partAndParcel", "personalService")
     )
     versionToElements.getOrElse(version, List())
   }
