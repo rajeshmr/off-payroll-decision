@@ -90,7 +90,7 @@ object DecisionServiceInstance extends DecisionService {
 object DecisionServiceInstance100Final extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
-    (5, "/tables/1.0.0-final/control.csv", "control"),
+    (4, "/tables/1.0.0-final/control.csv", "control"),
     (15, "/tables/1.0.0-final/financial-risk.csv", "financialRisk"),
     (4, "/tables/1.0.0-final/part-and-parcel.csv", "partAndParcel"),
     (5, "/tables/1.0.0-final/personal-service.csv", "personalService"),
