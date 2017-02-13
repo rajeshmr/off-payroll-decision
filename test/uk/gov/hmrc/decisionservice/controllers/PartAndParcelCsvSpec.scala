@@ -52,7 +52,7 @@ class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with Decisi
     s"return 200 and correct response with the expected decision for part and parcel scenario 0 version ${Versions.VERSION2}" in {
       createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0_V2, Versions.VERSION2)
     }
-    s"return 200 and correct response with the expected decision for part and parcel scenarios version ${Versions.VERSION2}" in {
+    "return 200 and correct response with the expected decision for part and parcel scenarios version " + Versions.VERSION2 in {
       createMultipleRequestsSendVerifyDecision(PART_AND_PARCEL_SCENARIO_S_V2, Versions.VERSION2)
     }
   }
