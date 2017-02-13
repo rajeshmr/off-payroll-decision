@@ -122,7 +122,6 @@ class JsonSchemaSpec extends UnitSpec {
     maybeValidator.map { validator =>
       val validationResult = validator.validate(requestJsonString)
       printValidationResult(validationResult)
-      println(validationResult)
       validationResult.isRight shouldBe true
     }
   }

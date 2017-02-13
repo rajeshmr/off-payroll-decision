@@ -110,35 +110,25 @@
             "expensesAreNotRelevantForRole": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "incomeCalendarPeriods": {
-              "$ref": "#/definitions/binaryAnswer"
+            "workerMainIncome": {
+              "type": "string",
+              "enum": [
+                "incomeCalendarPeriods",
+                "incomeFixed",
+                "incomePieceRate",
+                "incomeCommission",
+                "incomeProfitOrLosses"
+              ]
             },
-            "incomeFixed": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "incomePieceRate": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "incomeCommission": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "incomeProfitOrLosses": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "asPartOfUsualRateInWorkingHours": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "outsideOfUsualRateAndHours": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "outsideOfHoursNoCharge": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "noObligationToCorrect": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "cannotBeCorrected": {
-              "$ref": "#/definitions/binaryAnswer"
+            "paidForSubstandardWork": {
+              "type": "string",
+              "enum": [
+                "asPartOfUsualRateInWorkingHours",
+                "outsideOfUsualRateAndHours",
+                "outsideOfHoursNoCharge",
+                "noObligationToCorrect",
+                "cannotBeCorrected"
+              ]
             }
           },
           "minProperties": 0,

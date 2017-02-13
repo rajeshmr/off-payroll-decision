@@ -3,13 +3,7 @@ financialRisk,   workerProvidedEquipment         ,
 financialRisk,   workerUsedVehicle               ,
 financialRisk,   workerHadOtherExpenses          ,
 financialRisk,   expensesAreNotRelevantForRole   ,
-financialRisk,   incomeCalendarPeriods           ,
-financialRisk,   incomeFixed                     ,
-financialRisk,   incomePieceRate                 ,
-financialRisk,   incomeCommission                ,
-financialRisk,   incomeProfitOrLosses            ,
-financialRisk,   asPartOfUsualRateInWorkingHours ,
-financialRisk,   outsideOfUsualRateAndHours      ,
-financialRisk,   outsideOfHoursNoCharge          ,
+financialRisk,   workerMainIncome                ,  incomeCalendarPeriods
+financialRisk,   paidForSubstandardWork          ,  asPartOfUsualRateInWorkingHours
 OUTOFIR35
 

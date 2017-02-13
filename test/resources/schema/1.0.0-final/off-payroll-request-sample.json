@@ -21,14 +21,8 @@
       "workerUsedVehicle": "No",
       "workerHadOtherExpenses": "No",
       "expensesAreNotRelevantForRole": "No",
-      "incomeCalendarPeriods": "No",
-      "incomeFixed": "No",
-      "incomePieceRate": "No",
-      "incomeCommission": "No",
-      "incomeProfitOrLosses": "No",
-      "asPartOfUsualRateInWorkingHours": "No",
-      "outsideOfUsualRateAndHours": "No",
-      "outsideOfHoursNoCharge": "No"
+      "workerMainIncome": "incomeCalendarPeriods",
+      "paidForSubstandardWork": "asPartOfUsualRateInWorkingHours"
     },
     "partAndParcel": {
       "workerReceivesBenefits": "Yes",
