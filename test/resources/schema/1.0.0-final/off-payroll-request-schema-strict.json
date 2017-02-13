@@ -60,42 +60,39 @@
         "control": {
           "type": "object",
           "properties": {
-            "toldWhatToDo": {
+            "engagerMovingWorker": {
               "type": "string",
               "enum": [
-                "Yes",
-                "No",
-                "Sometimes"
+                "canMoveWorkerWithPermission",
+                "canMoveWorkerWithoutPermission",
+                "cannotMoveWorkerWithoutNewAgreement"
               ]
-            },
-            "engagerMovingWorker": {
-              "$ref": "#/definitions/binaryAnswer"
             },
             "workerDecidingHowWorkIsDone": {
               "type": "string",
               "enum": [
-                "workingSetInstructions",
-                "WorkerCanGetInstructed",
-                "WorkerDecidesToClientSatisfaction",
-                "WorkerFullyDecides"
+                "workerDecidesWithoutInput",
+                "workerAgreeWithOthers",
+                "noWorkerInputAllowed",
+                "workerFollowStrictEmployeeProcedures"
               ]
             },
             "whenWorkHasToBeDone": {
               "type": "string",
               "enum": [
-                "workingPatternStipulated",
-                "workingPatternAgreed",
-                "noDefinedWorkingPattern",
-                "workinPatternAgreedDeadlines",
-                "workinPatternRegularHoursToAgreedDeadlines"
+                "workerDecideSchedule",
+                "workerAgreeSchedule",
+                "scheduleDecidedForWorker",
+                "noScheduleRequiredOnlyDeadlines"
               ]
             },
             "workerDecideWhere": {
               "type": "string",
               "enum": [
-                "couldFixWorkerLocation",
-                "cannotFixWorkerLocation",
-                "workerLocationFixed"
+                "workerChooses",
+                "workerCannotChoose",
+                "workerAgreeWithOthers",
+                "noLocationRequired"
               ]
             }
           },

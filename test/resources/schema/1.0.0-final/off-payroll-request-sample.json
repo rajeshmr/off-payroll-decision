@@ -10,11 +10,10 @@
       "wouldWorkerPayHelper": "Yes"
     },
     "control": {
-      "toldWhatToDo": "Sometimes",
-      "engagerMovingWorker": "Yes",
-      "workerDecidingHowWorkIsDone": "WorkerDecidesToClientSatisfaction",
-      "whenWorkHasToBeDone": "workingPatternStipulated",
-      "workerDecideWhere": "couldFixWorkerLocation"
+      "engagerMovingWorker": "canMoveWorkerWithPermission",
+      "workerDecidingHowWorkIsDone": "workerAgreeWithOthers",
+      "whenWorkHasToBeDone": "workerAgreeSchedule",
+      "workerDecideWhere": "workerChooses"
     },
     "financialRisk": {
       "workerProvidedMaterials": "No",
