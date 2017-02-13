@@ -49,9 +49,6 @@
         },
         "partAndParcel": {
           "$ref": "#/definitions/weightedAnswer"
-        },
-        "businessStructure": {
-          "$ref": "#/definitions/weightedAnswer"
         }
       },
       "additionalProperties": false,
@@ -59,8 +56,7 @@
         "personalService",
         "control",
         "financialRisk",
-        "partAndParcel",
-        "businessStructure"
+        "partAndParcel"
       ]
     }
   },

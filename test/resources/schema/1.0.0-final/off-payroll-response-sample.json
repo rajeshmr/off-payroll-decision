@@ -5,8 +5,7 @@
     "personalService": "HIGH",
     "control": "LOW",
     "financialRisk": "LOW",
-    "partAndParcel": "LOW",
-    "businessStructure": "LOW"
+    "partAndParcel": "LOW"
   },
   "result": "Unknown"
 }

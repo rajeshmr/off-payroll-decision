@@ -49,9 +49,6 @@
         },
         "partAndParcel": {
           "$ref": "#/definitions/weightedAnswer"
-        },
-        "businessStructure": {
-          "$ref": "#/definitions/weightedAnswer"
         }
       },
       "minProperties": 0,
