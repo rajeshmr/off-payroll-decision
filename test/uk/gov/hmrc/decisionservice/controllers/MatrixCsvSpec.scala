@@ -27,6 +27,7 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
   val TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK = "/test-scenarios/single/matrix/scenario-decision-ir35-matches-financialRiskBlank.csv"
   val TEST_CASE_UNKNOWN = "/test-scenarios/single/matrix/scenario-decision-unknown.csv"
   val TEST_CASE_INSIDE_IR35_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/matrix/scenario-decision-ir35.csv"
+  val TEST_CASE_UNKNOWN_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/matrix/scenario-decision-unknown.csv"
 
   "POST /decide" should {
     s"return 200 and correct response with the not matched decision (1) for version ${Versions.VERSION1}" in {
@@ -49,6 +50,9 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
     }
     s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION2}" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION2, Versions.VERSION2)
+    }
+    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION2}" in {
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION2, Versions.VERSION2)
     }
   }
 }
