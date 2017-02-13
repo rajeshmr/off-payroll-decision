@@ -3,14 +3,6 @@ financialRisk,   workerProvidedEquipment         ,  ,Yes,,,,,,,,,,,,,,,,,,,,,,
 financialRisk,   workerUsedVehicle               ,  ,,Yes,Yes,,,,,,,,,,,,,,,,,,,,
 financialRisk,   workerHadOtherExpenses          ,  ,,,Yes,,Yes,,,,,,,Yes,,Yes,Yes,,,,,,,,
 financialRisk,   expensesAreNotRelevantForRole   ,  ,,,,Yes,,Yes,Yes,Yes,Yes,Yes,,,,,,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
-financialRisk,   incomeCalendarPeriods           ,  ,,,,,,,,,,,,,,,,Yes,,Yes,Yes,,,,Yes
-financialRisk,   incomeFixed                     ,  ,,,,,,Yes,Yes,Yes,Yes,Yes,,,,,,,,,,,,,
-financialRisk,   incomePieceRate                 ,  ,,,,,,,,,,,,,,,,,Yes,,,Yes,Yes,Yes,
-financialRisk,   incomeCommission                ,  ,,,,Yes,Yes,,,,,,,,,,,,,,,,,,
-financialRisk,   incomeProfitOrLosses            ,  ,,,,,,,,,,,Yes,Yes,,,,,,,,,,,
-financialRisk,   asPartOfUsualRateInWorkingHours ,  ,,,,,,Yes,,,,,,,,,,,,Yes,,Yes,,,
-financialRisk,   outsideOfUsualRateAndHours      ,  ,,,,,,,Yes,,,,,,,,,,,,Yes,,Yes,,
-financialRisk,   outsideOfHoursNoCharge          ,  ,,Yes,,Yes,,,,Yes,,,Yes,,Yes,,Yes,,,,,,,,
-financialRisk,   noObligationToCorrect           ,  ,,,,,,,,,Yes,,,,,,,Yes,Yes,,,,,,
-financialRisk,   cannotBeCorrected               ,  ,,,,,,,,,,Yes,,,,,,,,,,,,Yes,Yes
+financialRisk,   workerMainIncome                ,  ,,,,incomeCommission,incomeCommission,incomeFixed,incomeFixed,incomeFixed,incomeFixed,incomeFixed,incomeProfitOrLosses,incomeProfitOrLosses,,,,incomeCalendarPeriods,incomePieceRate,incomeCalendarPeriods,incomeCalendarPeriods,incomePieceRate,incomePieceRate,incomePieceRate,incomeCalendarPeriods
+financialRisk,   paidForSubstandardWork          ,  ,,outsideOfHoursNoCharge,,outsideOfHoursNoCharge,,asPartOfUsualRateInWorkingHours,outsideOfUsualRateAndHours,outsideOfHoursNoCharge,noObligationToCorrect,cannotBeCorrected,outsideOfHoursNoCharge,,outsideOfHoursNoCharge,,outsideOfHoursNoCharge,noObligationToCorrect,noObligationToCorrect,asPartOfUsualRateInWorkingHours,outsideOfUsualRateAndHours,asPartOfUsualRateInWorkingHours,outsideOfUsualRateAndHours,cannotBeCorrected,cannotBeCorrected
              ,                                   ,  OUTOFIR35,OUTOFIR35,OUTOFIR35,OUTOFIR35,OUTOFIR35,OUTOFIR35,Low,Low,OUTOFIR35,Medium,Medium,OUTOFIR35,OUTOFIR35,OUTOFIR35,OUTOFIR35,OUTOFIR35,Low,Low,Low,Low,Low,Low,Low,Low

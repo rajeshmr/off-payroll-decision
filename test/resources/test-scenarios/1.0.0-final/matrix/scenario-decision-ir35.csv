@@ -12,14 +12,8 @@ financialRisk       ,   workerProvidedEquipment                   ,  No
 financialRisk       ,   workerUsedVehicle                         ,  No
 financialRisk       ,   workerHadOtherExpenses                    ,  No
 financialRisk       ,   expensesAreNotRelevantForRole             ,  Yes
-financialRisk       ,   incomeCalendarPeriods                     ,  No
-financialRisk       ,   incomeFixed                               ,  Yes
-financialRisk       ,   incomePieceRate                           ,
-financialRisk       ,   incomeCommission                          ,
-financialRisk       ,   incomeProfitOrLosses                      ,
-financialRisk       ,   asPartOfUsualRateInWorkingHours           ,  Yes
-financialRisk       ,   outsideOfUsualRateAndHours                ,
-financialRisk       ,   outsideOfHoursNoCharge                    ,
+financialRisk       ,   workerMainIncome                          ,  incomeFixed
+financialRisk       ,   paidForSubstandardWork                    ,  asPartOfUsualRateInWorkingHours
 partAndParcel       ,   workerReceivesBenefits                    ,  Yes
 partAndParcel       ,   workerAsLineManager                       ,  No
 partAndParcel       ,   contactWithEngagerCustomer                ,  No
