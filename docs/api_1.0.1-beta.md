@@ -20,31 +20,31 @@ Requests use the HTTP `POST` method
 ## Request
 
 * Body contains an __Interview__ JSON
-- A [JSON Schema](../test/resources/schema/off-payroll-request-schema.json) defines this __Interview__.
-- [Example](../test/resources/schema/off-payroll-request-sample.json) JSON with all fields populated.
+- A [JSON Schema](../test/resources/schema/1.0.1-beta/off-payroll-request-schema.json) defines this __Interview__.
+- [Example](../test/resources/schema/1.0.1-beta/off-payroll-request-sample.json) JSON with all fields populated.
 
 
 | Attribute        | Required           | Description                                                          |
-| :---------------- |:------------------:| :--------------------------------------------------------------------|
-| version          | true               | The version of the Interview being used and therefore the endpoint |
+| :----------------|:------------------:| :--------------------------------------------------------------------|
+| version          | true               | The version of the Interview being used |
 | correlationID    | true               | A value unique to the consumer, to identify this Interview and correlate to its Decision|
-| interview       | true               | A set of questions and answers grouped in clusters used to conduct the Interview |
-| personalService | false               | cluster |
-| control           | false             | cluster |
-| financialRiskA   | false               | cluster |
-| financialRiskB   | false               | cluster |
-| partAndParcel   | false               | cluster |
-| businesStructure| false               | cluster |
+| interview        | true               | A set of questions and answers grouped in clusters used to conduct the Interview |
+| personalService  | false              | cluster |
+| control          | false              | cluster |
+| financialRiskA   | false              | cluster |
+| financialRiskB   | false              | cluster |
+| partAndParcel    | false              | cluster |
+| businessStructure| false              | cluster |
 
- _Note:_ The __Interview__ does not need to contain all the clusters. Within each cluster there are a number of __ClusterElements__ a ClusterElement represents a Question with an answer. For a complete list of  __ClusterElements__ refer to the [JSON Schema](../test/resources/schema/off-payroll-request-schema.json) Once all the __Clusters__ are present in this __Interview__ then a __Decision__ response will be present. Depending on how the __Interview__ has been formed a __Decision__ may be arrived at before all __Clusters__ and __ClusterElements__ are present, this is known as a __Hard Exit__
+ _Note:_ The __Interview__ does not need to contain all the clusters. Within each cluster there are a number of __ClusterElements__ a ClusterElement represents a Question with an answer. For a complete list of  __ClusterElements__ refer to the [JSON Schema](../test/resources/schema/1.0.1-beta/off-payroll-request-schema.json) Once all the __Clusters__ are present in this __Interview__ then a __Decision__ response will be present. Depending on how the __Interview__ has been formed a __Decision__ may be arrived at before all __Clusters__ and __ClusterElements__ are present, this is known as a __Hard Exit__
 
 
 ## Response
 
 * HTTP 200 OK
 * Body contains __Decision__ JSON
-- A [JSON Schema](../test/resources/schema/off-payroll-response-schema.json) defines this __Decision__.
-- [Example](../test/resources/schema/off-payroll-response-sample.json) JSON with all fields populated.
+- A [JSON Schema](../test/resources/schema/1.0.1-beta/off-payroll-response-schema.json) defines this __Decision__.
+- [Example](../test/resources/schema/1.0.1-beta/off-payroll-response-sample.json) JSON with all fields populated.
 
 
 | Attribute            | Required           | Description                                                                                                    |
