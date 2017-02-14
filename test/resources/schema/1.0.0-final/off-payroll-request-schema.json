@@ -147,12 +147,7 @@
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerRepresentsEngagerBusiness": {
-              "type": "string",
-              "enum": [
-                "workForEndClient",
-                "workAsIndependent",
-                "workAsBusiness"
-              ]
+              "$ref": "#/definitions/binaryAnswer"
             }
           },
           "minProperties": 0,
