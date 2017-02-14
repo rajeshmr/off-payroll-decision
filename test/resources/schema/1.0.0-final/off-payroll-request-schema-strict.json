@@ -170,7 +170,12 @@
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerRepresentsEngagerBusiness": {
-              "$ref": "#/definitions/binaryAnswer"
+              "type": "string",
+              "enum": [
+                "workForEndClient",
+                "workAsIndependent",
+                "workAsBusiness"
+              ]
             }
           },
           
