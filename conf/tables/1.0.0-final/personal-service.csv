@@ -1,60 +1,14 @@
-contractualObligationForSubstitute,contractualObligationInPractise,contractualRightForSubstitute,actualRightToSendSubstitute,contractualRightReflectInPractise,engagerArrangeIfWorkerIsUnwillingOrUnable,possibleSubstituteRejection,contractTermsWorkerPaysSubstitute,workerSentActualSubstitute,actualSubstituteRejection,possibleHelper,wouldWorkerPayHelper,workerSentActualHelper,workerPayActualHelper
-YES,YES,   ,   ,   ,   ,   ,YES,   ,   ,   ,   ,   ,   ,OutOfIR35,TRUE,
-NO,   ,YES,   ,YES,NO,NO,YES,   ,   ,   ,   ,   ,   ,OutOfIR35,TRUE,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,NO,   ,   ,   ,   ,OutOfIR35,TRUE,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,YES,NO,   ,   ,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,YES,YES,NO,   ,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,YES,YES,YES,YES,YES,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,YES,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,YES,YES,YES,NO,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,YES,YES,YES,NO,YES,NO,HIGH,FALSE   ,
-YES,NO,   ,   ,   ,YES,   ,   ,   ,   ,NO,   ,   ,   ,HIGH,FALSE   ,
-YES,NO,   ,   ,   ,NO,   ,   ,   ,   ,   ,   ,   ,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,NO,   ,   ,   ,   ,   ,   ,   ,   ,   ,HIGH,FALSE   ,
-NO,   ,NO,YES,NO,   ,   ,   ,   ,   ,   ,   ,   ,   ,HIGH,FALSE   ,
-YES,YES,   ,   ,   ,   ,   ,NO,   ,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-YES,YES,   ,   ,   ,   ,   ,NO,   ,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-YES,YES,   ,   ,   ,   ,   ,NO,   ,   ,YES,YES,NO,   ,HIGH,FALSE   ,
-YES,YES,   ,   ,   ,   ,   ,NO,   ,   ,YES,NO,   ,   ,HIGH,FALSE   ,
-YES,YES,   ,   ,   ,   ,   ,NO,   ,   ,NO,   ,   ,   ,LOW,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,YES,NO,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,No,   ,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,NO,   ,   ,   ,LOW,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,YES,YES,YES,LOW,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,YES,   ,   ,   ,   ,YES,NO,   ,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,NO,NO,   ,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,YES,   ,YES,NO,NO,NO,   ,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,NO,NO,   ,   ,YES,YES,NO,   ,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,NO,NO,   ,   ,YES,NO,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,NO,NO,   ,   ,YES,NO,YES,YES,MEDIUM,FALSE   ,
-NO,   ,YES,   ,YES,NO,NO,NO,   ,   ,NO,   ,   ,   ,LOW,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,NO,   ,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,NO,   ,   ,YES,NO,NO,   ,LOW,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,NO,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,NO,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,NO,   ,YES,NO,YES,YES,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,NO,   ,YES,NO,YES,NO,HIGH,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,NO,,YES,NO,NO,NO,LOW,FALSE   ,
-NO,   ,YES,   ,YES,NO,YES,YES,NO,,NO,   ,   ,   ,LOW,FALSE   ,
-NO,   ,NO,NO,   ,   ,   ,   ,   ,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,NO,NO,   ,   ,   ,   ,   ,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,NO,NO,   ,   ,   ,   ,   ,   ,YES,NO,YES,YES,HIGH,FALSE   ,
-NO,   ,NO,NO,   ,   ,   ,   ,   ,   ,YES,NO,YES,NO,HIGH,FALSE   ,
-NO,   ,NO,NO,   ,   ,   ,   ,   ,   ,YES,NO,NO,NO,LOW,FALSE   ,
-NO,   ,NO,NO,   ,   ,   ,   ,   ,   ,NO,   ,   ,   ,LOW,FALSE   ,
-NO,   ,NO,YES,YES,   ,   ,   ,   ,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,NO,YES,YES,   ,   ,   ,   ,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,   ,   ,   ,   ,YES,NO,YES,YES,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,   ,   ,   ,   ,YES,NO,YES,NO,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,   ,   ,   ,   ,NO,   ,   ,   ,LOW,FALSE   ,
-NO,   ,NO,YES,YES,   ,NO,   ,   ,   ,   ,   ,   ,   ,MEDIUM,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,YES,NO,   ,   ,   ,   ,MEDIUM,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,YES,YES,NO,   ,   ,   ,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,NO,   ,YES,YES,YES,YES,MEDIUM,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,NO,   ,YES,YES,YES,NO,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,NO,   ,YES,NO,YES,YES,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,NO,   ,YES,NO,YES,NO,HIGH,FALSE   ,
-NO,   ,NO,YES,YES,   ,YES,   ,NO,   ,NO,   ,   ,   ,LOW,FALSE   ,
+workerSentActualSubstitute,workerPayActualSubstitute,possibleSubstituteRejection,possibleSubstituteWorkerPay,wouldWorkerPayHelper
+yesClientAgreed           ,YES                      ,                           ,                           ,                     ,OutOfIR35    ,TRUE
+noSubstitutionHappened    ,                         ,YES                        ,YES                        ,                     ,OutOfIR35    ,TRUE
+yesClientAgreed           ,NO                       ,                           ,                           ,YES                  ,Medium       ,FALSE
+yesClientAgreed           ,NO                       ,                           ,                           ,NO                   ,High         ,FALSE
+noSubstitutionHappened    ,                         ,YES                        ,NO                         ,YES                  ,OutOfIR35    ,TRUE
+noSubstitutionHappened    ,                         ,YES                        ,NO                         ,NO                   ,Medium       ,FALSE
+noSubstitutionHappened    ,                         ,NO                         ,                           ,YES                  ,Medium       ,FALSE
+noSubstitutionHappened    ,                         ,NO                         ,                           ,NO                   ,High         ,FALSE
+notAgreedWithClient       ,                         ,                           ,                           ,YES                  ,Medium       ,FALSE
+notAgreedWithClient       ,                         ,                           ,                           ,NO                   ,High         ,FALSE
+                          ,                         ,YES                        ,YES                        ,                     ,OutOfIR35    ,TRUE
+                          ,                         ,YES                        ,NO                         ,                     ,Medium       ,FALSE
+                          ,                         ,NO                         ,                           ,                     ,High         ,FALSE

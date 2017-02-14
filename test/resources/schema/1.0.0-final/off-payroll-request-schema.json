@@ -26,46 +26,24 @@
         "personalService": {
           "type": "object",
           "properties": {
-            "contractualObligationForSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
+            "workerSentActualSubstitute": {
+              "type": "string",
+              "enum": [
+                "yesClientAgreed",
+                "notAgreedWithClient",
+                "noSubstitutionHappened"
+              ]
             },
-            "contractualObligationInPractise": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "contractualRightForSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "actualRightToSendSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "contractualRightReflectInPractise": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerArrangeIfWorkerIsUnwillingOrUnable": {
+            "workerPayActualSubstitute": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "possibleSubstituteRejection": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "contractTermsWorkerPaysSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerSentActualSubstitute": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "actualSubstituteRejection": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "possibleHelper": {
+            "possibleSubstituteWorkerPay": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "wouldWorkerPayHelper": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerSentActualHelper": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPayActualHelper": {
               "$ref": "#/definitions/binaryAnswer"
             }
           },
@@ -75,121 +53,86 @@
         "control": {
           "type": "object",
           "properties": {
-            "toldWhatToDo": {
+            "engagerMovingWorker": {
               "type": "string",
               "enum": [
-                "Yes",
-                "No",
-                "Sometimes"
+                "canMoveWorkerWithPermission",
+                "canMoveWorkerWithoutPermission",
+                "cannotMoveWorkerWithoutNewAgreement"
               ]
-            },
-            "engagerMovingWorker": {
-              "$ref": "#/definitions/binaryAnswer"
             },
             "workerDecidingHowWorkIsDone": {
               "type": "string",
               "enum": [
-                "workingSetInstructions",
-                "WorkerCanGetInstructed",
-                "WorkerDecidesToClientSatisfaction",
-                "WorkerFullyDecides"
+                "workerDecidesWithoutInput",
+                "workerAgreeWithOthers",
+                "noWorkerInputAllowed",
+                "workerFollowStrictEmployeeProcedures"
               ]
             },
             "whenWorkHasToBeDone": {
               "type": "string",
               "enum": [
-                "workingPatternStipulated",
-                "workingPatternAgreed",
-                "noDefinedWorkingPattern",
-                "workinPatternAgreedDeadlines",
-                "workinPatternRegularHoursToAgreedDeadlines"
+                "workerDecideSchedule",
+                "workerAgreeSchedule",
+                "scheduleDecidedForWorker",
+                "noScheduleRequiredOnlyDeadlines"
               ]
             },
             "workerDecideWhere": {
               "type": "string",
               "enum": [
-                "couldFixWorkerLocation",
-                "cannotFixWorkerLocation",
-                "workerLocationFixed"
+                "workerChooses",
+                "workerCannotChoose",
+                "workerAgreeWithOthers",
+                "noLocationRequired"
               ]
             }
           },
           "minProperties": 0,
           "additionalProperties": false
         },
-        "financialRiskA": {
+        "financialRisk": {
           "type": "object",
           "properties": {
-            "workerPaidInclusive": {
+            "workerProvidedMaterials": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerNeedConsumablesMaterials": {
+            "workerProvidedEquipment": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerProvideConsumablesMaterials": {
+            "workerUsedVehicle": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "engagerPayConsumables": {
+            "workerHadOtherExpenses": {
               "$ref": "#/definitions/binaryAnswer"
             },
-            "workerNeedEquipment": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerProvideEquipment": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerPayEquipment": {
-              "$ref": "#/definitions/binaryAnswer"
-            }
-          },
-          "minProperties": 0,
-          "additionalProperties": false
-        },
-        "financialRiskB": {
-          "type": "object",
-          "properties": {
-            "provideVehicle": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerPayVehicleExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerIncurExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "engagerPayOtherExpense": {
+            "expensesAreNotRelevantForRole": {
               "$ref": "#/definitions/binaryAnswer"
             },
             "workerMainIncome": {
               "type": "string",
               "enum": [
                 "incomeCalendarPeriods",
+                "incomeFixed",
                 "incomePieceRate",
                 "incomeCommission",
-                "incomeFixed",
-                "incomeProfitOrLosses",
-                "incomeRateByInvoice"
+                "incomeProfitOrLosses"
               ]
             },
-            "workerSufferedLatePayment": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerProvideAtTheirExpense": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerFixAtTheirOwnTime": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "workerPayForMaterialsSubstandardWorker": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
             "paidForSubstandardWork": {
-              "$ref": "#/definitions/binaryAnswer"
-            },
-            "actualEngagerWithholdPayment": {
-              "$ref": "#/definitions/binaryAnswer"
+              "type": "string",
+              "enum": [
+                "asPartOfUsualRateInWorkingHours",
+                "outsideOfUsualRateAndHours",
+                "outsideOfHoursNoCharge",
+                "noObligationToCorrect",
+                "cannotBeCorrected"
+              ]
             }
-          }
+          },
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "partAndParcel": {
           "type": "object",

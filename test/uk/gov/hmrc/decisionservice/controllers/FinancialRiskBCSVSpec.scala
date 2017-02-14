@@ -28,13 +28,13 @@ class FinancialRiskBCSVSpec extends UnitSpec with WithFakeApplication with Decis
   val FINANCIAL_RISK_B_SCENARIO_2 = "/test-scenarios/single/financial-risk-b/scenario_2.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected decision for financial risk b scenario 0" in {
+    s"return 200 and expected decision for financial risk b scenario 0 for version ${Versions.VERSION1}" in {
       createRequestSendVerifyDecision(FINANCIAL_RISK_B_SCENARIO_0, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected decision for financial risk b scenario 1" in {
+    s"return 200 and expected decision for financial risk b scenario 1 for version ${Versions.VERSION1}" in {
       createRequestSendVerifyDecision(FINANCIAL_RISK_B_SCENARIO_1, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected decision for financial risk b scenario 2" in {
+    s"return 200 and expected decision for financial risk b scenario 2 for version ${Versions.VERSION1}" in {
       createRequestSendVerifyDecision(FINANCIAL_RISK_B_SCENARIO_2, Versions.VERSION1)
     }
   }

@@ -29,7 +29,7 @@ import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api._
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance, DecisionServiceInstance101Alpha}
+import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance, DecisionServiceInstance100Final}
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -68,13 +68,13 @@ trait DecisionController extends BaseController {
   }
 
   def doDecide(decisionRequest: DecisionRequest): Future[Validation[RuleEngineDecision]] = Future {
-    decisionInstance(decisionRequest.version).fold[Validation[RuleEngineDecision]]{
+    decisionServiceInstance(decisionRequest.version).fold[Validation[RuleEngineDecision]]{
       Validated.Invalid(List(VersionError(ErrorCodes.INVALID_VERSION, s"not supported version ${decisionRequest.version}")))} {
       decisionService => requestToFacts(decisionRequest) ==>: decisionService
     }
   }
 
-  def decisionInstance(version: String): Option[DecisionService] = decisionServices.get(version)
+  def decisionServiceInstance(version: String): Option[DecisionService] = decisionServices.get(version)
 
   def requestToFacts(decisionRequest: DecisionRequest): Facts = {
     val listsOfStringPairs = decisionRequest.interview.toList.collect { case (a, b) => b.toList }.flatten
@@ -85,7 +85,7 @@ trait DecisionController extends BaseController {
     DecisionResponse(
       decisionRequest.version,
       decisionRequest.correlationID,
-      Score.create(ruleEngineDecision.facts), responseString(ruleEngineDecision))
+      Score.create(ruleEngineDecision.facts, decisionRequest.version), responseString(ruleEngineDecision))
   }
 
   def responseString(ruleEngineDecision: RuleEngineDecision): String = ruleEngineDecision.value.toLowerCase match {
@@ -99,7 +99,7 @@ trait DecisionController extends BaseController {
 object DecisionController extends DecisionController {
   lazy val decisionServices = Map(
     Versions.VERSION1 -> DecisionServiceInstance,
-    Versions.VERSION2 -> DecisionServiceInstance101Alpha
+    Versions.VERSION2 -> DecisionServiceInstance100Final
   )
 }
 
