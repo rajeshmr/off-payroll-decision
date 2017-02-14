@@ -44,16 +44,10 @@
         "control": {
           "$ref": "#/definitions/weightedAnswer"
         },
-        "financialRiskA": {
-          "$ref": "#/definitions/weightedAnswer"
-        },
-        "financialRiskB": {
+        "financialRisk": {
           "$ref": "#/definitions/weightedAnswer"
         },
         "partAndParcel": {
-          "$ref": "#/definitions/weightedAnswer"
-        },
-        "businessStructure": {
           "$ref": "#/definitions/weightedAnswer"
         }
       },
@@ -61,10 +55,8 @@
       "required": [
         "personalService",
         "control",
-        "financialRiskA",
-        "financialRiskB",
-        "partAndParcel",
-        "businessStructure"
+        "financialRisk",
+        "partAndParcel"
       ]
     }
   },

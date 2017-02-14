@@ -4,10 +4,8 @@
   "score": {
     "personalService": "HIGH",
     "control": "LOW",
-    "financialRiskA": "LOW",
-    "financialRiskB": "LOW",
-    "partAndParcel": "LOW",
-    "businessStructure": "LOW"
+    "financialRisk": "LOW",
+    "partAndParcel": "LOW"
   },
   "result": "Unknown"
 }

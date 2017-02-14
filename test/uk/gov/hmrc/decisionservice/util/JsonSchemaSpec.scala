@@ -22,35 +22,32 @@ import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.testutil.RequestAndDecision
 import uk.gov.hmrc.play.test.UnitSpec
 
+import scala.util.Try
+
 class JsonSchemaSpec extends UnitSpec {
   val TEST_CASE_PATH = "/schema/1.0.1-beta/schema-checking-testcase.csv"
-  val FULL_EXAMPLE_REQUEST_JSON_PATH = "/schema/1.0.1-beta/off-payroll-request-sample.json"
-  val FULL_RESPONSE = "/schema/1.0.1-beta/off-payroll-response-sample.json"
-  val tryJson = FileReader.read(FULL_EXAMPLE_REQUEST_JSON_PATH)
 
   " A Json Schema" should {
-    s"validate correctly full example request json should validate with the loose schema for version ${Versions.VERSION1}" in {
-      tryJson.isSuccess shouldBe true
-      val requestJsonString = tryJson.get
-      val maybeValidator = JsonRequestValidatorFactory(Versions.VERSION1)
-      maybeValidator.isDefined shouldBe true
-      maybeValidator.map { validator =>
-        val validationResult = validator.validate(requestJsonString)
-        printValidationResult(validationResult)
-        validationResult.isRight shouldBe true
-      }
+    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION1}" in {
+      validateRequestWithSchema(Versions.VERSION1)
     }
   }
 
   it should {
-    "validate a request with the Strict Schema" in {
-      tryJson.isSuccess shouldBe true
-      val requestJsonString = tryJson.get
-      val maybeValidator = JsonRequestStrictValidatorFactory(Versions.VERSION1)
-      maybeValidator.isDefined shouldBe true
-      val validationResult = maybeValidator.get.validate(requestJsonString)
-      printValidationResult(validationResult)
-      validationResult.isRight shouldBe true
+    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION2}" in {
+      validateRequestWithSchema(Versions.VERSION2)
+    }
+  }
+
+  it should {
+    s"validate a request with the Strict Schema for version ${Versions.VERSION1}" in {
+      validateRequestWithStrictSchema(Versions.VERSION1)
+    }
+  }
+
+  it should {
+    s"validate a request with the Strict Schema for version ${Versions.VERSION2}" in {
+      validateRequestWithStrictSchema(Versions.VERSION1)
     }
   }
 
@@ -67,20 +64,20 @@ class JsonSchemaSpec extends UnitSpec {
   }
 
   it should {
-    "validate a full response with the Strict Schema" in {
-      tryJson.isSuccess shouldBe true
-      val requestJsonString = FileReader.read(FULL_RESPONSE).get
-      val maybeValidator = JsonResponseStrictValidatorFactory(Versions.VERSION1)
-      maybeValidator.isDefined shouldBe true
-      val validationResult = maybeValidator.get.validate(requestJsonString)
-      printValidationResult(validationResult)
-      validationResult.isRight shouldBe true
+    s"validate a full response with the strict Schema for version ${Versions.VERSION1}" in {
+      validateResponseWithStrictSchema(Versions.VERSION1)
     }
   }
 
   it should {
-    "validate request created from a flattened test case" in {
-      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH)
+    s"validate a full response with the strict Schema for version ${Versions.VERSION2}" in {
+      validateResponseWithStrictSchema(Versions.VERSION2)
+    }
+  }
+
+  it should {
+    s"validate request created from a flattened test case for version ${Versions.VERSION1}" in {
+      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH, Versions.VERSION1)
       testCasesTry.isSuccess shouldBe true
       val testCase = testCasesTry.get
       val request = testCase.request
@@ -94,6 +91,20 @@ class JsonSchemaSpec extends UnitSpec {
     }
   }
 
+  private def readExampleRequestJson(version: String): String = {
+    val exampleRequestPath = s"/schema/${version}/off-payroll-request-sample.json"
+    val tryJson = FileReader.read(exampleRequestPath)
+    tryJson.isSuccess shouldBe true
+    tryJson.get
+  }
+
+  private def readExampleResponseJson(version: String): String = {
+    val exampleResponsePath = s"/schema/${version}/off-payroll-response-sample.json"
+    val tryJson = FileReader.read(exampleResponsePath)
+    tryJson.isSuccess shouldBe true
+    tryJson.get
+  }
+
   private def printValidationResult(result: Xor[String, Unit]) = {
     result.leftMap { report => {
       info(report)
@@ -101,11 +112,26 @@ class JsonSchemaSpec extends UnitSpec {
     }
   }
 
-  def validateResponseWithSchema(version:String): Unit ={
-    val responsePath = s"/schema/${version}/off-payroll-response-sample.json"
-    tryJson.isSuccess shouldBe true
-    val requestJsonString = FileReader.read(responsePath).get
-    val maybeValidator = JsonResponseValidatorFactory(version)
+  def validateRequestWithSchema(version: String): Unit = validateRequestWithSchema(version, JsonRequestValidatorFactory(version))
+
+  def validateRequestWithStrictSchema(version: String): Unit = validateRequestWithSchema(version, JsonRequestStrictValidatorFactory(version))
+
+  def validateRequestWithSchema(version: String, maybeValidator: Option[JsonSchemaValidator]): Unit = {
+    val requestJsonString = readExampleRequestJson(version)
+    maybeValidator.isDefined shouldBe true
+    maybeValidator.map { validator =>
+      val validationResult = validator.validate(requestJsonString)
+      printValidationResult(validationResult)
+      validationResult.isRight shouldBe true
+    }
+  }
+
+  def validateResponseWithSchema(version: String): Unit = validateResponseWithSchema(version, JsonResponseValidatorFactory(version))
+
+  def validateResponseWithStrictSchema(version: String): Unit = validateResponseWithSchema(version, JsonResponseStrictValidatorFactory(version))
+
+  def validateResponseWithSchema(version: String, maybeValidator: Option[JsonSchemaValidator]): Unit = {
+    val requestJsonString = readExampleResponseJson(version)
     maybeValidator.isDefined shouldBe true
     val validationResult = maybeValidator.get.validate(requestJsonString)
     printValidationResult(validationResult)

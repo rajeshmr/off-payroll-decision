@@ -3,64 +3,32 @@
   "correlationID": "12345",
   "interview": {
     "personalService": {
-      "contractualObligationForSubstitute": "No",
-      "contractualObligationInPractise": "Yes",
-      "contractualRightForSubstitute": "Yes",
-      "actualRightToSendSubstitute": "Yes",
-      "contractualRightReflectInPractise": "No",
-      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
-      "possibleSubstituteRejection": "No",
-      "contractTermsWorkerPaysSubstitute": "Yes",
-      "workerSentActualSubstitute": "Yes",
-      "actualSubstituteRejection": "Yes",
-      "possibleHelper": "Yes",
-      "wouldWorkerPayHelper": "Yes",
-      "workerSentActualHelper": "No",
-      "workerPayActualHelper": "Yes"
+      "workerSentActualSubstitute": "yesClientAgreed",
+      "workerPayActualSubstitute": "No",
+      "possibleSubstituteRejection": "Yes",
+      "possibleSubstituteWorkerPay": "Yes",
+      "wouldWorkerPayHelper": "Yes"
     },
     "control": {
-      "toldWhatToDo": "Sometimes",
-      "engagerMovingWorker": "Yes",
-      "workerDecidingHowWorkIsDone": "WorkerDecidesToClientSatisfaction",
-      "whenWorkHasToBeDone": "workingPatternStipulated",
-      "workerDecideWhere": "couldFixWorkerLocation"
+      "engagerMovingWorker": "canMoveWorkerWithPermission",
+      "workerDecidingHowWorkIsDone": "workerAgreeWithOthers",
+      "whenWorkHasToBeDone": "workerAgreeSchedule",
+      "workerDecideWhere": "workerChooses"
     },
-    "financialRiskA": {
-      "workerPaidInclusive": "No",
-      "workerNeedConsumablesMaterials": "No",
-      "workerProvideConsumablesMaterials": "Yes",
-      "engagerPayConsumables": "Yes",
-      "workerNeedEquipment": "No",
-      "workerProvideEquipment": "Yes",
-      "engagerPayEquipment": "No"
-    },
-    "financialRiskB": {
-      "provideVehicle": "No",
-      "engagerPayVehicleExpense": "No",
-      "workerIncurExpense": "No",
-      "engagerPayOtherExpense": "No",
-      "workerMainIncome": "incomeProfitOrLosses",
-      "workerSufferedLatePayment": "No",
-      "workerProvideAtTheirExpense": "Yes",
-      "workerFixAtTheirOwnTime": "Yes",
-      "workerPayForMaterialsSubstandardWorker": "No",
-      "paidForSubstandardWork": "No",
-      "actualEngagerWithholdPayment": "Yes"
+    "financialRisk": {
+      "workerProvidedMaterials": "No",
+      "workerProvidedEquipment": "No",
+      "workerUsedVehicle": "No",
+      "workerHadOtherExpenses": "No",
+      "expensesAreNotRelevantForRole": "No",
+      "workerMainIncome": "incomeCalendarPeriods",
+      "paidForSubstandardWork": "asPartOfUsualRateInWorkingHours"
     },
     "partAndParcel": {
       "workerReceivesBenefits": "Yes",
       "workerAsLineManager": "Yes",
       "contactWithEngagerCustomer": "No",
       "workerRepresentsEngagerBusiness": "No"
-    },
-    "businessStructure": {
-      "workerVAT": "No",
-      "businessAccount": "No",
-      "advertiseForWork": "Yes",
-      "businessWebsite": "Yes",
-      "workerPayForTraining": "Yes",
-      "workerExpenseRunningBusinessPremises": "Yes",
-      "workerPaysForInsurance": "No"
     }
   }
 }

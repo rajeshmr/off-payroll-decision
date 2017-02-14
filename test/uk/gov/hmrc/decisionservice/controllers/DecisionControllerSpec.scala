@@ -29,7 +29,7 @@ import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, ErrorCodes, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance102alpha}
+import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance100final}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
@@ -37,8 +37,8 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   implicit val materializer = ActorMaterializer()
 
   private val CORRELATION_ID = "12345"
-  private val BAD_REQUEST_JSON = """{}"""
   private val TEST_ERROR_CODE = 15
+  private val BAD_REQUEST_JSON = """{}"""
 
   object ErrorGeneratingDecisionService extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
@@ -51,7 +51,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   object DecisionTestController extends DecisionController {
     lazy val decisionServices = Map(
       Versions.VERSION1 -> DecisionServiceTestInstance,
-      Versions.VERSION2 -> DecisionServiceTestInstance102alpha
+      Versions.VERSION2 -> DecisionServiceTestInstance100final
     )
   }
 
@@ -62,12 +62,23 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     )
   }
 
-  val interview = Map(
-    "personalService" -> Map(
-      "contractualObligationForSubstitute" -> "Yes",
-      "contractualObligationInPractise" -> "Yes",
-      "contractTermsWorkerPaysSubstitute" -> "Yes"
-    ))
+  def sampleInterviewForVersion(version:String) = {
+    val iVersion1 = Map(
+      "personalService" -> Map(
+        "contractualObligationForSubstitute" -> "Yes",
+        "contractualObligationInPractise" -> "Yes",
+        "contractTermsWorkerPaysSubstitute" -> "Yes"
+      ))
+    val iVersion2 = Map(
+      "personalService" -> Map(
+        "workerSentActualSubstitute" -> "yesClientAgreed",
+        "workerPayActualSubstitute" -> "Yes",
+        "possibleSubstituteRejection" -> "Yes",
+        "possibleSubstituteWorkerPay" -> "Yes",
+        "wouldWorkerPayHelper" -> "Yes"
+      ))
+    Map(Versions.VERSION1 -> iVersion1, Versions.VERSION2 -> iVersion2).getOrElse(version, Map())
+  }
 
   "POST /decide" should {
     s"return 200 and correct response when request is correct for version ${Versions.VERSION1}" in {
@@ -96,7 +107,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   }
 
   def runPostExpected200(version:String) = {
-    val decisionRequest = DecisionRequest(version, CORRELATION_ID, interview)
+    val decisionRequest = DecisionRequest(version, CORRELATION_ID, sampleInterviewForVersion(version))
     val EXPECTED_RESULT: String = "Outside IR35"
     val decisionController = DecisionTestController
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
@@ -104,11 +115,11 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     status(result) shouldBe Status.OK
     val response = jsonBodyOf(await(result))
     verifyResponse(response, EXPECTED_RESULT, version)
-    verifyScore(response)
+    verifyScore(response, version)
   }
 
   def runPostExpected400(version:String, expectedErrorCode:Int) = {
-    val decisionRequest = DecisionRequest(version, CORRELATION_ID, interview)
+    val decisionRequest = DecisionRequest(version, CORRELATION_ID, sampleInterviewForVersion(version))
     val decisionController = DecisionTestControllerWithErrorGeneratingDecisionService
     val fakeRequest = FakeRequest(Helpers.POST, "/decide").withBody(toJson(decisionRequest))
     val result = decisionController.decide()(fakeRequest)
@@ -129,13 +140,13 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     result(0).as[String] shouldBe expectedResult
   }
 
-  def verifyScore(response: JsValue): Unit = {
+  def verifyScore(response: JsValue, version:String): Unit = {
     val score = response \\ "score"
     score should have size 1
-    for (scoreElement <- Score.elements) {
+    for (scoreElement <- Score.elements(version)) {
       (score(0) \\ scoreElement) should have size 1
     }
-    score(0).as[JsObject].fields should have size Score.elements.size
+    score(0).as[JsObject].fields should have size Score.elements(version).size
   }
 
   def verifyErrorResponse(response: JsValue, expectedErrorCode:Int): Unit = {
