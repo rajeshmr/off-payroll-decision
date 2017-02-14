@@ -28,7 +28,7 @@
       "workerReceivesBenefits": "Yes",
       "workerAsLineManager": "Yes",
       "contactWithEngagerCustomer": "No",
-      "workerRepresentsEngagerBusiness": "workAsIndependent"
+      "workerRepresentsEngagerBusiness": "No"
     }
   }
 }
