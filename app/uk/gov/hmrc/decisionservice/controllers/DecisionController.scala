@@ -18,18 +18,18 @@ package uk.gov.hmrc.decisionservice.controllers
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import cats.data.{Validated, ValidatedFunctions}
+import cats.data.Validated
 import org.slf4j.MDC
 import play.api.Logger
 import play.api.libs.json.{JsError, JsSuccess, Json}
 import play.api.mvc.Action
-import uk.gov.hmrc.decisionservice.Validation
-import uk.gov.hmrc.decisionservice.model.{DecisionServiceError, VersionError}
+import uk.gov.hmrc.decisionservice.{Validation, Versions}
+import uk.gov.hmrc.decisionservice.model.VersionError
 import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api._
 import uk.gov.hmrc.decisionservice.model.rules.{>>>, Facts}
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance}
+import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceInstance, DecisionServiceInstance100Final}
 import uk.gov.hmrc.play.microservice.controller.BaseController
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -68,14 +68,13 @@ trait DecisionController extends BaseController {
   }
 
   def doDecide(decisionRequest: DecisionRequest): Future[Validation[RuleEngineDecision]] = Future {
-    decisionInstance(decisionRequest.version).fold[Validation[RuleEngineDecision]]{
+    decisionServiceInstance(decisionRequest.version).fold[Validation[RuleEngineDecision]]{
       Validated.Invalid(List(VersionError(ErrorCodes.INVALID_VERSION, s"not supported version ${decisionRequest.version}")))} {
       decisionService => requestToFacts(decisionRequest) ==>: decisionService
     }
   }
 
-//  def decisionInstance(version: String): Option[DecisionService] = decisionServices.get(version)
-  def decisionInstance(version: String): Option[DecisionService] = decisionServices.toList.headOption.map(_._2) // TODO 
+  def decisionServiceInstance(version: String): Option[DecisionService] = decisionServices.get(version)
 
   def requestToFacts(decisionRequest: DecisionRequest): Facts = {
     val listsOfStringPairs = decisionRequest.interview.toList.collect { case (a, b) => b.toList }.flatten
@@ -86,7 +85,7 @@ trait DecisionController extends BaseController {
     DecisionResponse(
       decisionRequest.version,
       decisionRequest.correlationID,
-      Score.create(ruleEngineDecision.facts), responseString(ruleEngineDecision))
+      Score.create(ruleEngineDecision.facts, decisionRequest.version), responseString(ruleEngineDecision))
   }
 
   def responseString(ruleEngineDecision: RuleEngineDecision): String = ruleEngineDecision.value.toLowerCase match {
@@ -98,6 +97,9 @@ trait DecisionController extends BaseController {
 }
 
 object DecisionController extends DecisionController {
-  lazy val decisionServices = Map("1.0.0" -> DecisionServiceInstance)
+  lazy val decisionServices = Map(
+    Versions.VERSION1 -> DecisionServiceInstance,
+    Versions.VERSION2 -> DecisionServiceInstance100Final
+  )
 }
 

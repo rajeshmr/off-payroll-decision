@@ -16,26 +16,25 @@
 
 package uk.gov.hmrc.decisionservice.testutil
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.model.api.DecisionRequest
 
 import scala.util.Try
-
-import uk.gov.hmrc.decisionservice.util.FileTokenizer.{tokenize,tokenizeWithTrailingSeparator}
+import uk.gov.hmrc.decisionservice.util.FileTokenizer.{tokenize, tokenizeWithTrailingSeparator}
 
 
 case class RequestAndDecision(request:DecisionRequest, expectedDecision:String)
 
 object RequestAndDecision {
-  val VERSION_STRING: String = "1.0.0-alpha"
   val CORRELATION_ID_STRING: String = "test-correlation-id"
 
-  def readFlattened(path:String):Try[List[RequestAndDecision]] = {
+  def readFlattened(path:String, version:String):Try[List[RequestAndDecision]] = {
     def create(clusterNames:List[String], tagNames:List[String], answersAndDecision:List[String]):RequestAndDecision = {
       val expectedDecision = answersAndDecision.last
       val answers = answersAndDecision.dropRight(1)
       val interviewRaw = clusterNames.zip(tagNames.zip(answers))
       val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
-      RequestAndDecision(DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview), expectedDecision)
+      RequestAndDecision(DecisionRequest(version, CORRELATION_ID_STRING, interview), expectedDecision)
     }
     tokenize(path).map { tokens =>
         val clusterNames = tokens(0).dropRight(1)
@@ -45,11 +44,11 @@ object RequestAndDecision {
     }
   }
 
-  def readFlattenedTransposed(path:String):Try[RequestAndDecision] = {
+  def readFlattenedTransposed(path:String, version:String):Try[RequestAndDecision] = {
     def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):RequestAndDecision = {
       val interviewRaw = clusterNames.zip(tagNames.zip(answers))
       val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
-      RequestAndDecision(DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview), expectedDecision)
+      RequestAndDecision(DecisionRequest(version, CORRELATION_ID_STRING, interview), expectedDecision)
     }
     tokenize(path).map { tokens =>
       val clusterNames = tokens.collect { case a if a.size > 2 => a(0) }
@@ -60,11 +59,11 @@ object RequestAndDecision {
     }
   }
 
-  def readAggregatedTransposed(path:String):Try[List[RequestAndDecision]] = {
+  def readAggregatedTransposed(path:String, version:String):Try[List[RequestAndDecision]] = {
     def create(clusterNames:List[String], tagNames:List[String], answers:List[String], expectedDecision:String):RequestAndDecision = {
       val interviewRaw = clusterNames.zip(tagNames.zip(answers).collect{case (t,a) if !a.isEmpty => (t,a)})
       val interview = interviewRaw.groupBy{case (cl,p) => cl}.map{case (cl,t3) => (cl,t3.map{case (t1,t2) => t2}.toMap)}
-      RequestAndDecision(DecisionRequest(VERSION_STRING, CORRELATION_ID_STRING, interview), expectedDecision)
+      RequestAndDecision(DecisionRequest(version, CORRELATION_ID_STRING, interview), expectedDecision)
     }
     tokenizeWithTrailingSeparator(path).map { tokens =>
       val t = tokens.transpose

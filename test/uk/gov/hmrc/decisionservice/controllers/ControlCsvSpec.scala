@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
@@ -24,19 +25,27 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
   val CONTROL_SCENARIO_1 = "/test-scenarios/single/control/scenario-should-give-MEDIUM-1.csv"
   val CONTROL_SCENARIO_2 = "/test-scenarios/single/control/scenario-should-give-HIGH.csv"
   val CONTROL_SCENARIO_3 = "/test-scenarios/single/control/scenario-should-give-EXIT-OUT.csv"
+  val CONTROL_SCENARIO_0_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/control/scenario_0.csv"
+  val CONTROL_SCENARIOS_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/control/scenarios.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected decision MEDIUM for control scenario 0" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0)
+    s"return 200 and correct response for control scenario 0 for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_0, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected decision MEDIUM for control scenario 1" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_1)
+    s"return 200 and correct response for control scenario 1 for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_1, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected decision HIGH for control scenario 2" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_2)
+    s"return 200 and correct response for control scenario 2 for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_2, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected decision OutsideIR35 for control scenario 3" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_3)
+    s"return 200 and correct response control scenario 3 for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_3, Versions.VERSION1)
+    }
+    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION2}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_0_VERSION2, Versions.VERSION2)
+    }
+    s"return 200 and correct response control scenarios for version ${Versions.VERSION2}" in {
+      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION2, Versions.VERSION2)
     }
   }
 }
