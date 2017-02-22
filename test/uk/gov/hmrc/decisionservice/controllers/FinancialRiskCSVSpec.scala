@@ -19,13 +19,20 @@ package uk.gov.hmrc.decisionservice.controllers
 import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class BusinessStructureAggregatedCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
-  val clusterName = "businessStructure"
-  val BUSINESS_STRUCTURE_SCENARIOS = "/test-scenarios/single/business-structure/scenarios.csv"
+/**
+  * Created by work on 09/01/2017.
+  */
+class FinancialRiskCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
+  val clusterName = "financialRisk"
+  val FINANCIAL_RISK_SCENARIO_0 = s"/test-scenarios/${Versions.VERSION2}/financial-risk/scenario_0.csv"
+  val FINANCIAL_RISK_SCENARIOS = s"/test-scenarios/${Versions.VERSION2}/financial-risk/scenarios.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected decision for business structure scenario LOW_0" in {
-      createMultipleRequestsSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIOS, Versions.VERSION1)
+    s"return 200 and expected decision for financial risk scenario 0 for version ${Versions.VERSION2}" in {
+      createRequestSendVerifyDecision(FINANCIAL_RISK_SCENARIO_0, Versions.VERSION2)
+    }
+    s"return 200 and expected decision for financial risk scenarios for version ${Versions.VERSION2}" in {
+      createMultipleRequestsSendVerifyDecision(FINANCIAL_RISK_SCENARIOS, Versions.VERSION2)
     }
   }
 }

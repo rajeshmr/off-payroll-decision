@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class PersonalServiceAggregatedCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
@@ -24,7 +25,7 @@ class PersonalServiceAggregatedCsvSpec extends UnitSpec with WithFakeApplication
 
   "POST /decide" should {
     "return 200 and correct response with the expected decisions for personal service scenarios" in {
-      createMultipleRequestsSendVerifyDecision(PERSONAL_SERVICE_SCENARIOS)
+      createMultipleRequestsSendVerifyDecision(PERSONAL_SERVICE_SCENARIOS, Versions.VERSION1)
     }
   }
 }

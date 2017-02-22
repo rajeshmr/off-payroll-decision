@@ -16,6 +16,7 @@
 
 package uk.gov.hmrc.decisionservice.controllers
 
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerFinalCsvSpec {
@@ -25,25 +26,33 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
   val TEST_CASE_INSIDE_IR35 = "/test-scenarios/single/matrix/scenario-decision-ir35.csv"
   val TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK = "/test-scenarios/single/matrix/scenario-decision-ir35-matches-financialRiskBlank.csv"
   val TEST_CASE_UNKNOWN = "/test-scenarios/single/matrix/scenario-decision-unknown.csv"
+  val TEST_CASE_INSIDE_IR35_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/matrix/scenario-decision-ir35.csv"
+  val TEST_CASE_UNKNOWN_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/matrix/scenario-decision-unknown.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected not matched decision (1)" in {
-      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_1)
+    s"return 200 and correct response with the not matched decision (1) for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_1, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected not matched decision (2)" in {
-      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_2)
+    s"return 200 and correct response with the not matched decision (2) for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_2, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected out IR35 decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35)
+    s"return 200 and correct response with the out IR35 decision for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected inside IR35 decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35)
+    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected inside IR35 decision - matches Financial Risk Blank" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK)
+    s"return 200 and correct response with the inside IR35 decision (matches Financial Risk Blank) for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK, Versions.VERSION1)
     }
-    "return 200 and correct response with the expected unknown decision" in {
-      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN)
+    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION1}" in {
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN, Versions.VERSION1)
+    }
+    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION2}" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION2, Versions.VERSION2)
+    }
+    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION2}" in {
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION2, Versions.VERSION2)
     }
   }
 }

@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.decisionservice.util
 
-import cats.data.Xor
-import uk.gov.hmrc.decisionservice.util.JsonRequestValidator.validate
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.UnitSpec
 
 
 class JsonRequestValidatorSpec extends UnitSpec {
+
+  val jsonRequestValidator = JsonRequestValidatorFactory(Versions.VERSION1).get // TODO
 
   val valid_twoSections = """
    |{
@@ -244,25 +245,19 @@ class JsonRequestValidatorSpec extends UnitSpec {
   "json validator" should {
 
     "return true for valid json" in {
-
-      validateWithInfo(valid_twoSections, JsonRequestValidator) shouldBe true
-
+      validateWithInfo(valid_twoSections, jsonRequestValidator) shouldBe true
     }
 
     "return true for valid json - with New FinancialRiskA fields" in {
-
-      validateWithInfo(valid_withNewFinancialRiskAFields, JsonRequestValidator) shouldBe true
-
+      validateWithInfo(valid_withNewFinancialRiskAFields, jsonRequestValidator) shouldBe true
     }
 
-    "validate a full request when using the strict validator " in {
-
-      validateWithInfo(valid_twoSections, JsonRequestStrictValidator) shouldBe false
+    s"validate a full request when using the strict validator for version ${Versions.VERSION1}" in {
+      validateWithInfo(valid_twoSections, JsonRequestStrictValidatorFactory(Versions.VERSION1).get) shouldBe false
     }
-
 
     "return true for valid json - no answers" in {
-      validateWithInfo(valid_noAnswers, JsonRequestValidator) shouldBe true
+      validateWithInfo(valid_noAnswers, jsonRequestValidator) shouldBe true
     }
 
     "return false for invalid json - InvalidAnswerValue" in {
@@ -288,7 +283,7 @@ class JsonRequestValidatorSpec extends UnitSpec {
              "correlationID": "ut",
              "interview" : {}
         }"""
-      validateWithInfo(valid_emptyInterview, JsonRequestValidator) shouldBe true
+      validateWithInfo(valid_emptyInterview, jsonRequestValidator) shouldBe true
     }
 
     "return false for invalid json - invalidFormatVersionId - should be string" in {
@@ -318,7 +313,7 @@ class JsonRequestValidatorSpec extends UnitSpec {
         "correlationID": "ut",
         "interview" : {}
       }"""
-      validateWithInfo(valid_versionId, JsonRequestValidator) shouldBe true
+      validateWithInfo(valid_versionId, jsonRequestValidator) shouldBe true
     }
 
     "return false for invalid json - enum value is not valid" in {
@@ -332,7 +327,6 @@ class JsonRequestValidatorSpec extends UnitSpec {
   }
 
   private def validateWithInfo(json: String, validator: JsonValidatorTrait) = {
-
     val result = validator.validate(json)
     if (result.isLeft){
       result.leftMap( r => info(r))
@@ -340,10 +334,8 @@ class JsonRequestValidatorSpec extends UnitSpec {
     result.isRight
   }
 
-  val verify = verifyError(validate) _
-
-  def verifyError(f:String => Xor[String,Unit])(s:String, expectedText:String):Unit = {
-    val result = validate(s)
+  def verify(s:String, expectedText:String):Unit = {
+    val result = jsonRequestValidator.validate(s)
     result.isRight shouldBe false
     result.leftMap { report => {
       info(report)
