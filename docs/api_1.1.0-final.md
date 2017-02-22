@@ -1,9 +1,6 @@
 
 # off-payroll-decision
 
-------------------------------
-FIXME THIS NOT YET UPDATED !!!!!
-------------------------------
 
 ## Endpoint URLs
 POST /decide/
