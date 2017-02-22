@@ -49,7 +49,7 @@ class ComplianceTestCasesSpec extends UnitSpec {
         maybeDecision.isValid shouldBe true
         maybeDecision.map { decision =>
           decision.value shouldBe "Not Matched"
-          val maybeBusinessStructureScore = Score.create(decision.facts, Versions.VERSION1).get("businessStructure")
+          val maybeBusinessStructureScore = Score.create(decision.facts, Versions.VERSION101_BETA).get("businessStructure")
           maybeBusinessStructureScore.isDefined shouldBe true
           maybeBusinessStructureScore.map { businessStructureScore =>
             businessStructureScore shouldBe "NotValidUseCase"

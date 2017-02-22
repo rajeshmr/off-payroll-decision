@@ -29,7 +29,7 @@ import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, ErrorCodes, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance100final}
+import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance100final, DecisionServiceTestInstance110final}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
@@ -50,15 +50,17 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   object DecisionTestController extends DecisionController {
     lazy val decisionServices = Map(
-      Versions.VERSION1 -> DecisionServiceTestInstance,
-      Versions.VERSION2 -> DecisionServiceTestInstance100final
+      Versions.VERSION101_BETA -> DecisionServiceTestInstance,
+      Versions.VERSION100_FINAL -> DecisionServiceTestInstance100final,
+      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final
     )
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
     lazy val decisionServices = Map(
-      Versions.VERSION1 -> ErrorGeneratingDecisionService,
-      Versions.VERSION2 -> ErrorGeneratingDecisionService
+      Versions.VERSION101_BETA -> ErrorGeneratingDecisionService,
+      Versions.VERSION100_FINAL -> ErrorGeneratingDecisionService,
+      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final
     )
   }
 
@@ -77,15 +79,25 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
         "possibleSubstituteWorkerPay" -> "Yes",
         "wouldWorkerPayHelper" -> "Yes"
       ))
-    Map(Versions.VERSION1 -> iVersion1, Versions.VERSION2 -> iVersion2).getOrElse(version, Map())
+    val iVersion3 = Map(
+      "personalService" -> Map(
+        "workerSentActualSubstitute" -> "yesClientAgreed",
+        "workerPayActualSubstitute" -> "Yes"
+      ))
+    Map(Versions.VERSION101_BETA -> iVersion1,
+        Versions.VERSION100_FINAL -> iVersion2,
+        Versions.VERSION110_FINAL -> iVersion3).getOrElse(version, Map())
   }
 
   "POST /decide" should {
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION1}" in {
-      runPostExpected200(Versions.VERSION1)
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION101_BETA}" in {
+      runPostExpected200(Versions.VERSION101_BETA)
     }
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION2}" in {
-      runPostExpected200(Versions.VERSION2)
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION100_FINAL}" in {
+      runPostExpected200(Versions.VERSION100_FINAL)
+    }
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION110_FINAL}" in {
+      runPostExpected200(Versions.VERSION110_FINAL)
     }
     "return 400 and error response when request does not conform to schema" in {
       val decisionController = DecisionTestController
@@ -95,11 +107,11 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       val errorResponse = jsonBodyOf(await(result))
       verifyErrorResponse(errorResponse, REQUEST_FORMAT)
     }
-    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION1}" in {
-      runPostExpected400(Versions.VERSION1, TEST_ERROR_CODE)
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION101_BETA}" in {
+      runPostExpected400(Versions.VERSION101_BETA, TEST_ERROR_CODE)
     }
-    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION2}" in {
-      runPostExpected400(Versions.VERSION2, TEST_ERROR_CODE)
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION100_FINAL}" in {
+      runPostExpected400(Versions.VERSION100_FINAL, TEST_ERROR_CODE)
     }
     "return 400 and error response when not supported version is passed in the request" in {
       runPostExpected400("NotSupportedVersion", INVALID_VERSION)

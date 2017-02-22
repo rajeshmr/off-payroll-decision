@@ -28,62 +28,62 @@ class JsonSchemaSpec extends UnitSpec {
   val TEST_CASE_PATH = "/schema/1.0.1-beta/schema-checking-testcase.csv"
 
   " A Json Schema" should {
-    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION1}" in {
-      validateRequestWithSchema(Versions.VERSION1)
+    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION101_BETA}" in {
+      validateRequestWithSchema(Versions.VERSION101_BETA)
     }
   }
 
   it should {
-    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION2}" in {
-      validateRequestWithSchema(Versions.VERSION2)
+    s"validate correctly full example request json with the loose schema for version ${Versions.VERSION100_FINAL}" in {
+      validateRequestWithSchema(Versions.VERSION100_FINAL)
     }
   }
 
   it should {
-    s"validate a request with the Strict Schema for version ${Versions.VERSION1}" in {
-      validateRequestWithStrictSchema(Versions.VERSION1)
+    s"validate a request with the Strict Schema for version ${Versions.VERSION101_BETA}" in {
+      validateRequestWithStrictSchema(Versions.VERSION101_BETA)
     }
   }
 
   it should {
-    s"validate a request with the Strict Schema for version ${Versions.VERSION2}" in {
-      validateRequestWithStrictSchema(Versions.VERSION1)
+    s"validate a request with the Strict Schema for version ${Versions.VERSION100_FINAL}" in {
+      validateRequestWithStrictSchema(Versions.VERSION101_BETA)
     }
   }
 
   it should {
-    s"validate a full response with the lose schema for version ${Versions.VERSION1}" in {
-      validateResponseWithSchema(Versions.VERSION1)
+    s"validate a full response with the lose schema for version ${Versions.VERSION101_BETA}" in {
+      validateResponseWithSchema(Versions.VERSION101_BETA)
     }
   }
 
   it should {
-    s"validate a full response with the lose schema for version ${Versions.VERSION2}" in {
-      validateResponseWithSchema(Versions.VERSION2)
+    s"validate a full response with the lose schema for version ${Versions.VERSION100_FINAL}" in {
+      validateResponseWithSchema(Versions.VERSION100_FINAL)
     }
   }
 
   it should {
-    s"validate a full response with the strict Schema for version ${Versions.VERSION1}" in {
-      validateResponseWithStrictSchema(Versions.VERSION1)
+    s"validate a full response with the strict Schema for version ${Versions.VERSION101_BETA}" in {
+      validateResponseWithStrictSchema(Versions.VERSION101_BETA)
     }
   }
 
   it should {
-    s"validate a full response with the strict Schema for version ${Versions.VERSION2}" in {
-      validateResponseWithStrictSchema(Versions.VERSION2)
+    s"validate a full response with the strict Schema for version ${Versions.VERSION100_FINAL}" in {
+      validateResponseWithStrictSchema(Versions.VERSION100_FINAL)
     }
   }
 
   it should {
-    s"validate request created from a flattened test case for version ${Versions.VERSION1}" in {
-      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH, Versions.VERSION1)
+    s"validate request created from a flattened test case for version ${Versions.VERSION101_BETA}" in {
+      val testCasesTry = RequestAndDecision.readFlattenedTransposed(TEST_CASE_PATH, Versions.VERSION101_BETA)
       testCasesTry.isSuccess shouldBe true
       val testCase = testCasesTry.get
       val request = testCase.request
       val requestJson = Json.toJson(request)
       val requestJsonString = Json.prettyPrint(requestJson)
-      val maybeValidator = JsonRequestValidatorFactory(Versions.VERSION1)
+      val maybeValidator = JsonRequestValidatorFactory(Versions.VERSION101_BETA)
       maybeValidator.isDefined shouldBe true
       val validationResult = maybeValidator.get.validate(requestJsonString)
       printValidationResult(validationResult)
