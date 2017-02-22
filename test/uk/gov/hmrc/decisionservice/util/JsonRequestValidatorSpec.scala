@@ -22,7 +22,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonRequestValidatorSpec extends UnitSpec {
 
-  val jsonRequestValidator = JsonRequestValidatorFactory(Versions.VERSION1).get // TODO
+  val jsonRequestValidator = JsonRequestValidatorFactory(Versions.VERSION101_BETA).get // TODO
 
   val valid_twoSections = """
    |{
@@ -252,8 +252,8 @@ class JsonRequestValidatorSpec extends UnitSpec {
       validateWithInfo(valid_withNewFinancialRiskAFields, jsonRequestValidator) shouldBe true
     }
 
-    s"validate a full request when using the strict validator for version ${Versions.VERSION1}" in {
-      validateWithInfo(valid_twoSections, JsonRequestStrictValidatorFactory(Versions.VERSION1).get) shouldBe false
+    s"validate a full request when using the strict validator for version ${Versions.VERSION101_BETA}" in {
+      validateWithInfo(valid_twoSections, JsonRequestStrictValidatorFactory(Versions.VERSION101_BETA).get) shouldBe false
     }
 
     "return true for valid json - no answers" in {

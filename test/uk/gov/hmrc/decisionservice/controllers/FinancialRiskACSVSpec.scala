@@ -30,10 +30,10 @@ class FinancialRiskACSVSpec extends UnitSpec with WithFakeApplication with Decis
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for financial risk a scenario 0" in {
-      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_0, Versions.VERSION1)
+      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_0, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for financial risk a scenario 1" in {
-      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_1, Versions.VERSION1)
+      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_1, Versions.VERSION101_BETA)
     }
 //    "return 200 and correct response with the expected decision for financial risk a scenario 2" in {
 //      createRequestSendVerifyDecision(FINANCIAL_RISK_A_SCENARIO_2)
