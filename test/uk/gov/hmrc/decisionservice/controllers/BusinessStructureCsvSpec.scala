@@ -31,25 +31,25 @@ class BusinessStructureCsvSpec extends UnitSpec with WithFakeApplication with De
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for business structure scenario LOW_0" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_0, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_0, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for business structure scenario HIGH_0" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_HIGH_0, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_HIGH_0, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for business structure scenario MEDIUM" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_MEDIUM, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_MEDIUM, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for business structure scenario LOW_1" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_1, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_1, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for business structure scenario LOW_2" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_2, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_LOW_2, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for business structure scenario NotValidUseCase" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_NOTVALIDUSECASE, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_NOTVALIDUSECASE, Versions.VERSION101_BETA)
     }
     "return 200 and correct response with the expected decision for business structure scenario HIGH_1" in {
-      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_HIGH_1, Versions.VERSION1)
+      createRequestSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIO_HIGH_1, Versions.VERSION101_BETA)
     }
   }
 }

@@ -25,27 +25,31 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
   val CONTROL_SCENARIO_1 = "/test-scenarios/single/control/scenario-should-give-MEDIUM-1.csv"
   val CONTROL_SCENARIO_2 = "/test-scenarios/single/control/scenario-should-give-HIGH.csv"
   val CONTROL_SCENARIO_3 = "/test-scenarios/single/control/scenario-should-give-EXIT-OUT.csv"
-  val CONTROL_SCENARIO_0_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/control/scenario_0.csv"
-  val CONTROL_SCENARIOS_VERSION2 = s"/test-scenarios/${Versions.VERSION2}/control/scenarios.csv"
+  val CONTROL_SCENARIO_0_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/control/scenario_0.csv"
+  val CONTROL_SCENARIOS_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/control/scenarios.csv"
+  val CONTROL_SCENARIOS_VERSION110_FINAL = s"/test-scenarios/${Versions.VERSION110_FINAL}/control/scenarios.csv"
 
   "POST /decide" should {
-    s"return 200 and correct response for control scenario 0 for version ${Versions.VERSION1}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0, Versions.VERSION1)
+    s"return 200 and correct response for control scenario 0 for version ${Versions.VERSION101_BETA}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_0, Versions.VERSION101_BETA)
     }
-    s"return 200 and correct response for control scenario 1 for version ${Versions.VERSION1}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_1, Versions.VERSION1)
+    s"return 200 and correct response for control scenario 1 for version ${Versions.VERSION101_BETA}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_1, Versions.VERSION101_BETA)
     }
-    s"return 200 and correct response for control scenario 2 for version ${Versions.VERSION1}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_2, Versions.VERSION1)
+    s"return 200 and correct response for control scenario 2 for version ${Versions.VERSION101_BETA}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_2, Versions.VERSION101_BETA)
     }
-    s"return 200 and correct response control scenario 3 for version ${Versions.VERSION1}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_3, Versions.VERSION1)
+    s"return 200 and correct response control scenario 3 for version ${Versions.VERSION101_BETA}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_3, Versions.VERSION101_BETA)
     }
-    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION2}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0_VERSION2, Versions.VERSION2)
+    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION100_FINAL}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIO_0_VERSION2, Versions.VERSION100_FINAL)
     }
-    s"return 200 and correct response control scenarios for version ${Versions.VERSION2}" in {
-      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION2, Versions.VERSION2)
+    s"return 200 and correct response control scenarios for version ${Versions.VERSION100_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION2, Versions.VERSION100_FINAL)
+    }
+    s"return 200 and correct response control scenarios for version ${Versions.VERSION110_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_FINAL, Versions.VERSION110_FINAL)
     }
   }
 }

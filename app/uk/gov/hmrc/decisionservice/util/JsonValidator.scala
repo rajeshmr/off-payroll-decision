@@ -59,32 +59,36 @@ case class JsonSchemaValidator(val schemaPath: String) extends JsonValidatorTrai
 
 object JsonResponseStrictValidatorFactory {
   lazy val jsonResponseValidators = Map(
-    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-response-schema-strict.json"),
-    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-response-schema-strict.json")
+    Versions.VERSION101_BETA -> JsonSchemaValidator(s"/schema/${Versions.VERSION101_BETA}/off-payroll-response-schema-strict.json"),
+    Versions.VERSION100_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION100_FINAL}/off-payroll-response-schema-strict.json"),
+    Versions.VERSION110_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION110_FINAL}/off-payroll-response-schema-strict.json")
   )
   def apply(version:String):Option[JsonSchemaValidator] = jsonResponseValidators.get(version)
 }
 
 object JsonRequestStrictValidatorFactory {
   lazy val jsonRequestValidators = Map(
-    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-request-schema-strict.json"),
-    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-request-schema-strict.json")
+    Versions.VERSION101_BETA -> JsonSchemaValidator(s"/schema/${Versions.VERSION101_BETA}/off-payroll-request-schema-strict.json"),
+    Versions.VERSION100_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION100_FINAL}/off-payroll-request-schema-strict.json"),
+    Versions.VERSION110_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION110_FINAL}/off-payroll-request-schema-strict.json")
   )
   def apply(version:String):Option[JsonSchemaValidator] = jsonRequestValidators.get(version)
 }
 
 object JsonResponseValidatorFactory {
   lazy val jsonResponseValidators = Map(
-    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-response-schema.json"),
-    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-response-schema.json")
+    Versions.VERSION101_BETA -> JsonSchemaValidator(s"/schema/${Versions.VERSION101_BETA}/off-payroll-response-schema.json"),
+    Versions.VERSION100_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION100_FINAL}/off-payroll-response-schema.json"),
+    Versions.VERSION110_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION110_FINAL}/off-payroll-response-schema.json")
   )
   def apply(version:String):Option[JsonSchemaValidator] = jsonResponseValidators.get(version)
 }
 
 object JsonRequestValidatorFactory {
   lazy val jsonRequestValidators = Map(
-    Versions.VERSION1 -> JsonSchemaValidator(s"/schema/${Versions.VERSION1}/off-payroll-request-schema.json"),
-    Versions.VERSION2 -> JsonSchemaValidator(s"/schema/${Versions.VERSION2}/off-payroll-request-schema.json")
+    Versions.VERSION101_BETA -> JsonSchemaValidator(s"/schema/${Versions.VERSION101_BETA}/off-payroll-request-schema.json"),
+    Versions.VERSION100_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION100_FINAL}/off-payroll-request-schema.json"),
+    Versions.VERSION110_FINAL -> JsonSchemaValidator(s"/schema/${Versions.VERSION110_FINAL}/off-payroll-request-schema.json")
   )
   def apply(version:String):Option[JsonSchemaValidator] = jsonRequestValidators.get(version)
 }

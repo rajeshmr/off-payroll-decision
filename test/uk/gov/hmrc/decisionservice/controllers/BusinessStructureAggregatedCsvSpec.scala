@@ -25,7 +25,7 @@ class BusinessStructureAggregatedCsvSpec extends UnitSpec with WithFakeApplicati
 
   "POST /decide" should {
     "return 200 and correct response with the expected decision for business structure scenario LOW_0" in {
-      createMultipleRequestsSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIOS, Versions.VERSION1)
+      createMultipleRequestsSendVerifyDecision(BUSINESS_STRUCTURE_SCENARIOS, Versions.VERSION101_BETA)
     }
   }
 }
