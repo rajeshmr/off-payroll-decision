@@ -28,6 +28,7 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
   val CONTROL_SCENARIO_0_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/control/scenario_0.csv"
   val CONTROL_SCENARIOS_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/control/scenarios.csv"
   val CONTROL_SCENARIOS_VERSION110_FINAL = s"/test-scenarios/${Versions.VERSION110_FINAL}/control/scenarios.csv"
+  val CONTROL_SCENARIOS_VERSION111_FINAL = s"/test-scenarios/${Versions.VERSION111_FINAL}/control/scenarios.csv"
 
   "POST /decide" should {
     s"return 200 and correct response for control scenario 0 for version ${Versions.VERSION101_BETA}" in {
@@ -50,6 +51,9 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
     }
     s"return 200 and correct response control scenarios for version ${Versions.VERSION110_FINAL}" in {
       createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_FINAL, Versions.VERSION110_FINAL)
+    }
+    s"return 200 and correct response control scenarios for version ${Versions.VERSION111_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION111_FINAL, Versions.VERSION111_FINAL)
     }
   }
 }

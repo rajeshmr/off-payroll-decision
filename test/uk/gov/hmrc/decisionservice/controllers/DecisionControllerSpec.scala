@@ -52,7 +52,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     lazy val decisionServices = Map(
       Versions.VERSION101_BETA -> DecisionServiceTestInstance,
       Versions.VERSION100_FINAL -> DecisionServiceTestInstance100final,
-      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final
+      Versions.LATEST -> DecisionServiceTestInstance110final
     )
   }
 
@@ -60,7 +60,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     lazy val decisionServices = Map(
       Versions.VERSION101_BETA -> ErrorGeneratingDecisionService,
       Versions.VERSION100_FINAL -> ErrorGeneratingDecisionService,
-      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final
+      Versions.LATEST -> DecisionServiceTestInstance110final
     )
   }
 
@@ -86,7 +86,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       ))
     Map(Versions.VERSION101_BETA -> iVersion1,
         Versions.VERSION100_FINAL -> iVersion2,
-        Versions.VERSION110_FINAL -> iVersion3).getOrElse(version, Map())
+        Versions.LATEST -> iVersion3).getOrElse(version, Map())
   }
 
   "POST /decide" should {
@@ -96,8 +96,8 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     s"return 200 and correct response when request is correct for version ${Versions.VERSION100_FINAL}" in {
       runPostExpected200(Versions.VERSION100_FINAL)
     }
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION110_FINAL}" in {
-      runPostExpected200(Versions.VERSION110_FINAL)
+    s"return 200 and correct response when request is correct for version ${Versions.LATEST}" in {
+      runPostExpected200(Versions.LATEST)
     }
     "return 400 and error response when request does not conform to schema" in {
       val decisionController = DecisionTestController
