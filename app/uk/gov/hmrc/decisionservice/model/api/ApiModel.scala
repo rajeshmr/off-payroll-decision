@@ -17,6 +17,7 @@
 package uk.gov.hmrc.decisionservice.model.api
 
 import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.decisionservice.model.rules.CarryOver
 
 
@@ -32,9 +33,10 @@ object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
   def elements(version:String):List[String] = {
     val versionToElements = Map(
-      "1.0.1-beta" -> List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService"),
-      "1.0.0-final" -> List("control", "financialRisk", "partAndParcel", "personalService"),
-      "1.1.0-final" -> List("control", "financialRisk", "partAndParcel", "personalService")
+      Versions.VERSION101_BETA -> List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService"),
+      Versions.VERSION100_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService"),
+      Versions.VERSION110_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService"),
+      Versions.VERSION111_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService")
     )
     versionToElements.getOrElse(version, List())
   }

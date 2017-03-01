@@ -27,6 +27,8 @@ package object decisionservice {
     val VERSION101_BETA = "1.0.1-beta"
     val VERSION100_FINAL = "1.0.0-final"
     val VERSION110_FINAL = "1.1.0-final"
+    val VERSION111_FINAL = "1.1.1-final"
+    val LATEST = VERSION111_FINAL
   }
 
 }
