@@ -1,7 +1,7 @@
 {
   "publicId": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-request-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Decision Request Version 1.1.0-final",
+  "description": "Decision Request Version 1.1.1-final",
   "definitions": {
     "binaryAnswer": {
       "type": "string",
