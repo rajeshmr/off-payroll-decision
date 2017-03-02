@@ -29,7 +29,7 @@ import uk.gov.hmrc.decisionservice.model.api.ErrorCodes._
 import uk.gov.hmrc.decisionservice.model.api.{DecisionRequest, ErrorCodes, Score}
 import uk.gov.hmrc.decisionservice.model.rules.Facts
 import uk.gov.hmrc.decisionservice.ruleengine.RuleEngineDecision
-import uk.gov.hmrc.decisionservice.services.{DecisionService, DecisionServiceTestInstance, DecisionServiceTestInstance100final, DecisionServiceTestInstance110final}
+import uk.gov.hmrc.decisionservice.services._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
@@ -52,7 +52,8 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     lazy val decisionServices = Map(
       Versions.VERSION101_BETA -> DecisionServiceTestInstance,
       Versions.VERSION100_FINAL -> DecisionServiceTestInstance100final,
-      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final
+      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final,
+      Versions.VERSION111_FINAL -> DecisionServiceTestInstance111final
     )
   }
 
@@ -60,7 +61,8 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     lazy val decisionServices = Map(
       Versions.VERSION101_BETA -> ErrorGeneratingDecisionService,
       Versions.VERSION100_FINAL -> ErrorGeneratingDecisionService,
-      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final
+      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final,
+      Versions.VERSION111_FINAL -> DecisionServiceTestInstance111final
     )
   }
 
@@ -86,7 +88,8 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       ))
     Map(Versions.VERSION101_BETA -> iVersion1,
         Versions.VERSION100_FINAL -> iVersion2,
-        Versions.VERSION110_FINAL -> iVersion3).getOrElse(version, Map())
+        Versions.VERSION110_FINAL -> iVersion3,
+        Versions.VERSION111_FINAL -> iVersion3).getOrElse(version, Map())
   }
 
   "POST /decide" should {
@@ -98,6 +101,9 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
     }
     s"return 200 and correct response when request is correct for version ${Versions.VERSION110_FINAL}" in {
       runPostExpected200(Versions.VERSION110_FINAL)
+    }
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION111_FINAL}" in {
+      runPostExpected200(Versions.VERSION111_FINAL)
     }
     "return 400 and error response when request does not conform to schema" in {
       val decisionController = DecisionTestController
