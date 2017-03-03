@@ -10,7 +10,7 @@ POST /decide/
 Requests use the HTTP `POST` method
 
 ### Decision Service
-
+ 
 #### Functionality
 
 * Evaluates an __Interview__
