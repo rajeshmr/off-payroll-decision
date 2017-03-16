@@ -31,24 +31,9 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
   val CONTROL_SCENARIOS_VERSION111_FINAL = s"/test-scenarios/${Versions.VERSION111_FINAL}/control/scenarios.csv"
 
   "POST /decide" should {
-    s"return 200 and correct response for control scenario 0 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response for control scenario 1 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_1, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response for control scenario 2 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_2, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response control scenario 3 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_3, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION100_FINAL}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0_VERSION2, Versions.VERSION100_FINAL)
-    }
-    s"return 200 and correct response control scenarios for version ${Versions.VERSION100_FINAL}" in {
-      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION2, Versions.VERSION100_FINAL)
-    }
+
+    //FIXME add tests for 1.2.0-final
+
     s"return 200 and correct response control scenarios for version ${Versions.VERSION110_FINAL}" in {
       createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_FINAL, Versions.VERSION110_FINAL)
     }

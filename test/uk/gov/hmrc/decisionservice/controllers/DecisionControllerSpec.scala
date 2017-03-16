@@ -42,7 +42,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   object ErrorGeneratingDecisionService extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
-    lazy val csvSectionMetadata = DecisionServiceTestInstance.csvSectionMetadata
+    lazy val csvSectionMetadata = DecisionServiceTestInstance111final.csvSectionMetadata
     override def ==>:(facts: Facts): Validation[RuleEngineDecision] = {
       Validated.invalid(List(FactError(TEST_ERROR_CODE, "fact error")))
     }
@@ -50,8 +50,6 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   object DecisionTestController extends DecisionController {
     lazy val decisionServices = Map(
-      Versions.VERSION101_BETA -> DecisionServiceTestInstance,
-      Versions.VERSION100_FINAL -> DecisionServiceTestInstance100final,
       Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final,
       Versions.VERSION111_FINAL -> DecisionServiceTestInstance111final
     )
@@ -93,12 +91,9 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
   }
 
   "POST /decide" should {
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION101_BETA}" in {
-      runPostExpected200(Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION100_FINAL}" in {
-      runPostExpected200(Versions.VERSION100_FINAL)
-    }
+
+    //FIXME add tests for 1.1.0-final and 1.2.0-final
+
     s"return 200 and correct response when request is correct for version ${Versions.VERSION110_FINAL}" in {
       runPostExpected200(Versions.VERSION110_FINAL)
     }

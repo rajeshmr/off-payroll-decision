@@ -25,7 +25,7 @@ class PersonalServiceAggregatedCsvSpec extends UnitSpec with WithFakeApplication
 
   "POST /decide" should {
     "return 200 and correct response with the expected decisions for personal service scenarios" in {
-      createMultipleRequestsSendVerifyDecision(PERSONAL_SERVICE_SCENARIOS, Versions.VERSION101_BETA)
+      //FIXME add tests for 1.1.0, 1.1.1 and 1.2.0
     }
   }
 }
