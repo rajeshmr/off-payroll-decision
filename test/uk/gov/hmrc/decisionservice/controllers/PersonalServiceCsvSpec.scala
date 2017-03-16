@@ -23,6 +23,7 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with Deci
   val clusterName = "personalService"
   val PERSONAL_SERVICE_SCENARIO_0 = "/test-scenarios/single/personal-service/scenario-0.csv"
   val PERSONAL_SERVICE_SCENARIO_0_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/personal-service/scenario_0.csv"
+  val PERSONAL_SERVICE_SCENARIO_0_v111 = s"/test-scenarios/${Versions.VERSION111_FINAL}/personal-service/scenario_0.csv"
   val PERSONAL_SERVICE_SCENARIO_0_LATEST = s"/test-scenarios/${Versions.LATEST}/personal-service/scenario_0.csv"
   val PERSONAL_SERVICE_SCENARIO_1 = "/test-scenarios/single/personal-service/scenario-1.csv"
   val PERSONAL_SERVICE_SCENARIO_2 = "/test-scenarios/single/personal-service/scenario-2.csv"
@@ -31,41 +32,17 @@ class PersonalServiceCsvSpec extends UnitSpec with WithFakeApplication with Deci
   val PERSONAL_SERVICE_SCENARIO_V2 = "/test-scenarios/single/personal-service/scenario-v2.csv"
   val PERSONAL_SERVICE_SCENARIO_V3 = "/test-scenarios/single/personal-service/scenario-v3.csv"
   val PERSONAL_SERVICE_SCENARIOS_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/personal-service/scenarios.csv"
+  val PERSONAL_SERVICE_SCENARIOS_v111 = s"/test-scenarios/${Versions.VERSION111_FINAL}/personal-service/scenarios.csv"
   val PERSONAL_SERVICE_SCENARIOS_LATEST = s"/test-scenarios/${Versions.LATEST}/personal-service/scenarios.csv"
 
   "POST /decide" should {
-    s"return 200 and correct response with the expected decision for personal service scenario 0 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0, Versions.VERSION101_BETA)
+    //fixme add tests for 1.1.0 and 1.2.0
+
+    s"return 200 and correct response with the expected decision for personal service scenario 0 for version ${Versions.VERSION111_FINAL}" in {
+      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0_v111, Versions.VERSION111_FINAL)
     }
-    s"return 200 and correct response with the expected decision for personal service scenario 0 for version ${Versions.VERSION100_FINAL}" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0_VERSION2, Versions.VERSION100_FINAL)
-    }
-    s"return 200 and correct response with the expected decision for personal service scenario 0 for version ${Versions.LATEST}" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_0_LATEST, Versions.LATEST)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario 1" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_1, Versions.VERSION101_BETA)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario 2" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_2, Versions.VERSION101_BETA)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario 3" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_3, Versions.VERSION101_BETA)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario V1" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V1, Versions.VERSION101_BETA)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario V2" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V2, Versions.VERSION101_BETA)
-    }
-    "return 200 and correct response with the expected decision for personal service scenario V3" in {
-      createRequestSendVerifyDecision(PERSONAL_SERVICE_SCENARIO_V3, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the expected decision for personal service scenarios for version ${Versions.VERSION100_FINAL}" in {
-      createMultipleRequestsSendVerifyDecision(PERSONAL_SERVICE_SCENARIOS_VERSION2, Versions.VERSION100_FINAL)
-    }
-    s"return 200 and correct response with the expected decision for personal service scenarios for version ${Versions.LATEST}" in {
-      createMultipleRequestsSendVerifyDecision(PERSONAL_SERVICE_SCENARIOS_LATEST, Versions.LATEST)
+    s"return 200 and correct response with the expected decision for personal service scenarios for version ${Versions.VERSION111_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(PERSONAL_SERVICE_SCENARIOS_v111, Versions.VERSION111_FINAL)
     }
   }
 }

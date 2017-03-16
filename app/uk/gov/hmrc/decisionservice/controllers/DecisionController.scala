@@ -100,10 +100,9 @@ trait DecisionController extends BaseController {
 
 object DecisionController extends DecisionController {
   lazy val decisionServices = Map(
-    Versions.VERSION101_BETA -> DecisionServiceInstance,
-    Versions.VERSION100_FINAL -> DecisionServiceInstance100Final,
     Versions.VERSION110_FINAL -> DecisionServiceInstance110Final,
-    Versions.VERSION111_FINAL -> DecisionServiceInstance111Final
+    Versions.VERSION111_FINAL -> DecisionServiceInstance111Final,
+    Versions.VERSION120_FINAL -> DecisionServiceInstance120Final
   )
 }
 

@@ -33,30 +33,9 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
   val TEST_CASE_UNKNOWN_VERSION111_FINAL = s"/test-scenarios/${Versions.VERSION111_FINAL}/matrix/scenario-decision-unknown.csv"
 
   "POST /decide" should {
-    s"return 200 and correct response with the not matched decision (1) for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_1, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the not matched decision (2) for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(TEST_CASE_NOT_MATCHED_2, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the out IR35 decision for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(TEST_CASE_OUTOFIR35, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the inside IR35 decision (matches Financial Risk Blank) for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION100_FINAL}" in {
-      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION2, Versions.VERSION100_FINAL)
-    }
-    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION100_FINAL}" in {
-      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION2, Versions.VERSION100_FINAL)
-    }
+
+    //FIXME add tests for 1.1.0-final and 1.2.0-final
+
     s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION111_FINAL}" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION111_FINAL, Versions.VERSION111_FINAL)
     }

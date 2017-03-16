@@ -63,41 +63,6 @@ trait DecisionService {
   }
 }
 
-object DecisionServiceInstance extends DecisionService {
-  lazy val businessStructureRule = SectionRuleSet("businessStructure",
-    List(
-      "similarWork",
-      "workerVAT",
-      "businessAccount",
-      "advertiseForWork",
-      "businessWebsite",
-      "workerPayForTraining",
-      "workerExpenseRunningBusinessPremises",
-      "workerPaysForInsurance"),
-    List(SectionRule(List(), EmptyCarryOver, businessStructureMatches, businessStructureFactsValid)))
-  lazy override val extraRules = List(businessStructureRule)
-  lazy val maybeSectionRules = loadSectionRules()
-  lazy val csvSectionMetadata = List(
-    (5, "/tables/1.0.1-beta/control.csv", "control"),
-    (7, "/tables/1.0.1-beta/financial-risk-a.csv", "financialRiskA"),
-    (13, "/tables/1.0.1-beta/financial-risk-b.csv", "financialRiskB"),
-    (4, "/tables/1.0.1-beta/part-and-parcel.csv", "partAndParcel"),
-    (14, "/tables/1.0.1-beta/personal-service.csv", "personalService"),
-    (5, "/tables/1.0.1-beta/matrix-of-matrices.csv", "matrix")
-  ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
-}
-
-object DecisionServiceInstance100Final extends DecisionService {
-  lazy val maybeSectionRules = loadSectionRules()
-  lazy val csvSectionMetadata = List(
-    (4, "/tables/1.0.0-final/control.csv", "control"),
-    (7, "/tables/1.0.0-final/financial-risk.csv", "financialRisk"),
-    (4, "/tables/1.0.0-final/part-and-parcel.csv", "partAndParcel"),
-    (5, "/tables/1.0.0-final/personal-service.csv", "personalService"),
-    (4, "/tables/1.0.0-final/matrix-of-matrices.csv", "matrix")
-  ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
-}
-
 object DecisionServiceInstance110Final extends DecisionService {
   lazy val maybeSectionRules = loadSectionRules()
   lazy val csvSectionMetadata = List(
@@ -117,5 +82,16 @@ object DecisionServiceInstance111Final extends DecisionService {
     (4, "/tables/1.1.1-final/part-and-parcel.csv", "partAndParcel"),
     (5, "/tables/1.1.1-final/personal-service.csv", "personalService"),
     (4, "/tables/1.1.1-final/matrix-of-matrices.csv", "matrix")
+  ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
+}
+
+object DecisionServiceInstance120Final extends DecisionService {
+  lazy val maybeSectionRules = loadSectionRules()
+  lazy val csvSectionMetadata = List(
+    (4, "/tables/1.2.0-final/control.csv", "control"),
+    (7, "/tables/1.2.0-final/financial-risk.csv", "financialRisk"),
+    (4, "/tables/1.2.0-final/part-and-parcel.csv", "partAndParcel"),
+    (5, "/tables/1.2.0-final/personal-service.csv", "personalService"),
+    (4, "/tables/1.2.0-final/matrix-of-matrices.csv", "matrix")
   ).collect{case (q,f,n) => RulesFileMetaData(q,f,n)}
 }
