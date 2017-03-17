@@ -20,22 +20,33 @@ import uk.gov.hmrc.decisionservice.Versions
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerFinalCsvSpec {
-  val TEST_CASE_NOT_MATCHED_1 = "/test-scenarios/single/matrix/scenario-final-not-matched-1.csv"
-  val TEST_CASE_NOT_MATCHED_2 = "/test-scenarios/single/matrix/scenario-final-not-matched-2.csv"
-  val TEST_CASE_OUTOFIR35 = "/test-scenarios/single/matrix/scenario-earlyexit-outofir35.csv"
-  val TEST_CASE_INSIDE_IR35 = "/test-scenarios/single/matrix/scenario-decision-ir35.csv"
-  val TEST_CASE_INSIDE_IR35_MATCH_FINANCIAL_RISK_BLANK = "/test-scenarios/single/matrix/scenario-decision-ir35-matches-financialRiskBlank.csv"
-  val TEST_CASE_UNKNOWN = "/test-scenarios/single/matrix/scenario-decision-unknown.csv"
-  val TEST_CASE_INSIDE_IR35_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/matrix/scenario-decision-ir35.csv"
-  val TEST_CASE_UNKNOWN_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/matrix/scenario-decision-unknown.csv"
+
+  val TEST_CASE_INSIDE_IR35_VERSION110_FINAL = s"/test-scenarios/${Versions.VERSION110_FINAL}/matrix/scenario-decision-insideIr35.csv"
+  val TEST_CASE_INSIDE_IR35_VERSION110_FINAL_2 = s"/test-scenarios/${Versions.VERSION110_FINAL}/matrix/scenario-decision-insideIr35_2.csv"
+  val TEST_CASE_UNKNOWN_VERSION110_FINAL = s"/test-scenarios/${Versions.VERSION110_FINAL}/matrix/scenario-decision-unknown.csv"
+
   val TEST_CASE_INSIDE_IR35_VERSION111_FINAL = s"/test-scenarios/${Versions.VERSION111_FINAL}/matrix/scenario-decision-insideIr35.csv"
   val TEST_CASE_INSIDE_IR35_VERSION111_FINAL_2 = s"/test-scenarios/${Versions.VERSION111_FINAL}/matrix/scenario-decision-insideIr35_2.csv"
   val TEST_CASE_UNKNOWN_VERSION111_FINAL = s"/test-scenarios/${Versions.VERSION111_FINAL}/matrix/scenario-decision-unknown.csv"
 
+  val TEST_CASE_INSIDE_IR35_VERSION120_FINAL = s"/test-scenarios/${Versions.VERSION120_FINAL}/matrix/scenario-decision-insideIr35.csv"
+  val TEST_CASE_INSIDE_IR35_VERSION120_FINAL_2 = s"/test-scenarios/${Versions.VERSION120_FINAL}/matrix/scenario-decision-insideIr35_2.csv"
+  val TEST_CASE_UNKNOWN_VERSION120_FINAL = s"/test-scenarios/${Versions.VERSION120_FINAL}/matrix/scenario-decision-unknown.csv"
+
   "POST /decide" should {
 
-    //FIXME add tests for 1.1.0-final and 1.2.0-final
+    //v1.1.0-final
+    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION110_FINAL}" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION110_FINAL, Versions.VERSION110_FINAL)
+    }
+    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION110_FINAL} - 2" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION110_FINAL_2, Versions.VERSION110_FINAL)
+    }
+    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION110_FINAL}" in {
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION110_FINAL, Versions.VERSION110_FINAL)
+    }
 
+    //v1.1.1-final
     s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION111_FINAL}" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION111_FINAL, Versions.VERSION111_FINAL)
     }
@@ -44,6 +55,17 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
     }
     s"return 200 and correct response with the unknown decision for version ${Versions.VERSION111_FINAL}" in {
       createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION111_FINAL, Versions.VERSION111_FINAL)
+    }
+
+    //v1.2.0-final
+    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION120_FINAL}" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION120_FINAL, Versions.VERSION120_FINAL)
+    }
+    s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION120_FINAL} - 2" in {
+      createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION120_FINAL_2, Versions.VERSION120_FINAL)
+    }
+    s"return 200 and correct response with the unknown decision for version ${Versions.VERSION120_FINAL}" in {
+      createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION120_FINAL, Versions.VERSION120_FINAL)
     }
   }
 }
