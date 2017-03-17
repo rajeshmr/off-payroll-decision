@@ -24,15 +24,39 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
   */
 class FinancialRiskCSVSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
   val clusterName = "financialRisk"
-  val FINANCIAL_RISK_SCENARIO_0 = s"/test-scenarios/${Versions.VERSION100_FINAL}/financial-risk/scenario_0.csv"
-  val FINANCIAL_RISK_SCENARIOS_VERSION100_FINAL = s"/test-scenarios/${Versions.VERSION100_FINAL}/financial-risk/scenarios.csv"
+
+  val FINANCIAL_RISK_SCENARIO_0_v110 = s"/test-scenarios/${Versions.VERSION110_FINAL}/financial-risk/scenario_0.csv"
+  val FINANCIAL_RISK_SCENARIOS_v110 = s"/test-scenarios/${Versions.VERSION110_FINAL}/financial-risk/scenarios.csv"
+
+  val FINANCIAL_RISK_SCENARIO_0_v111 = s"/test-scenarios/${Versions.VERSION111_FINAL}/financial-risk/scenario_0.csv"
   val FINANCIAL_RISK_SCENARIOS_v111 = s"/test-scenarios/${Versions.VERSION111_FINAL}/financial-risk/scenarios.csv"
-  val FINANCIAL_RISK_SCENARIOS_LATEST = s"/test-scenarios/${Versions.LATEST}/financial-risk/scenarios.csv"
+
+  val FINANCIAL_RISK_SCENARIO_0_v120 = s"/test-scenarios/${Versions.VERSION120_FINAL}/financial-risk/scenario_0.csv"
+  val FINANCIAL_RISK_SCENARIOS_v120 = s"/test-scenarios/${Versions.VERSION120_FINAL}/financial-risk/scenarios.csv"
 
   "POST /decide" should {
-    //FIXME add tests for 1.1.0 and 1.2.0
+    //v1.1.0-final
+    s"return 200 and expected decision for financial risk scenario 0 for version ${Versions.VERSION110_FINAL}" in {
+      createRequestSendVerifyDecision(FINANCIAL_RISK_SCENARIO_0_v110, Versions.VERSION110_FINAL)
+    }
+    s"return 200 and expected decision for financial risk scenarios for version ${Versions.VERSION110_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(FINANCIAL_RISK_SCENARIOS_v110, Versions.VERSION110_FINAL)
+    }
+
+    //v1.1.1-final
+    s"return 200 and expected decision for financial risk scenario 0 for version ${Versions.VERSION111_FINAL}" in {
+      createRequestSendVerifyDecision(FINANCIAL_RISK_SCENARIO_0_v111, Versions.VERSION111_FINAL)
+    }
     s"return 200 and expected decision for financial risk scenarios for version ${Versions.VERSION111_FINAL}" in {
       createMultipleRequestsSendVerifyDecision(FINANCIAL_RISK_SCENARIOS_v111, Versions.VERSION111_FINAL)
+    }
+
+    //v1.2.0-final
+    s"return 200 and expected decision for financial risk scenario 0 for version ${Versions.VERSION120_FINAL}" in {
+      createRequestSendVerifyDecision(FINANCIAL_RISK_SCENARIO_0_v120, Versions.VERSION120_FINAL)
+    }
+    s"return 200 and expected decision for financial risk scenarios for version ${Versions.VERSION120_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(FINANCIAL_RISK_SCENARIOS_v120, Versions.VERSION120_FINAL)
     }
   }
 }
