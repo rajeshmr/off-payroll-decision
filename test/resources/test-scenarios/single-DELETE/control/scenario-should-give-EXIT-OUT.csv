@@ -1,7 +1,0 @@
-control,   toldWhatToDo                 , 	Yes
-control,   engagerMovingWorker          , 	No
-control,   workerDecidingHowWorkIsDone  ,   WorkerDecidesToClientSatisfaction
-control,   whenWorkHasToBeDone          ,   workingPatternAgreed
-control,   workerDecideWhere            ,   workerLocationFixed
-OUTOFIR35
-
