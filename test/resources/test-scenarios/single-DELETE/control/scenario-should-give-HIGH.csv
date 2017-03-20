@@ -1,9 +1,0 @@
-control,   toldWhatToDo                 , 	No
-control,   engagerMovingWorker          , 	Yes
-control,   workerDecidingHowWorkIsDone  ,   workingSetInstructions
-control,   whenWorkHasToBeDone          ,   workinPatternRegularHoursToAgreedDeadlines
-control,   workerDecideWhere            ,   couldFixWorkerLocation
-HIGH
-
-
-

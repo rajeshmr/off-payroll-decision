@@ -33,8 +33,6 @@ object Score {
   implicit val scoreFormat: Format[Score] = Json.format[Score]
   def elements(version:String):List[String] = {
     val versionToElements = Map(
-      Versions.VERSION101_BETA -> List("control", "financialRiskA", "financialRiskB", "partAndParcel", "businessStructure", "personalService"),
-      Versions.VERSION100_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService"),
       Versions.VERSION110_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService"),
       Versions.VERSION111_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService"),
       Versions.VERSION120_FINAL -> List("control", "financialRisk", "partAndParcel", "personalService")
