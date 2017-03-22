@@ -35,7 +35,6 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
 
   "POST /decide" should {
 
-    //v1.1.0-final
     s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION110_FINAL}" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION110_FINAL, Versions.VERSION110_FINAL)
     }
@@ -46,7 +45,6 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
       createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION110_FINAL, Versions.VERSION110_FINAL)
     }
 
-    //v1.1.1-final
     s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION111_FINAL}" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION111_FINAL, Versions.VERSION111_FINAL)
     }
@@ -57,7 +55,6 @@ class MatrixCsvSpec extends UnitSpec with WithFakeApplication with DecisionContr
       createRequestSendVerifyDecision(TEST_CASE_UNKNOWN_VERSION111_FINAL, Versions.VERSION111_FINAL)
     }
 
-    //v1.2.0-final
     s"return 200 and correct response with the inside IR35 decision for version ${Versions.VERSION120_FINAL}" in {
       createRequestSendVerifyDecision(TEST_CASE_INSIDE_IR35_VERSION120_FINAL, Versions.VERSION120_FINAL)
     }

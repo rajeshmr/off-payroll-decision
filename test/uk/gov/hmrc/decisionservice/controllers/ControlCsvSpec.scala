@@ -34,7 +34,6 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
 
   "POST /decide" should {
 
-    //v1.1.0-final
     s"return 200 and correct response control scenario 0 for version ${Versions.VERSION110_FINAL}" in {
       createRequestSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_SCENARIO_0, Versions.VERSION110_FINAL)
     }
@@ -42,7 +41,6 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
       createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_FINAL, Versions.VERSION110_FINAL)
     }
 
-    //v1.1.1-final
     s"return 200 and correct response control scenario 0 for version ${Versions.VERSION111_FINAL}" in {
       createRequestSendVerifyDecision(CONTROL_SCENARIOS_VERSION111_SCENARIO_0, Versions.VERSION111_FINAL)
     }
@@ -50,7 +48,6 @@ class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionCont
       createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION111_FINAL, Versions.VERSION111_FINAL)
     }
 
-    //v1.2.0-final
     s"return 200 and correct response control scenario 0 for version ${Versions.VERSION120_FINAL}" in {
       createRequestSendVerifyDecision(CONTROL_SCENARIOS_VERSION120_SCENARIO_0, Versions.VERSION120_FINAL)
     }
