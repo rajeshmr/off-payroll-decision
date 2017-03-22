@@ -21,39 +21,38 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ControlCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
   val clusterName = "control"
-  val CONTROL_SCENARIO_0 = "/test-scenarios/single/control/scenario-should-give-MEDIUM-0.csv"
-  val CONTROL_SCENARIO_1 = "/test-scenarios/single/control/scenario-should-give-MEDIUM-1.csv"
-  val CONTROL_SCENARIO_2 = "/test-scenarios/single/control/scenario-should-give-HIGH.csv"
-  val CONTROL_SCENARIO_3 = "/test-scenarios/single/control/scenario-should-give-EXIT-OUT.csv"
-  val CONTROL_SCENARIO_0_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/control/scenario_0.csv"
-  val CONTROL_SCENARIOS_VERSION2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/control/scenarios.csv"
+
+
   val CONTROL_SCENARIOS_VERSION110_FINAL = s"/test-scenarios/${Versions.VERSION110_FINAL}/control/scenarios.csv"
+  val CONTROL_SCENARIOS_VERSION110_SCENARIO_0 = s"/test-scenarios/${Versions.VERSION110_FINAL}/control/scenario_0.csv"
+
   val CONTROL_SCENARIOS_VERSION111_FINAL = s"/test-scenarios/${Versions.VERSION111_FINAL}/control/scenarios.csv"
+  val CONTROL_SCENARIOS_VERSION111_SCENARIO_0 = s"/test-scenarios/${Versions.VERSION111_FINAL}/control/scenario_0.csv"
+
+  val CONTROL_SCENARIOS_VERSION120_FINAL = s"/test-scenarios/${Versions.VERSION120_FINAL}/control/scenarios.csv"
+  val CONTROL_SCENARIOS_VERSION120_SCENARIO_0 = s"/test-scenarios/${Versions.VERSION120_FINAL}/control/scenario_0.csv"
 
   "POST /decide" should {
-    s"return 200 and correct response for control scenario 0 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response for control scenario 1 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_1, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response for control scenario 2 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_2, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response control scenario 3 for version ${Versions.VERSION101_BETA}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_3, Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION100_FINAL}" in {
-      createRequestSendVerifyDecision(CONTROL_SCENARIO_0_VERSION2, Versions.VERSION100_FINAL)
-    }
-    s"return 200 and correct response control scenarios for version ${Versions.VERSION100_FINAL}" in {
-      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION2, Versions.VERSION100_FINAL)
+
+    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION110_FINAL}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_SCENARIO_0, Versions.VERSION110_FINAL)
     }
     s"return 200 and correct response control scenarios for version ${Versions.VERSION110_FINAL}" in {
       createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION110_FINAL, Versions.VERSION110_FINAL)
     }
+
+    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION111_FINAL}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIOS_VERSION111_SCENARIO_0, Versions.VERSION111_FINAL)
+    }
     s"return 200 and correct response control scenarios for version ${Versions.VERSION111_FINAL}" in {
       createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION111_FINAL, Versions.VERSION111_FINAL)
+    }
+
+    s"return 200 and correct response control scenario 0 for version ${Versions.VERSION120_FINAL}" in {
+      createRequestSendVerifyDecision(CONTROL_SCENARIOS_VERSION120_SCENARIO_0, Versions.VERSION120_FINAL)
+    }
+    s"return 200 and correct response control scenarios for version ${Versions.VERSION120_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(CONTROL_SCENARIOS_VERSION120_FINAL, Versions.VERSION120_FINAL)
     }
   }
 }

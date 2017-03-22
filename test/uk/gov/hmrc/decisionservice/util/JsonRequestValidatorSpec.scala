@@ -22,71 +22,22 @@ import uk.gov.hmrc.play.test.UnitSpec
 
 class JsonRequestValidatorSpec extends UnitSpec {
 
-  val jsonRequestValidator = JsonRequestValidatorFactory(Versions.VERSION101_BETA).get // TODO
+  val jsonRequestValidator = JsonRequestValidatorFactory(Versions.VERSION110_FINAL).get
 
-  val valid_twoSections = """
+  val  valid_twoSections = """
    |{
-   |  "version": "1.0.0-beta",
+   |  "version": "1.1.0-final",
    |  "correlationID": "12345",
    |  "interview": {
    |    "personalService": {
-   |      "contractualObligationForSubstitute": "No",
-   |      "contractualObligationInPractise": "Yes",
-   |      "contractualRightForSubstitute": "Yes",
-   |      "actualRightToSendSubstitute": "Yes",
-   |      "contractualRightReflectInPractise": "No",
-   |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
-   |      "possibleSubstituteRejection": "No",
-   |      "contractTermsWorkerPaysSubstitute": "Yes",
-   |      "workerSentActualSubstitute": "Yes",
-   |      "actualSubstituteRejection": "Yes",
-   |      "possibleHelper": "Yes",
-   |      "wouldWorkerPayHelper": "Yes",
-   |      "workerSentActualHelper": "No",
-   |      "workerPayActualHelper": "Yes"
+   |      "workerSentActualSubstitute": "yesClientAgreed",
+   |      "workerPayActualSubstitute": "Yes"
    |    },
    |    "control": {
-   |      "toldWhatToDo": "Yes",
-   |      "engagerMovingWorker": "Yes",
-   |      "workerDecidingHowWorkIsDone": "WorkerCanGetInstructed",
-   |      "whenWorkHasToBeDone": "workingPatternStipulated",
-   |      "workerDecideWhere": "couldFixWorkerLocation"
-   |    }
-   |  }
-   |}
-   """.stripMargin
-
-  val valid_withNewFinancialRiskAFields = """
-   |{
-   |  "version": "1.0.0-beta",
-   |  "correlationID": "12345",
-   |  "interview": {
-   |    "personalService": {
-   |      "contractualObligationForSubstitute": "No",
-   |      "contractualObligationInPractise": "Yes",
-   |      "contractualRightForSubstitute": "Yes",
-   |      "actualRightToSendSubstitute": "Yes",
-   |      "contractualRightReflectInPractise": "No",
-   |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
-   |      "possibleSubstituteRejection": "No",
-   |      "contractTermsWorkerPaysSubstitute": "Yes",
-   |      "workerSentActualSubstitute": "Yes",
-   |      "actualSubstituteRejection": "Yes",
-   |      "possibleHelper": "Yes",
-   |      "wouldWorkerPayHelper": "Yes",
-   |      "workerSentActualHelper": "No",
-   |      "workerPayActualHelper": "Yes"
-   |    },
-   |    "control": {
-   |      "toldWhatToDo": "Yes",
-   |      "engagerMovingWorker": "Yes",
-   |      "workerDecidingHowWorkIsDone": "WorkerCanGetInstructed",
-   |      "whenWorkHasToBeDone": "workingPatternStipulated",
-   |      "workerDecideWhere": "couldFixWorkerLocation"
-   |    },
-   |    "financialRiskA": {
-   |      "engagerPayConsumables": "Yes",
-   |      "engagerPayEquipment": "Yes"
+   |      "engagerMovingWorker": "canMoveWorkerWithPermission",
+   |      "workerDecidingHowWorkIsDone": "workerDecidesWithoutInput",
+   |      "whenWorkHasToBeDone": "workerAgreeSchedule",
+   |      "workerDecideWhere": "noLocationRequired"
    |    }
    |  }
    |}
@@ -142,24 +93,12 @@ class JsonRequestValidatorSpec extends UnitSpec {
 
   val invalid_invalidAnswerValue = """
  |{
- |  "version": "1.0.0-beta",
+ |  "version": "1.1.0-final",
  |  "correlationID": "12345",
  |  "interview": {
  |    "personalService": {
- |      "contractualObligationForSubstitute": "No",
- |      "contractualObligationInPractise": true,
- |      "contractualRightForSubstitute": "Yes",
- |      "actualRightToSendSubstitute": "Yes",
- |      "contractualRightReflectInPractise": "No",
- |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
- |      "possibleSubstituteRejection": "No",
- |      "contractTermsWorkerPaysSubstitute": "Yes",
- |      "workerSentActualSubstitute": "Yes",
- |      "actualSubstituteRejection": "Yes",
- |      "possibleHelper": "Yes",
- |      "wouldWorkerPayHelper": "Yes",
- |      "workerSentActualHelper": "No",
- |      "workerPayActualHelper": "Yes"
+ |      "workerSentActualSubstitute": "yesClientAgreed",
+ |      "workerPayActualSubstitute": "true"
  |    }
  |  }
  | } """.stripMargin
@@ -197,27 +136,14 @@ class JsonRequestValidatorSpec extends UnitSpec {
 
   val invalid_invalidEnum = """
                              |{
- |  "version": "1.0.0-beta",
+ |  "version": "1.1.0-final",
  |  "correlationID": "12345",
  |  "interview": {
  |    "personalService": {
- |      "contractualObligationForSubstitute": "No",
- |      "contractualObligationInPractise": "Yes",
- |      "contractualRightForSubstitute": "Yes",
- |      "actualRightToSendSubstitute": "Yes",
- |      "contractualRightReflectInPractise": "No",
- |      "engagerArrangeIfWorkerIsUnwillingOrUnable": "No",
- |      "possibleSubstituteRejection": "No",
- |      "contractTermsWorkerPaysSubstitute": "Yes",
- |      "workerSentActualSubstitute": "Yes",
- |      "actualSubstituteRejection": "Yes",
- |      "possibleHelper": "Yes",
- |      "wouldWorkerPayHelper": "Yes",
- |      "workerSentActualHelper": "No",
- |      "workerPayActualHelper": "Yes"
+ |      "workerSentActualSubstitute": "yesClientAgreed",
+ |      "workerPayActualSubstitute": "Yes"
  |    },
  |    "control": {
- |      "toldWhatToDo": "No",
  |      "engagerMovingWorker": "Yes",
  |      "workerDecidingHowWorkIsDone": "No",
  |      "whenWorkHasToBeDone": "workingPatternStipulated",
@@ -230,11 +156,10 @@ class JsonRequestValidatorSpec extends UnitSpec {
                                      "correlationID": "dolor dolor",
                                      "interview": {
                                        "personalService": {
-                                         "contractualObligationForSubstitute": "No",
-                                         "contractualObligationInPractise": "No"
+                                         "workerSentActualSubstitute": "yesClientAgreed",
+                                         "workerPayActualSubstitute": "No"
                                        },
                                        "control": {
-                                         "toldWhatToDo": "Yes",
                                          "engagerMovingWorker": "No",
                                          "whenWorkHasToBeDone": "allDayEveryDay"
                                        }
@@ -248,12 +173,8 @@ class JsonRequestValidatorSpec extends UnitSpec {
       validateWithInfo(valid_twoSections, jsonRequestValidator) shouldBe true
     }
 
-    "return true for valid json - with New FinancialRiskA fields" in {
-      validateWithInfo(valid_withNewFinancialRiskAFields, jsonRequestValidator) shouldBe true
-    }
-
-    s"validate a full request when using the strict validator for version ${Versions.VERSION101_BETA}" in {
-      validateWithInfo(valid_twoSections, JsonRequestStrictValidatorFactory(Versions.VERSION101_BETA).get) shouldBe false
+    s"validate a full request when using the strict validator for version ${Versions.VERSION110_FINAL}" in {
+      validateWithInfo(valid_twoSections, JsonRequestStrictValidatorFactory(Versions.VERSION110_FINAL).get) shouldBe false
     }
 
     "return true for valid json - no answers" in {
@@ -261,7 +182,7 @@ class JsonRequestValidatorSpec extends UnitSpec {
     }
 
     "return false for invalid json - InvalidAnswerValue" in {
-      verify(invalid_invalidAnswerValue, "string")
+      verify(invalid_invalidAnswerValue, "not found in enum")
     }
 
     "return false for invalid json - missing Version" in {
