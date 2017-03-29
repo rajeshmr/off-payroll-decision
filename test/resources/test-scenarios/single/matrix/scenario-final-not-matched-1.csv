@@ -1,8 +1,0 @@
-personalService     ,   contractualRightForSubstitute       , 	No
-personalService     ,   contractualObligationForSubstitute  ,   Yes
-control         	,   toldWhatToDo                        ,   Yes
-control             ,  	engagerMovingWorker                 , 	No
-financialRiskB 	    ,   provideVehicle                      ,	No
-financialRiskB      , 	engagerPayForVehicle                ,	No
-financialRiskB      ,	workerNeedEquipment                 ,	No
-Not Matched

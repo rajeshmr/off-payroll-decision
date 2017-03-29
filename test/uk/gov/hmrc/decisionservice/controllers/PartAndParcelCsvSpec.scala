@@ -24,40 +24,36 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
   */
 class PartAndParcelCsvSpec extends UnitSpec with WithFakeApplication with DecisionControllerClusterCsvSpec {
   val clusterName = "partAndParcel"
-  val PART_AND_PARCEL_SCENARIO_0 = "/test-scenarios/single/part-and-parcel/scenario-0.csv"
-  val PART_AND_PARCEL_SCENARIO_1 = "/test-scenarios/single/part-and-parcel/scenario-1.csv"
-  val PART_AND_PARCEL_SCENARIO_2 = "/test-scenarios/single/part-and-parcel/scenario-2.csv"
-  val PART_AND_PARCEL_SCENARIO_3 = "/test-scenarios/single/part-and-parcel/scenario-3.csv"
-  val PART_AND_PARCEL_SCENARIO_4 = "/test-scenarios/single/part-and-parcel/scenario-4.csv"
 
-  val PART_AND_PARCEL_SCENARIO_0_V2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/part-and-parcel/scenario-0.csv"
-  val PART_AND_PARCEL_SCENARIO_S_V2 = s"/test-scenarios/${Versions.VERSION100_FINAL}/part-and-parcel/scenarios.csv"
-  val PART_AND_PARCEL_SCENARIO_S_LATEST = s"/test-scenarios/${Versions.LATEST}/part-and-parcel/scenarios.csv"
+  val PART_AND_PARCEL_SCENARIOS_v110 = s"/test-scenarios/${Versions.VERSION110_FINAL}/part-and-parcel/scenarios.csv"
+  val PART_AND_PARCEL_SCENARIO_0_v110 = s"/test-scenarios/${Versions.VERSION110_FINAL}/part-and-parcel/scenario_0.csv"
+
+  val PART_AND_PARCEL_SCENARIOS_v111 = s"/test-scenarios/${Versions.VERSION111_FINAL}/part-and-parcel/scenarios.csv"
+  val PART_AND_PARCEL_SCENARIO_0_v111 = s"/test-scenarios/${Versions.VERSION111_FINAL}/part-and-parcel/scenario_0.csv"
+
+  val PART_AND_PARCEL_SCENARIOS_v120 = s"/test-scenarios/${Versions.VERSION110_FINAL}/part-and-parcel/scenarios.csv"
+  val PART_AND_PARCEL_SCENARIO_0_v120 = s"/test-scenarios/${Versions.VERSION110_FINAL}/part-and-parcel/scenario_0.csv"
 
   "POST /decide" should {
-    "return 200 and correct response with the expected decision for part and parcel scenario 0" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0, Versions.VERSION101_BETA)
+    s"return 200 and expected decision for part and parcel scenario 0 for version ${Versions.VERSION110_FINAL}" in {
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0_v110, Versions.VERSION110_FINAL)
     }
-    "return 200 and correct response with the expected decision for part and parcel scenario 1" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_1, Versions.VERSION101_BETA)
+    s"return 200 and expected decision for part and parcel scenarios for version ${Versions.VERSION110_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(PART_AND_PARCEL_SCENARIOS_v110, Versions.VERSION110_FINAL)
     }
-    "return 200 and correct response with the expected decision for part and parcel scenario 2" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_2, Versions.VERSION101_BETA)
+
+    s"return 200 and expected decision for part and parcel scenario 0 for version ${Versions.VERSION111_FINAL}" in {
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0_v111, Versions.VERSION111_FINAL)
     }
-    "return 200 and correct response with the expected decision for part and parcel scenario 3" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_3, Versions.VERSION101_BETA)
+    s"return 200 and expected decision for part and parcel scenarios for version ${Versions.VERSION111_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(PART_AND_PARCEL_SCENARIOS_v111, Versions.VERSION111_FINAL)
     }
-    "return 200 and correct response with the expected decision for part and parcel scenario 4" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_4, Versions.VERSION101_BETA)
+
+    s"return 200 and expected decision for part and parcel scenario 0 for version ${Versions.VERSION120_FINAL}" in {
+      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0_v120, Versions.VERSION120_FINAL)
     }
-    s"return 200 and correct response with the expected decision for part and parcel scenario 0 version ${Versions.VERSION100_FINAL}" in {
-      createRequestSendVerifyDecision(PART_AND_PARCEL_SCENARIO_0_V2, Versions.VERSION100_FINAL)
-    }
-    "return 200 and correct response with the expected decision for part and parcel scenarios version " + Versions.VERSION100_FINAL in {
-      createMultipleRequestsSendVerifyDecision(PART_AND_PARCEL_SCENARIO_S_V2, Versions.VERSION100_FINAL)
-    }
-    "return 200 and correct response with the expected decision for part and parcel scenarios version " + Versions.LATEST in {
-      createMultipleRequestsSendVerifyDecision(PART_AND_PARCEL_SCENARIO_S_LATEST, Versions.LATEST)
+    s"return 200 and expected decision for part and parcel scenarios for version ${Versions.VERSION120_FINAL}" in {
+      createMultipleRequestsSendVerifyDecision(PART_AND_PARCEL_SCENARIOS_v120, Versions.VERSION120_FINAL)
     }
   }
 }

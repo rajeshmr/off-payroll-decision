@@ -1,7 +1,7 @@
 {
   "publicId": "https://raw.githubusercontent.com/hmrc/off-payroll-decision/master/test/resources/schema/off-payroll-request-schema.json",
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "description": "Decision Request Version 1.1.1-final",
+  "description": "Decision Request Version 1.2.0-final",
   "definitions": {
     "binaryAnswer": {
       "type": "string",
@@ -47,15 +47,8 @@
               "$ref": "#/definitions/binaryAnswer"
             }
           },
-          
-          "additionalProperties": false,
-          "required": [
-            "workerSentActualSubstitute",
-            "workerPayActualSubstitute",
-            "possibleSubstituteRejection",
-            "possibleSubstituteWorkerPay",
-            "wouldWorkerPayHelper"
-          ]
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "control": {
           "type": "object",
@@ -96,14 +89,8 @@
               ]
             }
           },
-          
-          "additionalProperties": false,
-          "required": [
-            "engagerMovingWorker",
-            "workerDecidingHowWorkIsDone",
-            "whenWorkHasToBeDone",
-            "workerDecideWhere"
-          ]
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "financialRisk": {
           "type": "object",
@@ -144,17 +131,8 @@
               ]
             }
           },
-          
-          "additionalProperties": false,
-          "required": [
-            "workerProvidedMaterials",
-            "workerProvidedEquipment",
-            "workerUsedVehicle",
-            "workerHadOtherExpenses",
-            "expensesAreNotRelevantForRole",
-            "workerMainIncome",
-            "paidForSubstandardWork"
-          ]
+          "minProperties": 0,
+          "additionalProperties": false
         },
         "partAndParcel": {
           "type": "object",
@@ -177,24 +155,12 @@
               ]
             }
           },
-          
-          "additionalProperties": false,
-          "required": [
-            "workerReceivesBenefits",
-            "workerAsLineManager",
-            "contactWithEngagerCustomer",
-            "workerRepresentsEngagerBusiness"
-          ]
+          "minProperties": 0,
+          "additionalProperties": false
         }
       },
-      
-      "additionalProperties": false,
-      "required": [
-        "personalService",
-        "control",
-        "financialRisk",
-        "partAndParcel"
-      ]
+      "minProperties": 0,
+      "additionalProperties": false
     }
   },
   "required": [

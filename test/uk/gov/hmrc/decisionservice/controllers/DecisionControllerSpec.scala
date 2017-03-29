@@ -42,7 +42,7 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   object ErrorGeneratingDecisionService extends DecisionService {
     lazy val maybeSectionRules = loadSectionRules()
-    lazy val csvSectionMetadata = DecisionServiceTestInstance.csvSectionMetadata
+    lazy val csvSectionMetadata = DecisionServiceTestInstance111final.csvSectionMetadata
     override def ==>:(facts: Facts): Validation[RuleEngineDecision] = {
       Validated.invalid(List(FactError(TEST_ERROR_CODE, "fact error")))
     }
@@ -50,60 +50,41 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
 
   object DecisionTestController extends DecisionController {
     lazy val decisionServices = Map(
-      Versions.VERSION101_BETA -> DecisionServiceTestInstance,
-      Versions.VERSION100_FINAL -> DecisionServiceTestInstance100final,
       Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final,
-      Versions.VERSION111_FINAL -> DecisionServiceTestInstance111final
+      Versions.VERSION111_FINAL -> DecisionServiceTestInstance111final,
+      Versions.VERSION120_FINAL -> DecisionServiceTestInstance120final
     )
   }
 
   object DecisionTestControllerWithErrorGeneratingDecisionService extends DecisionController {
     lazy val decisionServices = Map(
-      Versions.VERSION101_BETA -> ErrorGeneratingDecisionService,
-      Versions.VERSION100_FINAL -> ErrorGeneratingDecisionService,
-      Versions.VERSION110_FINAL -> DecisionServiceTestInstance110final,
-      Versions.VERSION111_FINAL -> DecisionServiceTestInstance111final
+      Versions.VERSION110_FINAL -> ErrorGeneratingDecisionService,
+      Versions.VERSION111_FINAL -> ErrorGeneratingDecisionService,
+      Versions.VERSION120_FINAL -> ErrorGeneratingDecisionService
     )
   }
 
   def sampleInterviewForVersion(version:String) = {
-    val iVersion1 = Map(
-      "personalService" -> Map(
-        "contractualObligationForSubstitute" -> "Yes",
-        "contractualObligationInPractise" -> "Yes",
-        "contractTermsWorkerPaysSubstitute" -> "Yes"
-      ))
-    val iVersion2 = Map(
-      "personalService" -> Map(
-        "workerSentActualSubstitute" -> "yesClientAgreed",
-        "workerPayActualSubstitute" -> "Yes",
-        "possibleSubstituteRejection" -> "Yes",
-        "possibleSubstituteWorkerPay" -> "Yes",
-        "wouldWorkerPayHelper" -> "Yes"
-      ))
     val iVersion3 = Map(
       "personalService" -> Map(
         "workerSentActualSubstitute" -> "yesClientAgreed",
         "workerPayActualSubstitute" -> "Yes"
       ))
-    Map(Versions.VERSION101_BETA -> iVersion1,
-        Versions.VERSION100_FINAL -> iVersion2,
-        Versions.VERSION110_FINAL -> iVersion3,
-        Versions.VERSION111_FINAL -> iVersion3).getOrElse(version, Map())
+    Map(Versions.VERSION110_FINAL -> iVersion3,
+        Versions.VERSION111_FINAL -> iVersion3,
+        Versions.VERSION120_FINAL -> iVersion3).getOrElse(version, Map())
   }
 
   "POST /decide" should {
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION101_BETA}" in {
-      runPostExpected200(Versions.VERSION101_BETA)
-    }
-    s"return 200 and correct response when request is correct for version ${Versions.VERSION100_FINAL}" in {
-      runPostExpected200(Versions.VERSION100_FINAL)
-    }
+
     s"return 200 and correct response when request is correct for version ${Versions.VERSION110_FINAL}" in {
       runPostExpected200(Versions.VERSION110_FINAL)
     }
     s"return 200 and correct response when request is correct for version ${Versions.VERSION111_FINAL}" in {
       runPostExpected200(Versions.VERSION111_FINAL)
+    }
+    s"return 200 and correct response when request is correct for version ${Versions.VERSION120_FINAL}" in {
+      runPostExpected200(Versions.VERSION120_FINAL)
     }
     "return 400 and error response when request does not conform to schema" in {
       val decisionController = DecisionTestController
@@ -113,11 +94,14 @@ class DecisionControllerSpec extends UnitSpec with WithFakeApplication {
       val errorResponse = jsonBodyOf(await(result))
       verifyErrorResponse(errorResponse, REQUEST_FORMAT)
     }
-    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION101_BETA}" in {
-      runPostExpected400(Versions.VERSION101_BETA, TEST_ERROR_CODE)
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION110_FINAL}" in {
+      runPostExpected400(Versions.VERSION110_FINAL, TEST_ERROR_CODE)
     }
-    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION100_FINAL}" in {
-      runPostExpected400(Versions.VERSION100_FINAL, TEST_ERROR_CODE)
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION111_FINAL}" in {
+      runPostExpected400(Versions.VERSION111_FINAL, TEST_ERROR_CODE)
+    }
+    s"return 400 and error response when there is error in decision service for version ${Versions.VERSION120_FINAL}" in {
+      runPostExpected400(Versions.VERSION120_FINAL, TEST_ERROR_CODE)
     }
     "return 400 and error response when not supported version is passed in the request" in {
       runPostExpected400("NotSupportedVersion", INVALID_VERSION)
