@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title>Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        #output{
+            background-color: #e5e5e5;
+            height: 200px;
+            width: 600px;
+        }
+
+        #input{
+            width: 600px;
+            height: 200px
+        }
+
+        #url{
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+<p>URL</p>
+<input type="text" id="url" value="http://0.0.0.0:9849/cest-decision/decide">
+
+<p>Input</p>
+<textarea id="input" rows="10" cols="100" >
+    {
+    "version": "1.5.0-final",
+    "correlationID": "test-id",
+    "interview": {
+        "setup": {
+            "endUserRole": "personDoingWork",
+            "hasContractStarted": true,
+            "provideServices": "limitedCompany"
+        }
+    }
+}
+</textarea>
+<p>Output</p>
+<pre id="output"></pre>
+<button id="test">Test</button>
+</body>
+</html>
+<script>
+    $(function() {
+        $('#test').click(function(){
+            console.log(JSON.parse($('#input').val()))
+            $.ajax({
+                url: $('#url').val(),
+                method: "post",
+                timeout:0,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify(JSON.parse($('#input').val()))
+            }).done(function(response){
+                $('#output').text(JSON.stringify(response, null, 2))
+            })
+        })
+    });
+</script>

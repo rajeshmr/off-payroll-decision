@@ -22,6 +22,7 @@ import play.api.libs.json._
 import play.api.mvc.{Action, MessagesControllerComponents}
 import uk.gov.hmrc.decisionservice.models.{DecisionRequest, ErrorResponse}
 import uk.gov.hmrc.decisionservice.services._
+import uk.gov.hmrc.decisionservice.utils.Utils.RichResult
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +36,7 @@ class DecisionController @Inject()(mcc: MessagesControllerComponents,
     request.body.validate[DecisionRequest] match {
       case JsSuccess(validRequest, _) =>
         logger.info("Valid interview request to decide API")
-        service.calculateResult(validRequest).map(response => Ok(Json.toJson(response)))
+        service.calculateResult(validRequest).map(response => Ok(Json.toJson(response)).enableCors)
       case JsError(jsonErrors) =>
         val errorDetails = s"""{"incorrectRequest":$jsonErrors}"""
         val errorResponseBody = Json.toJson(ErrorResponse(BAD_REQUEST, JsError.toJson(jsonErrors).toString(),errorDetails))
